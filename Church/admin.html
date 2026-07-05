@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Amalet Marketplace</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: "#57B5E7", secondary: "#8DD3C7" },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        .sidebar-link.active {
+            background: rgba(87,181,231,0.1);
+            border-right: 3px solid #57B5E7;
+            color: #57B5E7;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-approved { background: #d1fae5; color: #065f46; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-8">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-['Pacifico'] text-primary mb-2">Amalet Admin</h1>
+                <p class="text-gray-600">Please login to access the admin dashboard</p>
+            </div>
+            <form id="adminLoginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Username</label>
+                    <input id="adminUsername" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Password</label>
+                    <input id="adminPassword" type="password" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required>
+                </div>
+                <button type="submit" class="w-full bg-primary text-white py-3 rounded font-semibold hover:bg-blue-600 transition-colors">
+                    Login
+                </button>
+                <div id="loginError" class="text-red-600 text-sm mt-2 hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden min-h-screen flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-lg">
+            <div class="p-6 border-b">
+                <h1 class="text-xl font-['Pacifico'] text-primary">Amalet Admin</h1>
+                <p class="text-sm text-gray-600" id="adminWelcome">Welcome, Admin</p>
+            </div>
+            <nav class="mt-6">
+                <a href="#" class="sidebar-link active flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors" data-section="overview">
+                    <i class="ri-dashboard-line mr-3"></i>
+                    Overview
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors" data-section="pending-listings">
+                    <i class="ri-file-list-line mr-3"></i>
+                    Pending Listings
+                    <span id="pendingListingsCount" class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors" data-section="pending-sellers">
+                    <i class="ri-user-add-line mr-3"></i>
+                    Pending Sellers
+                    <span id="pendingSellersCount" class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors" data-section="all-listings">
+                    <i class="ri-list-check-line mr-3"></i>
+                    All Listings
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors" data-section="all-sellers">
+                    <i class="ri-group-line mr-3"></i>
+                    All Sellers
+                </a>
+                <div class="border-t mt-6 pt-6">
+                    <a href="#" id="logoutBtn" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50 transition-colors">
+                        <i class="ri-logout-box-line mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <header class="bg-white shadow-sm p-6 border-b">
+                <h2 id="pageTitle" class="text-2xl font-bold text-gray-900">Dashboard Overview</h2>
+            </header>
+
+            <main class="p-6">
+                <!-- Overview Section -->
+                <div id="overviewSection" class="section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-lg p-6 shadow-sm card-hover transition-all">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                    <i class="ri-file-list-line text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-600">Total Listings</p>
+                                    <p id="totalListings" class="text-2xl font-bold text-gray-900">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-6 shadow-sm card-hover transition-all">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                    <i class="ri-time-line text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-600">Pending Listings</p>
+                                    <p id="pendingListingsTotal" class="text-2xl font-bold text-gray-900">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-6 shadow-sm card-hover transition-all">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                    <i class="ri-user-line text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-600">Total Sellers</p>
+                                    <p id="totalSellers" class="text-2xl font-bold text-gray-900">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-6 shadow-sm card-hover transition-all">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                                    <i class="ri-user-add-line text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-gray-600">Pending Sellers</p>
+                                    <p id="pendingSellersTotal" class="text-2xl font-bold text-gray-900">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-lg p-6 shadow-sm">
+                            <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+                            <div id="recentActivity" class="space-y-3">
+                                <p class="text-gray-500">Loading recent activity...</p>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-6 shadow-sm">
+                            <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+                            <div class="space-y-3">
+                                <button class="w-full text-left p-3 rounded border hover:bg-gray-50 transition-colors" data-section="pending-listings">
+                                    <i class="ri-file-list-line mr-2 text-primary"></i>
+                                    Review Pending Listings
+                                </button>
+                                <button class="w-full text-left p-3 rounded border hover:bg-gray-50 transition-colors" data-section="pending-sellers">
+                                    <i class="ri-user-add-line mr-2 text-primary"></i>
+                                    Review Seller Applications
+                                </button>
+                                <button class="w-full text-left p-3 rounded border hover:bg-gray-50 transition-colors" data-section="all-listings">
+                                    <i class="ri-list-check-line mr-2 text-primary"></i>
+                                    Manage All Listings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Listings Section -->
+                <div id="pendingListingsSection" class="section hidden">
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <div class="p-6 border-b">
+                            <h3 class="text-lg font-semibold">Pending Listings</h3>
+                            <p class="text-gray-600">Review and approve/reject new listings</p>
+                        </div>
+                        <div id="pendingListingsContent" class="p-6">
+                            <p class="text-gray-500">Loading pending listings...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Sellers Section -->
+                <div id="pendingSellersSection" class="section hidden">
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <div class="p-6 border-b">
+                            <h3 class="text-lg font-semibold">Pending Seller Applications</h3>
+                            <p class="text-gray-600">Review and approve/reject seller applications</p>
+                        </div>
+                        <div id="pendingSellersContent" class="p-6">
+                            <p class="text-gray-500">Loading pending seller applications...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Listings Section -->
+                <div id="allListingsSection" class="section hidden">
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <div>
+                                <h3 class="text-lg font-semibold">All Listings</h3>
+                                <p class="text-gray-600">Manage all listings in the system</p>
+                            </div>
+                            <select id="listingsStatusFilter" class="border rounded px-3 py-2">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div id="allListingsContent" class="p-6">
+                            <p class="text-gray-500">Loading all listings...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Sellers Section -->
+                <div id="allSellersSection" class="section hidden">
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <div>
+                                <h3 class="text-lg font-semibold">All Sellers</h3>
+                                <p class="text-gray-600">Manage all seller applications</p>
+                            </div>
+                            <select id="sellersStatusFilter" class="border rounded px-3 py-2">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div id="allSellersContent" class="p-6">
+                            <p class="text-gray-500">Loading all sellers...</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentUser = null;
+        let currentSection = 'overview';
+
+        // API functions
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const response = await fetch(`/api${endpoint}`, {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('API call failed:', error);
+                return { success: false, message: 'Network error' };
+            }
+        }
+
+        // Authentication
+        async function login(username, password) {
+            const result = await apiCall('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({ username, password })
+            });
+
+            if (result.success && result.user.is_admin) {
+                currentUser = result.user;
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('adminWelcome').textContent = `Welcome, ${currentUser.username}`;
+                loadDashboardData();
+                return true;
+            } else {
+                document.getElementById('loginError').textContent = result.message || 'Invalid credentials or insufficient permissions';
+                document.getElementById('loginError').classList.remove('hidden');
+                return false;
+            }
+        }
+
+        async function logout() {
+            await apiCall('/auth/logout', { method: 'POST' });
+            currentUser = null;
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        // Dashboard data loading
+        async function loadDashboardData() {
+            const stats = await apiCall('/admin/dashboard-stats');
+            if (stats.success) {
+                document.getElementById('totalListings').textContent = stats.stats.listings.total;
+                document.getElementById('pendingListingsTotal').textContent = stats.stats.listings.pending;
+                document.getElementById('totalSellers').textContent = stats.stats.sellers.total;
+                document.getElementById('pendingSellersTotal').textContent = stats.stats.sellers.pending;
+                document.getElementById('pendingListingsCount').textContent = stats.stats.listings.pending;
+                document.getElementById('pendingSellersCount').textContent = stats.stats.sellers.pending;
+            }
+        }
+
+        // Section management
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Remove active class from all sidebar links
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName + 'Section').classList.remove('hidden');
+            
+            // Add active class to selected sidebar link
+            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+
+            // Update page title
+            const titles = {
+                'overview': 'Dashboard Overview',
+                'pending-listings': 'Pending Listings',
+                'pending-sellers': 'Pending Seller Applications',
+                'all-listings': 'All Listings',
+                'all-sellers': 'All Sellers'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionName];
+
+            currentSection = sectionName;
+            loadSectionData(sectionName);
+        }
+
+        async function loadSectionData(sectionName) {
+            switch (sectionName) {
+                case 'pending-listings':
+                    await loadPendingListings();
+                    break;
+                case 'pending-sellers':
+                    await loadPendingSellers();
+                    break;
+                case 'all-listings':
+                    await loadAllListings();
+                    break;
+                case 'all-sellers':
+                    await loadAllSellers();
+                    break;
+            }
+        }
+
+        async function loadPendingListings() {
+            const result = await apiCall('/admin/pending-listings');
+            const container = document.getElementById('pendingListingsContent');
+            
+            if (result.success && result.listings.length > 0) {
+                container.innerHTML = result.listings.map(listing => `
+                    <div class="border rounded-lg p-4 mb-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold text-lg">${listing.title}</h4>
+                                <p class="text-gray-600">${listing.category} - ${listing.location}</p>
+                                <p class="text-primary font-bold">P ${listing.price || 'N/A'}</p>
+                            </div>
+                            <span class="status-pending px-2 py-1 rounded text-xs font-medium">${listing.status}</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">${listing.description || 'No description'}</p>
+                        <div class="text-sm text-gray-600 mb-3">
+                            <p><strong>Seller:</strong> ${listing.seller_name || 'N/A'}</p>
+                            <p><strong>Email:</strong> ${listing.seller_email || 'N/A'}</p>
+                            <p><strong>Phone:</strong> ${listing.seller_phone || listing.phone_number || 'N/A'}</p>
+                            <p><strong>Created:</strong> ${new Date(listing.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveListing(${listing.id})" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
+                                <i class="ri-check-line mr-1"></i>Approve
+                            </button>
+                            <button onclick="rejectListing(${listing.id})" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
+                                <i class="ri-close-line mr-1"></i>Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="text-gray-500">No pending listings found.</p>';
+            }
+        }
+
+        async function loadPendingSellers() {
+            const result = await apiCall('/admin/pending-sellers');
+            const container = document.getElementById('pendingSellersContent');
+            
+            if (result.success && result.sellers.length > 0) {
+                container.innerHTML = result.sellers.map(seller => `
+                    <div class="border rounded-lg p-4 mb-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold text-lg">${seller.first_name} ${seller.last_name}</h4>
+                                <p class="text-gray-600">${seller.business_name || 'No business name'}</p>
+                                <p class="text-gray-600">${seller.category} - ${seller.location}</p>
+                            </div>
+                            <span class="status-pending px-2 py-1 rounded text-xs font-medium">${seller.status}</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">${seller.description || 'No description'}</p>
+                        <div class="text-sm text-gray-600 mb-3">
+                            <p><strong>Email:</strong> ${seller.email}</p>
+                            <p><strong>Mobile:</strong> ${seller.mobile || 'N/A'}</p>
+                            <p><strong>Applied:</strong> ${new Date(seller.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="approveSeller(${seller.id})" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
+                                <i class="ri-check-line mr-1"></i>Approve
+                            </button>
+                            <button onclick="rejectSeller(${seller.id})" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
+                                <i class="ri-close-line mr-1"></i>Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="text-gray-500">No pending seller applications found.</p>';
+            }
+        }
+
+        async function loadAllListings() {
+            const status = document.getElementById('listingsStatusFilter').value;
+            const result = await apiCall(`/admin/all-listings?status=${status}`);
+            const container = document.getElementById('allListingsContent');
+            
+            if (result.success && result.listings.length > 0) {
+                container.innerHTML = result.listings.map(listing => `
+                    <div class="border rounded-lg p-4 mb-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold text-lg">${listing.title}</h4>
+                                <p class="text-gray-600">${listing.category} - ${listing.location}</p>
+                                <p class="text-primary font-bold">P ${listing.price || 'N/A'}</p>
+                            </div>
+                            <span class="status-${listing.status} px-2 py-1 rounded text-xs font-medium">${listing.status}</span>
+                        </div>
+                        <p class="text-gray-700 mb-3">${listing.description || 'No description'}</p>
+                        <div class="text-sm text-gray-600">
+                            <p><strong>Created:</strong> ${new Date(listing.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="text-gray-500">No listings found.</p>';
+            }
+        }
+
+        async function loadAllSellers() {
+            const status = document.getElementById('sellersStatusFilter').value;
+            const result = await apiCall(`/admin/all-sellers?status=${status}`);
+            const container = document.getElementById('allSellersContent');
+            
+            if (result.success && result.sellers.length > 0) {
+                container.innerHTML = result.sellers.map(seller => `
+                    <div class="border rounded-lg p-4 mb-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold text-lg">${seller.first_name} ${seller.last_name}</h4>
+                                <p class="text-gray-600">${seller.business_name || 'No business name'}</p>
+                                <p class="text-gray-600">${seller.category} - ${seller.location}</p>
+                            </div>
+                            <span class="status-${seller.status} px-2 py-1 rounded text-xs font-medium">${seller.status}</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <p><strong>Email:</strong> ${seller.email}</p>
+                            <p><strong>Applied:</strong> ${new Date(seller.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p class="text-gray-500">No seller applications found.</p>';
+            }
+        }
+
+        // Action functions
+        async function approveListing(listingId) {
+            const result = await apiCall(`/admin/approve-listing/${listingId}`, { method: 'POST' });
+            if (result.success) {
+                loadDashboardData();
+                loadSectionData(currentSection);
+            }
+        }
+
+        async function rejectListing(listingId) {
+            const result = await apiCall(`/admin/reject-listing/${listingId}`, { method: 'POST' });
+            if (result.success) {
+                loadDashboardData();
+                loadSectionData(currentSection);
+            }
+        }
+
+        async function approveSeller(sellerId) {
+            const result = await apiCall(`/admin/approve-seller/${sellerId}`, { method: 'POST' });
+            if (result.success) {
+                loadDashboardData();
+                loadSectionData(currentSection);
+            }
+        }
+
+        async function rejectSeller(sellerId) {
+            const result = await apiCall(`/admin/reject-seller/${sellerId}`, { method: 'POST' });
+            if (result.success) {
+                loadDashboardData();
+                loadSectionData(currentSection);
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Login form
+            document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const username = document.getElementById('adminUsername').value;
+                const password = document.getElementById('adminPassword').value;
+                await login(username, password);
+            });
+
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    if (section) {
+                        showSection(section);
+                    }
+                });
+            });
+
+            // Quick action buttons
+            document.querySelectorAll('button[data-section]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                });
+            });
+
+            // Filter dropdowns
+            document.getElementById('listingsStatusFilter').addEventListener('change', function() {
+                if (currentSection === 'all-listings') {
+                    loadAllListings();
+                }
+            });
+
+            document.getElementById('sellersStatusFilter').addEventListener('change', function() {
+                if (currentSection === 'all-sellers') {
+                    loadAllSellers();
+                }
+            });
+
+            // Check if already authenticated
+            checkAuth();
+        });
+
+        async function checkAuth() {
+            const result = await apiCall('/auth/check-auth');
+            if (result.authenticated && result.user.is_admin) {
+                currentUser = result.user;
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('adminWelcome').textContent = `Welcome, ${currentUser.username}`;
+                loadDashboardData();
+            }
+        }
+    </script>
+</body>
+</html>
+

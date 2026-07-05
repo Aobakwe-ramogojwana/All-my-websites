@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Internet | BOCRA</title>
+  <link rel="stylesheet" href="https://www.bocra.org.bw/themes/bocra/css/bootstrap.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; } body { font-family: 'Lato', sans-serif; margin: 0; padding: 0; font-size: 16px; }
+    a { color: #0073ae; } header#header { background: rgba(255,255,255,0.9); padding: 15px 0; }
+    .container { width: 1170px; max-width: 100%; margin: 0 auto; } .row { margin: 0 -15px; } .row:after { content: ""; clear: both; display: block; }
+    .col-md-12, .col-md-8, .col-md-2 { float: left; padding: 0 15px; }
+    .col-md-8 { width: 66.666667%; } .col-md-2 { width: 16.666667%; } .col-md-offset-2 { margin-left: 16.666667%; }
+    #block-bocra-site-branding img { max-width: 200px; }
+    #block-bocra-search-form-wide { background: rgba(198,30,83,0.4); padding: 8px 15px; }
+    #block-bocra-search-form-wide input { background: transparent; border: none; color: white; width: 70%; }
+    .telecoms-btn { background: rgba(198,30,83,0.6); color: white; padding: 8px 15px; }
+    ul.nice-menu { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+    ul.nice-menu > li > a { display: block; padding: 30px 10px; color: #0073ae; font-weight: bold; }
+    ul.nice-menu li ul { display: none; position: absolute; top: 100%; left: 0; background: rgba(198,30,83,0.95); width: 200px; }
+    ul.nice-menu li:hover ul { display: block; } ul.nice-menu li ul li a { color: white; padding: 10px; display: block; }
+    #carousel { background: url('https://www.bocra.org.bw/sites/default/files/media%20image/ipad-605439.jpg') center/cover no-repeat; min-height: 200px; padding: 80px 0 30px; }
+    #carousel h1 { color: white; font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+    #main-content { padding: 40px 0; } #main-content h1 { color: #0073ae; margin-bottom: 20px; }
+    #main-content h2 { color: #0073ae; margin-top: 25px; } #main-content p { line-height: 1.6; margin-bottom: 15px; }
+    #main-content ul { list-style: disc; margin-left: 20px; }
+    #sidebar { padding: 40px 0; } #sidebar h2 { color: #0073ae; font-size: 18px; }
+    #sidebar select { width: 100%; padding: 10px; border: 1px solid #ddd; }
+    .subpage-bar-compaint-btn { display: inline-block; padding: 10px 20px; background: #0073ae; color: white; margin-top: 15px; }
+    footer { background: #06193e; color: white; padding: 40px 0; } footer a { color: white; } footer h3 { color: white; margin-bottom: 15px; }
+    footer ul { list-style: none; padding: 0; }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3"><a href="index.html"><img src="https://www.bocra.org.bw/sites/default/files/logo_1.png" alt="BOCRA"></a></div>
+        <div class="col-md-4" id="block-bocra-search-form-wide"><form><input type="search" placeholder="Search BOCRA"><input type="image" src="https://www.bocra.org.bw/themes/bocra/images/search.png"></form></div>
+        <div class="col-md-3"><a href="#" class="telecoms-btn">Telecoms Statistics</a></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="nice-menu">
+            <li><a href="index.html">About</a><ul><li><a href="profile.html">Profile</a></li></ul></li>
+            <li><a href="mandate.html">Mandate</a><ul><li><a href="legislation.html">Legislation</a></li></ul></li>
+            <li><a href="telecommunications.html">Telecommunications</a></li>
+            <li><a href="broadcasting.html">Broadcasting</a></li>
+            <li><a href="internet.html">Internet</a></li>
+            <li><a href="licensing.html">Licensing</a></li>
+            <li><a href="complaints.html">Complaints</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div id="carousel"><div class="container"><h1>Internet</h1></div></div>
+  <div class="container">
+    <div class="row">
+      <div id="main-content" class="col-md-8 col-md-offset-2">
+        <h1>Internet</h1>
+        <h2>bw ccTLD</h2>
+        <p>Section 38(1) of the Communications and Regulatory Act No.19 of 2012(CRA) mandates Botswana Communications Regulatory Authority to administer the .bw country code top-level domain (ccTLD).</p>
+        <h2>bw CIRT</h2>
+        <p>The Ministry of Transport and Communications (MTC) developed the National Cybersecurity Strategy. BOCRA is responsible for the Botswana Computer Incident Response Team (bw CIRT).</p>
+        <h2>Electronic Evidence</h2>
+        <p>The Electronic Records (Evidence) Act No. 13 of 2014 allows for the admissibility and authentication of electronic evidence in court.</p>
+        <h2>Electronic Communications Transactions</h2>
+        <p>Under the Electronic Communications and Transaction Act the Authority has the responsibility of accreditation of secure digital signature service providers.</p>
+      </div>
+      <div id="sidebar" class="col-md-2">
+        <div><h2>Apply For A License</h2><select onchange="if(this.value) window.location.href=this.value;"><option>Choose</option><option value="vans-licence.html">VANS</option></select></div>
+        <div style="margin-top:30px;"><a href="file-complaint-form.html" class="subpage-bar-compaint-btn">File Complaint</a></div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4"><h3>BOCRA</h3><p>T : +267 395 7755</p></div>
+        <div class="col-md-4"><h3>Links</h3><ul><li><a href="index.html">Home</a></li></ul></div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

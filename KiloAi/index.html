@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kilo Code – AI Coding Assistant</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+</head>
+<body>
+  <!-- ===== APP SHELL ===== -->
+  <div id="app">
+
+    <!-- ===== ACTIVITY BAR (far left) ===== -->
+    <aside id="activity-bar">
+      <div class="activity-top">
+        <button class="activity-btn active" data-panel="chat" title="Chat">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </button>
+        <button class="activity-btn" data-panel="explorer" title="File Explorer">
+          <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+        </button>
+        <button class="activity-btn" data-panel="history" title="History">
+          <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+        </button>
+        <button class="activity-btn" data-panel="mcp" title="MCP Servers">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        </button>
+      </div>
+      <div class="activity-bottom">
+        <button class="activity-btn" data-panel="settings" title="Settings">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== SIDE PANEL ===== -->
+    <div id="side-panel">
+
+      <!-- CHAT PANEL -->
+      <div class="panel active" id="panel-chat">
+        <div class="panel-header">
+          <div class="panel-title-row">
+            <span class="panel-title">Kilo Code</span>
+            <div class="panel-actions">
+              <button class="icon-btn" id="btn-new-task" title="New Task">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+              </button>
+              <button class="icon-btn" id="btn-clear" title="Clear Chat">
+                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+              </button>
+            </div>
+          </div>
+          <!-- Mode Selector -->
+          <div class="mode-selector-row">
+            <label class="mode-label">Mode:</label>
+            <div class="mode-dropdown-wrap">
+              <button class="mode-dropdown-btn" id="mode-dropdown-btn">
+                <span class="mode-icon code-icon">⌨</span>
+                <span id="current-mode-name">Code</span>
+                <svg class="chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+              </button>
+              <div class="mode-dropdown" id="mode-dropdown">
+                <div class="mode-option active" data-mode="code">
+                  <span class="mode-icon code-icon">⌨</span>
+                  <div class="mode-info">
+                    <span class="mode-name">Code</span>
+                    <span class="mode-desc">Write, modify, or refactor code</span>
+                  </div>
+                </div>
+                <div class="mode-option" data-mode="architect">
+                  <span class="mode-icon arch-icon">🏗</span>
+                  <div class="mode-info">
+                    <span class="mode-name">Architect</span>
+                    <span class="mode-desc">Plan, design, or strategize</span>
+                  </div>
+                </div>
+                <div class="mode-option" data-mode="ask">
+                  <span class="mode-icon ask-icon">❓</span>
+                  <div class="mode-info">
+                    <span class="mode-name">Ask</span>
+                    <span class="mode-desc">Explanations & documentation</span>
+                  </div>
+                </div>
+                <div class="mode-option" data-mode="debug">
+                  <span class="mode-icon debug-icon">🐛</span>
+                  <div class="mode-info">
+                    <span class="mode-name">Debug</span>
+                    <span class="mode-desc">Troubleshoot & diagnose issues</span>
+                  </div>
+                </div>
+                <div class="mode-option" data-mode="orchestrator">
+                  <span class="mode-icon orch-icon">🎯</span>
+                  <div class="mode-info">
+                    <span class="mode-name">Orchestrator</span>
+                    <span class="mode-desc">Multi-step project coordination</span>
+                  </div>
+                </div>
+                <div class="mode-option" data-mode="review">
+                  <span class="mode-icon review-icon">🔍</span>
+                  <div class="mode-info">
+                    <span class="mode-name">Review</span>
+                    <span class="mode-desc">Review code changes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="messages-area">
+          <!-- Welcome message injected by JS -->
+        </div>
+
+        <!-- Input Area -->
+        <div id="input-area">
+          <!-- Context pills -->
+          <div id="context-pills" class="context-pills"></div>
+
+          <div class="input-box">
+            <textarea
+              id="chat-input"
+              placeholder="Ask Kilo Code anything… (Shift+Enter for new line)"
+              rows="1"
+            ></textarea>
+            <div class="input-actions">
+              <button class="icon-btn" id="btn-attach" title="Attach file / mention">
+                <svg viewBox="0 0 24 24"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>
+              </button>
+              <button class="send-btn" id="btn-send" title="Send (Enter)">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="input-footer">
+            <span class="token-count" id="token-count">0 tokens</span>
+            <span class="model-badge" id="model-badge">claude-sonnet-4.6</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPLORER PANEL -->
+      <div class="panel" id="panel-explorer">
+        <div class="panel-header">
+          <span class="panel-title">File Explorer</span>
+          <div class="panel-actions">
+            <button class="icon-btn" id="btn-new-file" title="New File">
+              <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </button>
+            <button class="icon-btn" id="btn-new-folder" title="New Folder">
+              <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="file-tree">
+          <div class="file-tree-root">
+            <div class="tree-item folder open" data-path="/">
+              <svg class="tree-icon" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+              <span>KiloAi</span>
+            </div>
+            <div class="tree-children">
+              <div class="tree-item file" data-path="/index.html">
+                <svg class="tree-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+                <span>index.html</span>
+              </div>
+              <div class="tree-item file" data-path="/styles.css">
+                <svg class="tree-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+                <span>styles.css</span>
+              </div>
+              <div class="tree-item file" data-path="/app.js">
+                <svg class="tree-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+                <span>app.js</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY PANEL -->
+      <div class="panel" id="panel-history">
+        <div class="panel-header">
+          <span class="panel-title">Task History</span>
+          <div class="panel-actions">
+            <button class="icon-btn" id="btn-clear-history" title="Clear History">
+              <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="history-list">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+            <p>No task history yet</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MCP PANEL -->
+      <div class="panel" id="panel-mcp">
+        <div class="panel-header">
+          <span class="panel-title">MCP Servers</span>
+          <div class="panel-actions">
+            <button class="icon-btn" id="btn-add-mcp" title="Add MCP Server">
+              <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="mcp-list">
+          <div class="mcp-server connected">
+            <div class="mcp-status-dot"></div>
+            <div class="mcp-info">
+              <span class="mcp-name">filesystem</span>
+              <span class="mcp-status-text">Connected · 8 tools</span>
+            </div>
+            <button class="icon-btn mcp-toggle" title="Disconnect">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </button>
+          </div>
+          <div class="mcp-server disconnected">
+            <div class="mcp-status-dot"></div>
+            <div class="mcp-info">
+              <span class="mcp-name">github</span>
+              <span class="mcp-status-text">Disconnected</span>
+            </div>
+            <button class="icon-btn mcp-toggle" title="Connect">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </button>
+          </div>
+          <div class="mcp-add-hint">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            <span>Add a new MCP server</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PANEL -->
+      <div class="panel" id="panel-settings">
+        <div class="panel-header">
+          <span class="panel-title">Settings</span>
+        </div>
+        <div id="settings-content">
+          <div class="settings-section">
+            <h3 class="settings-section-title">API Configuration</h3>
+            <div class="settings-item">
+              <label>API Provider</label>
+              <select id="api-provider">
+                <option value="anthropic">Anthropic</option>
+                <option value="openai">OpenAI</option>
+                <option value="openrouter">OpenRouter</option>
+                <option value="gemini">Google Gemini</option>
+                <option value="ollama">Ollama (Local)</option>
+                <option value="lmstudio">LM Studio</option>
+              </select>
+            </div>
+            <div class="settings-item">
+              <label>API Key</label>
+              <div class="api-key-wrap">
+                <input type="password" id="api-key-input" placeholder="sk-ant-..." />
+                <button class="icon-btn" id="btn-toggle-key" title="Show/Hide">
+                  <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="settings-item">
+              <label>Model</label>
+              <select id="model-select">
+                <option value="claude-sonnet-4-5">claude-sonnet-4-5</option>
+                <option value="claude-opus-4-5">claude-opus-4-5</option>
+                <option value="claude-haiku-3-5">claude-haiku-3-5</option>
+                <option value="gpt-4o">gpt-4o</option>
+                <option value="gpt-4o-mini">gpt-4o-mini</option>
+                <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Behavior</h3>
+            <div class="settings-item toggle-item">
+              <label>Auto-approve safe tools</label>
+              <label class="toggle">
+                <input type="checkbox" id="auto-approve" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="settings-item toggle-item">
+              <label>Show tool use details</label>
+              <label class="toggle">
+                <input type="checkbox" id="show-tool-details" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="settings-item toggle-item">
+              <label>Sound notifications</label>
+              <label class="toggle">
+                <input type="checkbox" id="sound-notif" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="settings-item">
+              <label>Max tokens per request</label>
+              <input type="number" id="max-tokens" value="8096" min="1024" max="200000" />
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Appearance</h3>
+            <div class="settings-item">
+              <label>Theme</label>
+              <select id="theme-select">
+                <option value="dark">Dark (Default)</option>
+                <option value="light">Light</option>
+                <option value="high-contrast">High Contrast</option>
+              </select>
+            </div>
+            <div class="settings-item">
+              <label>Font Size</label>
+              <input type="range" id="font-size" min="11" max="18" value="13" />
+              <span id="font-size-val">13px</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Personality</h3>
+            <div class="settings-item">
+              <label>Personality Style</label>
+              <select id="personality-style">
+                <option value="balanced">Balanced (Claude + Grok)</option>
+                <option value="claude">Claude-like (Structured Reasoning)</option>
+                <option value="grok">Grok-like (Bold & Edgy)</option>
+                <option value="calm">Calm & Detailed</option>
+                <option value="bold">Bold & Direct</option>
+              </select>
+            </div>
+            <div class="settings-item">
+              <label>Response Tone</label>
+              <input type="range" id="tone-slider" min="0" max="100" value="50" />
+              <div class="range-labels">
+                <span>Calm & Technical</span>
+                <span id="tone-value">50</span>
+                <span>Bold & Opinionated</span>
+              </div>
+            </div>
+            <div class="settings-item">
+              <label>Depth of Reasoning</label>
+              <select id="reasoning-depth">
+                <option value="quick">Quick Answers</option>
+                <option value="balanced">Balanced</option>
+                <option value="deep">Deep Analysis</option>
+                <option value="comprehensive">Comprehensive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3 class="settings-section-title">Custom Instructions</h3>
+            <div class="settings-item">
+              <label>System Prompt Override</label>
+              <textarea id="custom-instructions" rows="5" placeholder="Add custom instructions for the AI…"></textarea>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="btn-save-settings">Save Settings</button>
+        </div>
+      </div>
+
+    </div><!-- /side-panel -->
+
+    <!-- ===== MAIN CONTENT AREA ===== -->
+    <main id="main-content">
+      <!-- Tab bar -->
+      <div id="tab-bar">
+        <div class="tab active" data-tab="welcome">
+          <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Welcome</span>
+          <button class="tab-close" title="Close">×</button>
+        </div>
+        <button id="btn-add-tab" title="New Tab">+</button>
+      </div>
+
+      <!-- Tab content -->
+      <div id="tab-content">
+
+        <!-- Welcome Tab -->
+        <div class="tab-pane active" id="tab-welcome">
+          <div class="welcome-screen">
+            <div class="welcome-logo">
+              <div class="logo-icon">
+                <svg viewBox="0 0 64 64" fill="none">
+                  <rect width="64" height="64" rx="12" fill="#2563eb"/>
+                  <path d="M16 20h32M16 32h20M16 44h28" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="46" cy="44" r="6" fill="#60a5fa"/>
+                </svg>
+              </div>
+              <h1>Kilo Code</h1>
+              <p class="welcome-tagline">AI-powered coding assistant in your browser</p>
+            </div>
+
+            <div class="welcome-grid">
+              <div class="welcome-card" id="wc-new-task">
+                <div class="wc-icon">✨</div>
+                <h3>New Task</h3>
+                <p>Start a new coding task with AI assistance</p>
+              </div>
+              <div class="welcome-card" id="wc-open-file">
+                <div class="wc-icon">📂</div>
+                <h3>Open File</h3>
+                <p>Browse and open files from your project</p>
+              </div>
+              <div class="welcome-card" id="wc-history">
+                <div class="wc-icon">🕐</div>
+                <h3>Recent Tasks</h3>
+                <p>Continue from where you left off</p>
+              </div>
+              <div class="welcome-card" id="wc-settings">
+                <div class="wc-icon">⚙️</div>
+                <h3>Settings</h3>
+                <p>Configure API keys, models, and preferences</p>
+              </div>
+            </div>
+
+            <div class="welcome-modes">
+              <h2>Available Modes</h2>
+              <div class="modes-grid">
+                <div class="mode-card" data-mode="code">
+                  <span class="mode-card-icon">⌨</span>
+                  <div>
+                    <strong>Code</strong>
+                    <p>Write, modify, or refactor code</p>
+                  </div>
+                </div>
+                <div class="mode-card" data-mode="architect">
+                  <span class="mode-card-icon">🏗</span>
+                  <div>
+                    <strong>Architect</strong>
+                    <p>Plan, design, or strategize</p>
+                  </div>
+                </div>
+                <div class="mode-card" data-mode="ask">
+                  <span class="mode-card-icon">❓</span>
+                  <div>
+                    <strong>Ask</strong>
+                    <p>Explanations & documentation</p>
+                  </div>
+                </div>
+                <div class="mode-card" data-mode="debug">
+                  <span class="mode-card-icon">🐛</span>
+                  <div>
+                    <strong>Debug</strong>
+                    <p>Troubleshoot & diagnose issues</p>
+                  </div>
+                </div>
+                <div class="mode-card" data-mode="orchestrator">
+                  <span class="mode-card-icon">🎯</span>
+                  <div>
+                    <strong>Orchestrator</strong>
+                    <p>Multi-step project coordination</p>
+                  </div>
+                </div>
+                <div class="mode-card" data-mode="review">
+                  <span class="mode-card-icon">🔍</span>
+                  <div>
+                    <strong>Review</strong>
+                    <p>Review code changes</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tab-content -->
+    </main>
+
+  </div><!-- /app -->
+
+  <!-- ===== MODALS ===== -->
+
+  <!-- Tool Approval Modal -->
+  <div class="modal-overlay" id="modal-tool-approval" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Tool Use Approval</h3>
+        <button class="icon-btn modal-close" data-modal="modal-tool-approval">×</button>
+      </div>
+      <div class="modal-body" id="tool-approval-body">
+        <div class="tool-approval-info">
+          <div class="tool-name-badge" id="tool-name-badge">read_file</div>
+          <div class="tool-params" id="tool-params-display"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-deny-tool">Deny</button>
+        <button class="btn-primary" id="btn-approve-tool">Approve</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Viewer Modal -->
+  <div class="modal-overlay" id="modal-file-viewer" style="display:none">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <h3 id="file-viewer-title">File Viewer</h3>
+        <button class="icon-btn modal-close" data-modal="modal-file-viewer">×</button>
+      </div>
+      <div class="modal-body">
+        <pre id="file-viewer-content"><code></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diff Viewer Modal -->
+  <div class="modal-overlay" id="modal-diff-viewer" style="display:none">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <h3>Diff Viewer</h3>
+        <button class="icon-btn modal-close" data-modal="modal-diff-viewer">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="diff-viewer-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

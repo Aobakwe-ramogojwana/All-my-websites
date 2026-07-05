@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlugPort - Your Global Style Plug</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#1A1B25", secondary: "#2D9CDB" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Inter', sans-serif;
+          background-color: #FAFAFA;
+      }
+      .hero-section {
+          background-image: url('https://readdy.ai/api/search-image?query=Modern%2520luxury%2520e-commerce%2520scene%2520with%2520premium%2520sneakers%252C%2520fashion%2520items%252C%2520and%2520electronics%2520arranged%2520elegantly%2520on%2520a%2520gradient%2520blue%2520background.%2520The%2520left%2520side%2520has%2520a%2520clean%2520white%2520space%2520for%2520text%252C%2520transitioning%2520smoothly%2520to%2520product%2520display%2520on%2520the%2520right.%2520Sophisticated%2520lighting%2520highlights%2520products%2520with%2520soft%2520shadows&width=1200&height=600&seq=123456&orientation=landscape');
+          background-size: cover;
+          background-position: center;
+      }
+      .countdown-timer {
+          background: rgba(26, 27, 37, 0.8);
+      }
+      .category-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+      .product-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+      input[type="search"]::-webkit-search-decoration,
+      input[type="search"]::-webkit-search-cancel-button,
+      input[type="search"]::-webkit-search-results-button,
+      input[type="search"]::-webkit-search-results-decoration {
+          display: none;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      .custom-checkbox {
+          position: relative;
+          cursor: pointer;
+      }
+      .custom-checkbox input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+      }
+      .checkmark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 20px;
+          width: 20px;
+          background-color: #fff;
+          border: 2px solid #e2e8f0;
+          border-radius: 4px;
+      }
+      .custom-checkbox:hover input ~ .checkmark {
+          border-color: #2D9CDB;
+      }
+      .custom-checkbox input:checked ~ .checkmark {
+          background-color: #2D9CDB;
+          border-color: #2D9CDB;
+      }
+      .checkmark:after {
+          content: "";
+          position: absolute;
+          display: none;
+      }
+      .custom-checkbox input:checked ~ .checkmark:after {
+          display: block;
+      }
+      .custom-checkbox .checkmark:after {
+          left: 6px;
+          top: 2px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+      }
+      .toggle-switch {
+          position: relative;
+          display: inline-block;
+          width: 48px;
+          height: 24px;
+      }
+      .toggle-switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+      }
+      .toggle-slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #e2e8f0;
+          transition: .4s;
+          border-radius: 24px;
+      }
+      .toggle-slider:before {
+          position: absolute;
+          content: "";
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+      }
+      input:checked + .toggle-slider {
+          background-color: #2D9CDB;
+      }
+      input:checked + .toggle-slider:before {
+          transform: translateX(24px);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+      <div
+        class="container mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <div class="w-10 h-10 flex items-center justify-center">
+          <i class="ri-user-line ri-lg text-gray-700"></i>
+        </div>
+        <div class="font-['Pacifico'] text-2xl text-primary">PlugPort</div>
+        <div class="w-10 h-10 flex items-center justify-center">
+          <i class="ri-search-line ri-lg text-gray-700"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Hero Section -->
+      <section class="hero-section relative h-[500px] w-full">
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"
+        ></div>
+        <div class="container mx-auto px-4 h-full flex items-center">
+          <div class="max-w-lg z-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
+              Your Global Style Plug
+            </h1>
+            <p class="text-lg text-gray-700 mb-6">
+              Exclusive drops of sneakers, fashion, and electronics delivered
+              straight to your doorstep in Botswana.
+            </p>
+            <div class="flex flex-wrap gap-4">
+              <button
+                class="bg-primary text-white px-6 py-3 font-semibold !rounded-button hover:bg-opacity-90 transition whitespace-nowrap"
+              >
+                Shop Now
+              </button>
+              <button
+                class="bg-white border border-primary text-primary px-6 py-3 font-semibold !rounded-button hover:bg-gray-50 transition whitespace-nowrap"
+              >
+                Upcoming Drops
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trending Now Section -->
+      <section class="py-10 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-primary">Trending Now</h2>
+            <a href="#" class="text-secondary font-medium">View All</a>
+          </div>
+          <div class="flex overflow-x-auto gap-4 pb-4 hide-scrollbar">
+            <div
+              class="product-card min-w-[260px] bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Premium%2520Nike%2520Air%2520Jordan%25201%2520High%2520OG%2520sneakers%2520in%2520blue%2520and%2520white%2520colorway%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520sneakers%2520are%2520positioned%2520at%2520a%2520slight%2520angle%2520to%2520show%2520design%2520details&width=400&height=300&seq=123457&orientation=landscape"
+                  alt="Nike Air Jordan 1"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800">
+                  Nike Air Jordan 1 High OG
+                </h3>
+                <p class="text-sm text-gray-500 mb-2">Limited Edition</p>
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-secondary">BWP 2,499</span>
+                  <div
+                    class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded"
+                  >
+                    In Stock: 6
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="product-card min-w-[260px] bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Apple%2520AirPods%2520Pro%2520with%2520charging%2520case%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520earbuds%2520and%2520case%2520are%2520positioned%2520to%2520show%2520design%2520details&width=400&height=300&seq=123458&orientation=landscape"
+                  alt="Apple AirPods Pro"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800">Apple AirPods Pro</h3>
+                <p class="text-sm text-gray-500 mb-2">Noise Cancellation</p>
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-secondary">BWP 3,199</span>
+                  <div
+                    class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded"
+                  >
+                    In Stock: 12
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="product-card min-w-[260px] bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Stylish%2520black%2520leather%2520designer%2520jacket%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520jacket%2520is%2520positioned%2520to%2520show%2520design%2520details%2520and%2520texture&width=400&height=300&seq=123459&orientation=landscape"
+                  alt="Premium Leather Jacket"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800">
+                  Premium Leather Jacket
+                </h3>
+                <p class="text-sm text-gray-500 mb-2">Italian Design</p>
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-secondary">BWP 4,299</span>
+                  <div
+                    class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded"
+                  >
+                    Low Stock: 2
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="product-card min-w-[260px] bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Samsung%2520Galaxy%2520S23%2520Ultra%2520smartphone%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520phone%2520is%2520positioned%2520to%2520show%2520the%2520screen%2520and%2520camera%2520system&width=400&height=300&seq=123460&orientation=landscape"
+                  alt="Samsung Galaxy S23"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800">
+                  Samsung Galaxy S23 Ultra
+                </h3>
+                <p class="text-sm text-gray-500 mb-2">256GB, Phantom Black</p>
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-secondary">BWP 14,999</span>
+                  <div
+                    class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded"
+                  >
+                    In Stock: 8
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Categories Section -->
+      <section class="py-10 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <h2 class="text-2xl font-bold text-primary mb-6">Shop by Category</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div
+              class="category-card bg-white rounded shadow-sm overflow-hidden transition-all duration-300"
+            >
+              <div class="h-36 relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Collection%2520of%2520premium%2520sneakers%2520arranged%2520in%2520a%2520stylish%2520display%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520Various%2520brands%2520and%2520styles%2520shown%2520from%2520different%2520angles&width=400&height=300&seq=123461&orientation=landscape"
+                  alt="Sneakers"
+                  class="w-full h-full object-cover object-top"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"
+                ></div>
+              </div>
+              <div class="p-4 flex justify-between items-center">
+                <h3 class="font-semibold text-gray-800">Sneakers</h3>
+                <div
+                  class="w-8 h-8 flex items-center justify-center bg-secondary rounded-full"
+                >
+                  <i class="ri-arrow-right-line text-white"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="category-card bg-white rounded shadow-sm overflow-hidden transition-all duration-300"
+            >
+              <div class="h-36 relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Stylish%2520fashion%2520clothing%2520items%2520including%2520shirts%2C%2520dresses%2C%2520and%2520accessories%2520arranged%2520elegantly%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520Modern%2520fashion%2520pieces%2520displayed%2520attractively&width=400&height=300&seq=123462&orientation=landscape"
+                  alt="Fashion"
+                  class="w-full h-full object-cover object-top"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"
+                ></div>
+              </div>
+              <div class="p-4 flex justify-between items-center">
+                <h3 class="font-semibold text-gray-800">Fashion</h3>
+                <div
+                  class="w-8 h-8 flex items-center justify-center bg-secondary rounded-full"
+                >
+                  <i class="ri-arrow-right-line text-white"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="category-card bg-white rounded shadow-sm overflow-hidden transition-all duration-300"
+            >
+              <div class="h-36 relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Modern%2520electronics%2520including%2520smartphones%2C%2520headphones%2C%2520and%2520smartwatches%2520arranged%2520in%2520a%2520tech-savvy%2520display%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520Latest%2520gadgets%2520shown%2520from%2520flattering%2520angles&width=400&height=300&seq=123463&orientation=landscape"
+                  alt="Electronics"
+                  class="w-full h-full object-cover object-top"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"
+                ></div>
+              </div>
+              <div class="p-4 flex justify-between items-center">
+                <h3 class="font-semibold text-gray-800">Electronics</h3>
+                <div
+                  class="w-8 h-8 flex items-center justify-center bg-secondary rounded-full"
+                >
+                  <i class="ri-arrow-right-line text-white"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="category-card bg-white rounded shadow-sm overflow-hidden transition-all duration-300"
+            >
+              <div class="h-36 relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Luxury%2520accessories%2520including%2520watches%2C%2520sunglasses%2C%2520belts%2C%2520and%2520jewelry%2520arranged%2520elegantly%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520Premium%2520accessories%2520displayed%2520to%2520highlight%2520craftsmanship&width=400&height=300&seq=123464&orientation=landscape"
+                  alt="Accessories"
+                  class="w-full h-full object-cover object-top"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"
+                ></div>
+              </div>
+              <div class="p-4 flex justify-between items-center">
+                <h3 class="font-semibold text-gray-800">Accessories</h3>
+                <div
+                  class="w-8 h-8 flex items-center justify-center bg-secondary rounded-full"
+                >
+                  <i class="ri-arrow-right-line text-white"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Upcoming Drops Section -->
+      <section class="py-10 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-primary">Upcoming Drops</h2>
+            <a href="#" class="text-secondary font-medium">View All</a>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+              class="bg-white rounded shadow-sm border border-gray-100 overflow-hidden"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Adidas%2520Yeezy%2520Boost%2520350%2520V2%2520sneakers%2520in%2520a%2520limited%2520edition%2520colorway%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520sneakers%2520are%2520positioned%2520to%2520show%2520unique%2520design%2520elements&width=400&height=300&seq=123465&orientation=landscape"
+                  alt="Adidas Yeezy Boost"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Exclusive
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800">
+                  Adidas Yeezy Boost 350 V2
+                </h3>
+                <p class="text-sm text-gray-500 mb-3">Zebra Colorway</p>
+                <div
+                  class="countdown-timer flex justify-between p-2 rounded mb-3"
+                >
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">02</div>
+                    <div class="text-xs text-gray-300">Days</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">14</div>
+                    <div class="text-xs text-gray-300">Hours</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">36</div>
+                    <div class="text-xs text-gray-300">Mins</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">22</div>
+                    <div class="text-xs text-gray-300">Secs</div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-secondary">BWP 3,899</span>
+                  <div class="flex items-center">
+                    <label class="toggle-switch mr-2">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span class="text-sm font-medium">Notify Me</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded shadow-sm border border-gray-100 overflow-hidden"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Apple%2520iPhone%252015%2520Pro%2520Max%2520in%2520titanium%2520finish%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520phone%2520is%2520positioned%2520to%2520showcase%2520the%2520premium%2520design%2520and%2520camera%2520system&width=400&height=300&seq=123466&orientation=landscape"
+                  alt="iPhone 15 Pro Max"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Limited
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800">iPhone 15 Pro Max</h3>
+                <p class="text-sm text-gray-500 mb-3">1TB, Titanium</p>
+                <div
+                  class="countdown-timer flex justify-between p-2 rounded mb-3"
+                >
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">05</div>
+                    <div class="text-xs text-gray-300">Days</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">08</div>
+                    <div class="text-xs text-gray-300">Hours</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">45</div>
+                    <div class="text-xs text-gray-300">Mins</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">10</div>
+                    <div class="text-xs text-gray-300">Secs</div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-secondary">BWP 19,999</span>
+                  <div class="flex items-center">
+                    <label class="toggle-switch mr-2">
+                      <input type="checkbox" />
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span class="text-sm font-medium">Notify Me</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded shadow-sm border border-gray-100 overflow-hidden"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Limited%2520edition%2520designer%2520handbag%2520in%2520premium%2520leather%2520with%2520gold%2520hardware%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520bag%2520is%2520positioned%2520to%2520showcase%2520craftsmanship%2520and%2520luxury%2520details&width=400&height=300&seq=123467&orientation=landscape"
+                  alt="Designer Handbag"
+                  class="w-full h-48 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-red-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Exclusive
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800">
+                  Limited Edition Handbag
+                </h3>
+                <p class="text-sm text-gray-500 mb-3">Italian Leather</p>
+                <div
+                  class="countdown-timer flex justify-between p-2 rounded mb-3"
+                >
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">01</div>
+                    <div class="text-xs text-gray-300">Days</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">22</div>
+                    <div class="text-xs text-gray-300">Hours</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">18</div>
+                    <div class="text-xs text-gray-300">Mins</div>
+                  </div>
+                  <div class="text-center">
+                    <div class="text-xl font-bold text-white">55</div>
+                    <div class="text-xs text-gray-300">Secs</div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-secondary">BWP 8,499</span>
+                  <div class="flex items-center">
+                    <label class="toggle-switch mr-2">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span class="text-sm font-medium">Notify Me</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recently Added Section -->
+      <section class="py-10 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-primary">Recently Added</h2>
+            <a href="#" class="text-secondary font-medium">View All</a>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div
+              class="product-card bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Puma%2520RS-X%2520sneakers%2520in%2520vibrant%2520colorway%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520sneakers%2520are%2520positioned%2520to%2520show%2520design%2520details%2520and%2520texture&width=300&height=300&seq=123468&orientation=squarish"
+                  alt="Puma RS-X"
+                  class="w-full h-40 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-3">
+                <h3 class="font-semibold text-gray-800 text-sm">Puma RS-X</h3>
+                <div class="flex justify-between items-center mt-1">
+                  <span class="font-bold text-secondary text-sm"
+                    >BWP 1,899</span
+                  >
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary rounded-full !rounded-button"
+                  >
+                    <i class="ri-add-line text-white"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="product-card bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Ray-Ban%2520Wayfarer%2520sunglasses%2520in%2520black%2520frame%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520sunglasses%2520are%2520positioned%2520to%2520show%2520design%2520details%2520and%2520lenses&width=300&height=300&seq=123469&orientation=squarish"
+                  alt="Ray-Ban Wayfarer"
+                  class="w-full h-40 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-3">
+                <h3 class="font-semibold text-gray-800 text-sm">
+                  Ray-Ban Wayfarer
+                </h3>
+                <div class="flex justify-between items-center mt-1">
+                  <span class="font-bold text-secondary text-sm"
+                    >BWP 1,499</span
+                  >
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary rounded-full !rounded-button"
+                  >
+                    <i class="ri-add-line text-white"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="product-card bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Beats%2520Studio%2520Pro%2520headphones%2520in%2520matte%2520black%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520headphones%2520are%2520positioned%2520to%2520show%2520design%2520details%2520and%2520ear%2520cups&width=300&height=300&seq=123470&orientation=squarish"
+                  alt="Beats Studio Pro"
+                  class="w-full h-40 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-3">
+                <h3 class="font-semibold text-gray-800 text-sm">
+                  Beats Studio Pro
+                </h3>
+                <div class="flex justify-between items-center mt-1">
+                  <span class="font-bold text-secondary text-sm"
+                    >BWP 2,799</span
+                  >
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary rounded-full !rounded-button"
+                  >
+                    <i class="ri-add-line text-white"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="product-card bg-white rounded shadow-sm border border-gray-100 overflow-hidden transition-all duration-300"
+            >
+              <div class="relative">
+                <img
+                  src="https://readdy.ai/api/search-image?query=Tommy%2520Hilfiger%2520polo%2520shirt%2520in%2520navy%2520blue%2520on%2520a%2520clean%2520white%2520background%2520with%2520soft%2520shadows.%2520Professional%2520product%2520photography%2520with%2520crisp%2520details%2520and%2520high%2520resolution.%2520The%2520shirt%2520is%2520positioned%2520to%2520show%2520design%2520details%2520and%2520logo&width=300&height=300&seq=123471&orientation=squarish"
+                  alt="Tommy Hilfiger Polo"
+                  class="w-full h-40 object-cover object-top"
+                />
+                <div
+                  class="absolute top-3 right-3 bg-yellow-500 text-xs text-white px-2 py-1 rounded-full"
+                >
+                  Verified
+                </div>
+              </div>
+              <div class="p-3">
+                <h3 class="font-semibold text-gray-800 text-sm">
+                  Tommy Hilfiger Polo
+                </h3>
+                <div class="flex justify-between items-center mt-1">
+                  <span class="font-bold text-secondary text-sm">BWP 899</span>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary rounded-full !rounded-button"
+                  >
+                    <i class="ri-add-line text-white"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="py-10 bg-white">
+        <div class="container mx-auto px-4">
+          <h2 class="text-2xl font-bold text-primary text-center mb-10">
+            Why Choose PlugPort
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+              <div
+                class="w-16 h-16 mx-auto mb-4 flex items-center justify-center bg-secondary/10 rounded-full"
+              >
+                <i class="ri-shield-check-line ri-2x text-secondary"></i>
+              </div>
+              <h3 class="text-lg font-semibold mb-2">Verified Authentic</h3>
+              <p class="text-gray-600">
+                Every product is verified for authenticity before delivery to
+                ensure you get genuine items.
+              </p>
+            </div>
+            <div class="text-center">
+              <div
+                class="w-16 h-16 mx-auto mb-4 flex items-center justify-center bg-secondary/10 rounded-full"
+              >
+                <i class="ri-truck-line ri-2x text-secondary"></i>
+              </div>
+              <h3 class="text-lg font-semibold mb-2">Fast Local Delivery</h3>
+              <p class="text-gray-600">
+                Get your products delivered quickly anywhere in Botswana with
+                our efficient logistics network.
+              </p>
+            </div>
+            <div class="text-center">
+              <div
+                class="w-16 h-16 mx-auto mb-4 flex items-center justify-center bg-secondary/10 rounded-full"
+              >
+                <i class="ri-flashlight-line ri-2x text-secondary"></i>
+              </div>
+              <h3 class="text-lg font-semibold mb-2">Exclusive Drops</h3>
+              <p class="text-gray-600">
+                Get access to limited edition products and exclusive drops
+                before they sell out globally.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Newsletter Section -->
+      <section class="py-12 bg-primary">
+        <div class="container mx-auto px-4">
+          <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-2xl font-bold text-white mb-2">
+              Stay Updated on Drops
+            </h2>
+            <p class="text-gray-300 mb-6">
+              Subscribe to get notifications about upcoming exclusive drops and
+              offers.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                class="flex-1 px-4 py-3 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-secondary"
+              />
+              <button
+                class="bg-secondary text-white px-6 py-3 font-semibold rounded-lg hover:bg-opacity-90 transition whitespace-nowrap !rounded-button"
+              >
+                Subscribe Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <div class="font-['Pacifico'] text-2xl text-white mb-4">
+              PlugPort
+            </div>
+            <p class="text-gray-400 mb-4">
+              Your global style plug, delivering exclusive products straight to
+              your doorstep in Botswana.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-secondary transition"
+              >
+                <i class="ri-instagram-line text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-secondary transition"
+              >
+                <i class="ri-facebook-fill text-white"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-secondary transition"
+              >
+                <i class="ri-twitter-x-line text-white"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary">Home</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >Categories</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >Upcoming Drops</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Customer Service</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >Shipping Policy</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >Returns & Refunds</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary">FAQs</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >Track Order</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-secondary"
+                  >Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <i class="ri-map-pin-line mt-1 mr-2 text-secondary"></i>
+                <span class="text-gray-400">Francistown, Botswana</span>
+              </li>
+              <li class="flex items-start">
+                <i class="ri-phone-line mt-1 mr-2 text-secondary"></i>
+                <span class="text-gray-400">+267 77 860 020</span>
+              </li>
+              <li class="flex items-start">
+                <i class="ri-mail-line mt-1 mr-2 text-secondary"></i>
+                <span class="text-gray-400">support@plugport.co.bw</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-gray-500 text-sm mb-4 md:mb-0">
+            © 2025 PlugPort. All rights reserved.
+          </p>
+          <div class="flex space-x-4">
+            <i class="ri-visa-line text-gray-400 text-2xl"></i>
+            <i class="ri-mastercard-line text-gray-400 text-2xl"></i>
+            <i class="ri-paypal-line text-gray-400 text-2xl"></i>
+            <i class="ri-apple-fill text-gray-400 text-2xl"></i>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Floating Cart Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+      <button
+        class="w-14 h-14 flex items-center justify-center bg-secondary rounded-full shadow-lg hover:bg-opacity-90 transition !rounded-button"
+      >
+        <i class="ri-shopping-bag-line ri-lg text-white"></i>
+        <div
+          class="absolute -top-1 -right-1 w-6 h-6 flex items-center justify-center bg-primary text-white text-xs rounded-full"
+        >
+          3
+        </div>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-40 md:hidden"
+    >
+      <div class="flex justify-around">
+        <a href="#" class="flex flex-col items-center py-2 px-3 text-secondary">
+          <i class="ri-home-5-line ri-lg"></i>
+          <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="#" class="flex flex-col items-center py-2 px-3 text-gray-500">
+          <i class="ri-apps-line ri-lg"></i>
+          <span class="text-xs mt-1">Categories</span>
+        </a>
+        <a href="#" class="flex flex-col items-center py-2 px-3 text-gray-500">
+          <i class="ri-flashlight-line ri-lg"></i>
+          <span class="text-xs mt-1">Drops</span>
+        </a>
+        <a href="#" class="flex flex-col items-center py-2 px-3 text-gray-500">
+          <i class="ri-file-list-3-line ri-lg"></i>
+          <span class="text-xs mt-1">Orders</span>
+        </a>
+        <a href="#" class="flex flex-col items-center py-2 px-3 text-gray-500">
+          <i class="ri-user-line ri-lg"></i>
+          <span class="text-xs mt-1">Profile</span>
+        </a>
+      </div>
+    </nav>
+
+    <script id="countdownTimers">
+      document.addEventListener("DOMContentLoaded", function () {
+        // This is a placeholder for actual countdown functionality
+        // In a real implementation, you would calculate the remaining time
+        // and update the display accordingly
+        console.log("Countdown timers initialized");
+      });
+    </script>
+
+    <script id="notifyToggles">
+      document.addEventListener("DOMContentLoaded", function () {
+        const toggleSwitches = document.querySelectorAll(".toggle-switch input");
+
+        toggleSwitches.forEach((toggle) => {
+          toggle.addEventListener("change", function () {
+            const isChecked = this.checked;
+            const productName =
+              this.closest(".bg-white").querySelector("h3").textContent;
+
+            if (isChecked) {
+              console.log(`Notifications enabled for ${productName}`);
+              // Here you would implement actual notification subscription
+            } else {
+              console.log(`Notifications disabled for ${productName}`);
+              // Here you would implement notification unsubscription
+            }
+          });
+        });
+      });
+    </script>
+
+    <script id="productInteractions">
+      document.addEventListener("DOMContentLoaded", function () {
+        const addButtons = document.querySelectorAll(".product-card button");
+
+        addButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const productCard = this.closest(".product-card");
+            const productName = productCard.querySelector("h3").textContent;
+            const productPrice =
+              productCard.querySelector(".text-secondary").textContent;
+
+            console.log(`Added to cart: ${productName} - ${productPrice}`);
+
+            // Update cart count
+            const cartCount = document.querySelector(
+              ".fixed.bottom-6.right-6 .absolute",
+            );
+            const currentCount = parseInt(cartCount.textContent);
+            cartCount.textContent = currentCount + 1;
+
+            // Add animation effect
+            button.classList.add("animate-ping");
+            setTimeout(() => {
+              button.classList.remove("animate-ping");
+            }, 300);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "webscraper-pro",
+  "version": "1.0.0",
+  "description": "Interactive web scraper with visual learning roadmap",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve . -p 8080",
+    "build": "mkdir -p build && copy index.html build\\index.html",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "webscraper",
+    "learning",
+    "roadmap",
+    "education"
+  ],
+  "author": "WebScraper Pro Team",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}

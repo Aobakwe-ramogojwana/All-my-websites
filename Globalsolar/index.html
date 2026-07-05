@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solentra Energy System Lineup: Lighting Up Normal Lives</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #fbbf24 100%);
+        }
+        .solar-gradient {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+        }
+        .energy-glow {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+        .chart-container {
+            height: 400px;
+        }
+        .product-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: #fbbf24;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .stats-number {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-8">
+                <i class="fas fa-sun text-6xl text-yellow-300 pulse-animation"></i>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Solentra Energy System Lineup
+            </h1>
+            <h2 class="text-3xl md:text-4xl font-light mb-8 text-yellow-200">
+                Lighting Up Normal Lives
+            </h2>
+            <div class="max-w-4xl mx-auto">
+                <p class="text-xl md:text-2xl font-medium mb-8 leading-relaxed">
+                    "Normal Life, Powered by Solentra"
+                </p>
+                <p class="text-lg md:text-xl opacity-90 leading-relaxed">
+                    Our vision is to empower every home and business in Botswana with reliable energy. 
+                    Frequent outages disrupt daily life, but Solentra brings consistent power, day and night, 
+                    restoring peace, fostering empowerment, and driving progress across the nation.
+                </p>
+            </div>
+            <div class="mt-12 flex justify-center space-x-4">
+                <div class="bg-white bg-opacity-20 rounded-full px-6 py-3">
+                    <i class="fas fa-home text-yellow-300 mr-2"></i>
+                    <span class="font-semibold">Homes Powered</span>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-full px-6 py-3">
+                    <i class="fas fa-building text-yellow-300 mr-2"></i>
+                    <span class="font-semibold">Businesses Empowered</span>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-full px-6 py-3">
+                    <i class="fas fa-bolt text-yellow-300 mr-2"></i>
+                    <span class="font-semibold">Energy Independence</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement -->
+    <section class="py-20 bg-red-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-red-800 mb-6">
+                    <i class="fas fa-exclamation-circle mr-4"></i>
+                    The Challenge We Face: Powering Through Disruption
+                </h2>
+                <p class="text-xl text-red-600 max-w-3xl mx-auto">
+                    Real Pain Points for Batswana
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white rounded-xl p-8 shadow-lg border-l-4 border-red-500">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-power-off"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-800 mb-4">Load Shedding</h3>
+                    <p class="text-gray-700 text-lg">
+                        Constant interruptions shatter family routines and halt business operations.
+                    </p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-8 shadow-lg border-l-4 border-red-500">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-800 mb-4">Rising Costs</h3>
+                    <p class="text-gray-700 text-lg">
+                        Escalating energy prices strain household and business budgets.
+                    </p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-8 shadow-lg border-l-4 border-red-500">
+                    <div class="text-red-500 text-4xl mb-4">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-800 mb-4">Growth Stifled</h3>
+                    <p class="text-gray-700 text-lg">
+                        Lack of consistent power obstructs education, economic growth, and essential services.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-red-800 text-white rounded-2xl p-8 max-w-4xl mx-auto text-center">
+                <i class="fas fa-quote-left text-3xl text-red-300 mb-4"></i>
+                <p class="text-xl md:text-2xl font-medium italic mb-4">
+                    "I desperately need my lights and fridge working when the power's out. 
+                    It affects everything, from my kids' studies to my small business."
+                </p>
+                <p class="text-red-300 font-semibold">- A concerned Motswana</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Overview -->
+    <section class="py-20 bg-gradient-to-r from-blue-600 to-green-500 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8">
+                <i class="fas fa-lightbulb mr-4 text-yellow-300"></i>
+                The Solentra Solution
+            </h2>
+            <p class="text-xl md:text-2xl mb-12 max-w-4xl mx-auto">
+                Three tailored systems designed to meet every energy need in Botswana
+            </p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 backdrop-blur">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-bold mb-4">Solentra Core</h3>
+                    <p class="text-lg opacity-90">Starting point for energy independence</p>
+                    <div class="mt-4 text-3xl font-bold text-yellow-300">P15,000</div>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 backdrop-blur transform scale-105 energy-glow">
+                    <div class="text-4xl mb-4">⚡⚡</div>
+                    <h3 class="text-2xl font-bold mb-4">Solentra Edge</h3>
+                    <p class="text-lg opacity-90">The family lifeline solution</p>
+                    <div class="mt-4 text-3xl font-bold text-yellow-300">P25,000</div>
+                    <div class="mt-2 bg-yellow-400 text-blue-800 rounded-full px-4 py-1 text-sm font-bold">
+                        MOST POPULAR
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 backdrop-blur">
+                    <div class="text-4xl mb-4">⚡⚡⚡</div>
+                    <h3 class="text-2xl font-bold mb-4">Solentra Ultra</h3>
+                    <p class="text-lg opacity-90">Total energy freedom solution</p>
+                    <div class="mt-4 text-3xl font-bold text-yellow-300">P42,500</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Details -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800">
+                Complete Product Lineup
+            </h2>
+            
+            <!-- Solentra Core -->
+            <div class="product-card rounded-2xl p-8 mb-12 shadow-lg">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="flex items-center mb-6">
+                            <div class="bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center mr-4">
+                                <i class="fas fa-home text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-blue-800">Solentra Core</h3>
+                                <p class="text-lg text-gray-600">The Starting Point for Energy Independence</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-3">Ideal For:</h4>
+                            <div class="bg-blue-50 rounded-lg p-4">
+                                <p class="text-lg font-medium text-blue-800">Starters / Small Homes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-3">What It Powers:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Lights</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">TV</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Router</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-4">Key Specifications:</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <i class="fas fa-solar-panel text-yellow-500 mr-3"></i>
+                                    <span>1 × Jinko 590W Solar Panel (0.6 kW)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-battery-full text-green-500 mr-3"></i>
+                                    <span>1 × 12V 100Ah Gel Battery (~1.2 kWh)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-plug text-blue-500 mr-3"></i>
+                                    <span>500W Pure Sine Inverter</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-clock text-purple-500 mr-3"></i>
+                                    <span>~3-4 Hours Backup for Essentials (Night)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-sun text-orange-500 mr-3"></i>
+                                    <span>Daytime: Lights, TV via solar direct</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="text-4xl font-bold stats-number mb-2">P15,000</div>
+                            <p class="text-gray-600">Brings basic, reliable power back to small homes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solentra Edge -->
+            <div class="product-card rounded-2xl p-8 mb-12 shadow-lg border-yellow-400">
+                <div class="bg-yellow-400 text-black rounded-full px-4 py-1 text-sm font-bold w-fit mb-4">
+                    MOST POPULAR CHOICE
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="flex items-center mb-6">
+                            <div class="bg-green-500 rounded-full w-16 h-16 flex items-center justify-center mr-4">
+                                <i class="fas fa-users text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-green-800">Solentra Edge</h3>
+                                <p class="text-lg text-gray-600">The Family Lifeline</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-3">Perfect For:</h4>
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <p class="text-lg font-medium text-green-800">Families / Small Businesses</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-3">Powers:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Fridge</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Lights</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Router</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">TV</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Kettle</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-4">Enhanced Specifications:</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <i class="fas fa-solar-panel text-yellow-500 mr-3"></i>
+                                    <span>2 × Jinko 590W Solar Panels (1.2 kW)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-battery-full text-green-500 mr-3"></i>
+                                    <span>2 × 12V 100Ah Gel Batteries (~2.4 kWh)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-plug text-blue-500 mr-3"></i>
+                                    <span>1.5kW Hybrid Inverter</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-clock text-purple-500 mr-3"></i>
+                                    <span>~6-8 Hours Backup for Essentials</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-sun text-orange-500 mr-3"></i>
+                                    <span>Daytime: Fridge & light appliances</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="text-4xl font-bold stats-number mb-2">P25,000</div>
+                            <p class="text-gray-600">Keeps families comfortable and small businesses operational</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solentra Ultra -->
+            <div class="product-card rounded-2xl p-8 mb-12 shadow-lg">
+                <div class="bg-purple-600 text-white rounded-full px-4 py-1 text-sm font-bold w-fit mb-4">
+                    PREMIUM SOLUTION
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="flex items-center mb-6">
+                            <div class="bg-purple-600 rounded-full w-16 h-16 flex items-center justify-center mr-4">
+                                <i class="fas fa-crown text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-bold text-purple-800">Solentra Ultra</h3>
+                                <p class="text-lg text-gray-600">The Full Solution for Total Energy Freedom</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-3">Designed For:</h4>
+                            <div class="bg-purple-50 rounded-lg p-4">
+                                <p class="text-lg font-medium text-purple-800">Full Homes / Serious Energy Users</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-3">Powers Everything:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Fridge</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Kettle</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Washing Machine</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">Lights</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">TV</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">And More!</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                            <h4 class="text-xl font-semibold text-gray-800 mb-4">Premium Specifications:</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <i class="fas fa-solar-panel text-yellow-500 mr-3"></i>
+                                    <span>3 × Jinko 590W Solar Panels (1.77 kW)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-battery-full text-green-500 mr-3"></i>
+                                    <span>1 × 48V 100Ah LiFePO₄ Battery (~4.8 kWh)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-plug text-blue-500 mr-3"></i>
+                                    <span>5.5kW Hybrid Inverter</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-clock text-purple-500 mr-3"></i>
+                                    <span>10+ Hours Full-Home Backup</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-tools text-orange-500 mr-3"></i>
+                                    <span>Free Installation & 24/7 Support</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="text-4xl font-bold stats-number mb-2">P42,500</div>
+                            <p class="text-gray-600">Complete energy independence and seamless daily life</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specifications Comparison -->
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 text-gray-800">
+                Why Solentra's Specifications Are Critical for Botswana
+            </h2>
+            <p class="text-xl text-center text-gray-600 mb-12 max-w-4xl mx-auto">
+                Our tailored systems ensure consistent power delivery for every need
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-12 mb-16">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                        <i class="fas fa-clock text-blue-500 mr-2"></i>
+                        Backup Duration (Hours)
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="backupChart"></canvas>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                        <i class="fas fa-bolt text-yellow-500 mr-2"></i>
+                        Peak Inverter Power (kW)
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="powerChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-8 shadow-lg max-w-4xl mx-auto text-center">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">The Solentra Difference</h3>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Our tailored inverter capacities (500W, 1.5kW, 5.5kW) ensure that from basic needs to heavy loads, 
+                    every Solentra system delivers consistent power. The backup durations (3-4, 6-8, 10+ hours) guarantee 
+                    uninterrupted routines, restoring peace of mind. Solentra makes every day feel powered, 
+                    regardless of grid stability.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partnership Proposal -->
+    <section class="py-20 solar-gradient text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    <i class="fas fa-handshake mr-4"></i>
+                    Let's Partner Up: Powering Botswana Together
+                </h2>
+                <p class="text-xl opacity-90 max-w-3xl mx-auto">
+                    A strategic partnership to transform Botswana's energy landscape
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur">
+                    <h3 class="text-3xl font-bold mb-6">
+                        <i class="fas fa-list-check text-yellow-300 mr-3"></i>
+                        What Solentra Needs from Global Solar
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-truck text-black text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Bulk Supply</h4>
+                                <p class="opacity-90">Reliable procurement of Jinko 590W panels, Gel/LiFePO₄ batteries, and Hybrid inverters.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-chart-line text-black text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Logistics & Pricing</h4>
+                                <p class="opacity-90">Competitive pricing and robust delivery solutions for 50 units by August 2025.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-tools text-black text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Installation & Support</h4>
+                                <p class="opacity-90">Partnership in installation and comprehensive customer service.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur">
+                    <h3 class="text-3xl font-bold mb-6">
+                        <i class="fas fa-trophy text-yellow-300 mr-3"></i>
+                        What We Gain Together
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-crown text-black text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Market Leadership</h4>
+                                <p class="opacity-90">Global Solar solidifies its position as a leader in Botswana's booming solar market.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-heart text-black text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Transformative Impact</h4>
+                                <p class="opacity-90">We turn components into life-changing solutions, empowering communities.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-yellow-400 rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1">
+                                <i class="fas fa-sun text-black text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Energy Independence</h4>
+                                <p class="opacity-90">Drive a movement towards a brighter, energy-independent future for all Batswana.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Next Steps -->
+    <section class="py-20 bg-gray-900 text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    <i class="fas fa-rocket mr-4 text-yellow-400"></i>
+                    Next Steps: Lighting Up Botswana's Future
+                </h2>
+            </div>
+            
+            <div class="max-w-4xl mx-auto mb-12">
+                <div class="bg-blue-600 rounded-2xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <i class="fas fa-question-circle text-yellow-400 mr-3"></i>
+                        Question for Global Solar:
+                    </h3>
+                    <p class="text-xl">
+                        Can you confirm your capability to handle deliveries and installations for bulk orders, 
+                        specifically for 50 Solentra kits?
+                    </p>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-4">
+                        <i class="fas fa-file-contract text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">1. Confirm Partnership Details</h3>
+                    <p class="opacity-90">
+                        Finalise bulk supply agreements and logistical support for our August 2025 target.
+                    </p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-4">
+                        <i class="fas fa-play-circle text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">2. Pilot Project Launch</h3>
+                    <p class="opacity-90">
+                        Initiate deployment of initial Solentra systems in target communities.
+                    </p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-4">
+                        <i class="fas fa-expand-arrows-alt text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">3. Scale and Expand</h3>
+                    <p class="opacity-90">
+                        Roll out Solentra across Botswana, reaching more homes and businesses.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-8 inline-block">
+                    <h3 class="text-3xl font-bold text-black mb-4">
+                        Together, let's light up Botswana—starting today!
+                    </h3>
+                    <div class="flex justify-center space-x-4 text-black">
+                        <i class="fas fa-sun text-4xl pulse-animation"></i>
+                        <i class="fas fa-bolt text-4xl pulse-animation" style="animation-delay: 0.5s;"></i>
+                        <i class="fas fa-home text-4xl pulse-animation" style="animation-delay: 1s;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Backup Duration Chart
+        const backupCtx = document.getElementById('backupChart').getContext('2d');
+        new Chart(backupCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Solentra Core', 'Solentra Edge', 'Solentra Ultra'],
+                datasets: [{
+                    label: 'Backup Hours',
+                    data: [3.5, 7, 12],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(34, 197, 94, 0.8)',
+                        'rgba(147, 51, 234, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(34, 197, 94)',
+                        'rgb(147, 51, 234)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' hours backup';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 15,
+                        ticks: {
+                            callback: function(value) {
+                                return value + 'h';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Power Chart
+        const powerCtx = document.getElementById('powerChart').getContext('2d');
+        new Chart(powerCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Solentra Core (0.5kW)', 'Solentra Edge (1.5kW)', 'Solentra Ultra (5.5kW)'],
+                datasets: [{
+                    data: [0.5, 1.5, 5.5],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(34, 197, 94, 0.8)',
+                        'rgba(147, 51, 234, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgb(59, 130, 246)',
+                        'rgb(34, 197, 94)',
+                        'rgb(147, 51, 234)'
+                    ],
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + 'kW';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add smooth scrolling for any internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add entrance animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all product cards
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

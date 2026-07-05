@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Cover - Aobakwe Ramogojwana</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        
+        .cover-container {
+            width: 1584px;
+            height: 396px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a4f7c 0%, #1a7bb5 50%, #2ba3e0 100%);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        /* Animated background pattern */
+        .bg-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);
+        }
+        
+        /* Circuit pattern overlay */
+        .circuit-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20h60v60H20z' stroke='%23fff' fill='none'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%23fff'/%3E%3Ccircle cx='80' cy='20' r='3' fill='%23fff'/%3E%3Ccircle cx='20' cy='80' r='3' fill='%23fff'/%3E%3Ccircle cx='80' cy='80' r='3' fill='%23fff'/%3E%3C/svg%3E");
+        }
+        
+        /* Main content */
+        .content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 80px;
+        }
+        
+        .left-section {
+            flex: 1;
+        }
+        
+        .tagline {
+            font-size: 28px;
+            color: #ffffff;
+            font-weight: 300;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .main-title {
+            font-size: 56px;
+            color: #ffffff;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 32px;
+            color: #ffd700;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            font-size: 20px;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 25px;
+            max-width: 700px;
+            line-height: 1.4;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            color: #ffd700;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+        
+        .contact-info {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px 35px;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            text-align: right;
+        }
+        
+        .name {
+            font-size: 32px;
+            color: #ffffff;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .position {
+            font-size: 18px;
+            color: #ffd700;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .company {
+            font-size: 16px;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: rgba(255,255,255,0.95);
+        }
+        
+        .contact-item svg {
+            width: 20px;
+            height: 20px;
+            fill: #ffd700;
+        }
+        
+        .flag {
+            font-size: 24px;
+            margin-left: 8px;
+        }
+        
+        /* Decorative elements */
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: 200px;
+        }
+        
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: 100px;
+        }
+        
+        .accent-line {
+            position: absolute;
+            height: 4px;
+            background: linear-gradient(90deg, #ffd700, transparent);
+            left: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 120px;
+        }
+        
+        /* Download info */
+        .download-info {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .download-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: #0a4f7c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: #1a7bb5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(10, 79, 124, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1584px;">
+        <div class="cover-container" id="linkedin-cover">
+            <div class="bg-pattern"></div>
+            <div class="circuit-pattern"></div>
+            
+            <div class="deco-circle circle-1"></div>
+            <div class="deco-circle circle-2"></div>
+            
+            <div class="content">
+                <div class="left-section">
+                    <div class="tagline">Connecting Botswana Businesses to the Future</div>
+                    <h1 class="main-title">Modern VoIP Solutions</h1>
+                    <h2 class="subtitle">Cut Phone Costs by 60%</h2>
+                    <p class="description">
+                        Empowering Botswana SMEs with enterprise-grade telecommunications • 
+                        Professional IVR Systems • Cloud-Based • Remote Work Ready
+                    </p>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number">60%</div>
+                            <div class="stat-label">Cost Savings</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Support</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-section">
+                    <div class="contact-info">
+                        <div class="name">Aobakwe Ramogojwana</div>
+                        <div class="position">CEO & Founder</div>
+                        <div class="company">Ditlhaeletsanyo NetSys (Pty) Ltd</div>
+                        
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                            <span>aybeeramogojwana21@gmail.com</span>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                            </svg>
+                            <span>+267 77 34 29 23</span>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            <span>Gaborone, Botswana <span class="flag">🇧🇼</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="download-info">
+            <p><strong>LinkedIn Cover Photo (1584 x 396px)</strong></p>
+            <p>Right-click the image above and "Save Image As..." or click the button below</p>
+            <button class="download-btn" onclick="downloadImage()">Download Cover Photo</button>
+        </div>
+    </div>
+    
+    <script>
+        function downloadImage() {
+            // Using html2canvas library
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = function() {
+                const element = document.getElementById('linkedin-cover');
+                html2canvas(element, {
+                    scale: 2,
+                    backgroundColor: null,
+                    width: 1584,
+                    height: 396
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'ditlhaeletsanyo-linkedin-cover.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            };
+            document.head.appendChild(script);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bliss - Shared Love, Big Vibes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#FF6B6B",
+              secondary: "#4ECDC4",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body { font-family: 'Inter', sans-serif; }
+      .hero-gradient {
+          background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-white">
+    <nav
+      class="fixed w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100"
+    >
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <a href="#" class="text-2xl font-['Pacifico'] text-primary">logo</a>
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="#experiences" class="text-gray-600 hover:text-primary"
+              >Experiences</a
+            >
+            <a href="#love-moments" class="text-gray-600 hover:text-primary"
+              >Love Moments</a
+            >
+            <a href="#services" class="text-gray-600 hover:text-primary"
+              >Our Services</a
+            >
+            <a href="#how-it-works" class="text-gray-600 hover:text-primary"
+              >How It Works</a
+            >
+            <a href="#partners" class="text-gray-600 hover:text-primary"
+              >Partners</a
+            >
+            <button
+              class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-primary/90 whitespace-nowrap cursor-pointer"
+            >
+              Start Your Bliss
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <header
+      class="relative pt-16 overflow-hidden min-h-[85vh] flex items-center"
+    >
+      <div class="absolute inset-0 z-0">
+        <img
+          src="https://public.readdy.ai/ai/img_res/fac753a0dc664d7fd7f25816e63eb1d2.jpg"
+          class="w-full h-full object-cover object-top"
+          alt="Hero Image"
+        />
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-4">
+        <div class="hero-gradient absolute inset-0"></div>
+        <div class="relative max-w-2xl">
+          <h1 class="text-6xl font-bold leading-tight mb-6">
+            Shared Love, Big Vibes—Your Day, Their Way
+          </h1>
+          <p class="text-xl text-gray-700 mb-8">
+            Experience Botswana's first tech-driven romance platform. From
+            casual dates to wild adventures, we craft unforgettable moments for
+            couples.
+          </p>
+          <div class="flex gap-4">
+            <button
+              class="bg-primary text-white px-8 py-4 !rounded-button text-lg hover:bg-primary/90 whitespace-nowrap cursor-pointer"
+            >
+              Start Your Bliss
+            </button>
+            <button
+              class="bg-white border-2 border-primary text-primary px-8 py-4 !rounded-button text-lg hover:bg-primary/5 whitespace-nowrap cursor-pointer"
+            >
+              Learn More
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <section id="experiences" class="py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-16">
+          Choose Your Experience
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img
+              src="https://public.readdy.ai/ai/img_res/a9b34345ea7da37e019c5fdd9eb3085c.jpg"
+              class="w-full h-48 object-cover object-top"
+              alt="Spark It Up"
+            />
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-2">Spark It Up</h3>
+              <p class="text-gray-600 mb-4">
+                Perfect for casual dates. Includes snacks, drinks, and a cozy
+                setting.
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-xl font-bold text-primary">P300</span>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-primary/90 whitespace-nowrap cursor-pointer"
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img
+              src="https://public.readdy.ai/ai/img_res/8b59063806c63cc6e25e5705b577fb76.jpg"
+              class="w-full h-48 object-cover object-top"
+              alt="City Switch"
+            />
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-2">City Switch</h3>
+              <p class="text-gray-600 mb-4">
+                Urban adventure with dam picnic and professional photography.
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-xl font-bold text-primary">P1,500</span>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-primary/90 whitespace-nowrap cursor-pointer"
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img
+              src="https://public.readdy.ai/ai/img_res/695ced7ee0ab8eaf9de574645b291d7f.jpg"
+              class="w-full h-48 object-cover object-top"
+              alt="Wild Together"
+            />
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-2">Wild Together</h3>
+              <p class="text-gray-600 mb-4">
+                Luxury safari lodge experience with private dining and game
+                drives.
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-xl font-bold text-primary">P5,000</span>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-primary/90 whitespace-nowrap cursor-pointer"
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Love Moments Section -->
+    <section id="love-moments" class="py-20">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-16">Choose Your Love Moments</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- I See You, Baby -->
+          <div class="bg-white rounded-2xl shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-300 border-2 border-primary/10">
+            <img
+              src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"
+              class="w-full h-56 object-cover object-top"
+              alt="I See You, Baby"
+            />
+            <div class="p-8 flex flex-col h-full">
+              <h3 class="text-3xl font-extrabold text-primary mb-2 tracking-tight">I See You, Baby</h3>
+              <span class="text-lg font-semibold text-gray-700 mb-4 block">P250–400</span>
+              <ul class="text-gray-600 mb-6 space-y-2 text-left text-base">
+                <li><i class="ri-heart-2-fill text-primary"></i> Sanitary items & snacks</li>
+                <li><i class="ri-sparkling-2-fill text-primary"></i> Socks or heat pack</li>
+                <li><i class="ri-sticky-note-fill text-primary"></i> Sweet note & optional flowers</li>
+                <li><i class="ri-emotion-happy-fill text-primary"></i> For her low days, your hug</li>
+              </ul>
+              <button class="bg-primary text-white px-8 py-3 !rounded-button text-lg font-bold hover:bg-primary/90 whitespace-nowrap cursor-pointer shadow-lg mt-auto book-btn" data-package="I See You, Baby">Book Now</button>
+            </div>
+          </div>
+          <!-- I Miss You Pack -->
+          <div class="bg-white rounded-2xl shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-300 border-2 border-primary/10">
+            <img
+              src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"
+              class="w-full h-56 object-cover object-top"
+              alt="I Miss You Pack"
+            />
+            <div class="p-8 flex flex-col h-full">
+              <h3 class="text-3xl font-extrabold text-primary mb-2 tracking-tight">I Miss You Pack</h3>
+              <span class="text-lg font-semibold text-gray-700 mb-4 block">P400–600</span>
+              <ul class="text-gray-600 mb-6 space-y-2 text-left text-base">
+                <li><i class="ri-image-fill text-primary"></i> Framed photo</li>
+                <li><i class="ri-voiceprint-fill text-primary"></i> QR voice note</li>
+                <li><i class="ri-cup-fill text-primary"></i> Snacks & flower</li>
+                <li><i class="ri-gift-fill text-primary"></i> Optional mug or bracelet</li>
+                <li><i class="ri-emotion-sad-fill text-primary"></i> Love across miles</li>
+              </ul>
+              <button class="bg-primary text-white px-8 py-3 !rounded-button text-lg font-bold hover:bg-primary/90 whitespace-nowrap cursor-pointer shadow-lg mt-auto book-btn" data-package="I Miss You Pack">Book Now</button>
+            </div>
+          </div>
+          <!-- Our Forever Memory -->
+          <div class="bg-white rounded-2xl shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-300 border-2 border-primary/10">
+            <img
+              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80"
+              class="w-full h-56 object-cover object-top"
+              alt="Our Forever Memory"
+            />
+            <div class="p-8 flex flex-col h-full">
+              <h3 class="text-3xl font-extrabold text-primary mb-2 tracking-tight">Our Forever Memory</h3>
+              <span class="text-lg font-semibold text-gray-700 mb-4 block">P2,000–4,000</span>
+              <ul class="text-gray-600 mb-6 space-y-2 text-left text-base">
+                <li><i class="ri-road-map-fill text-primary"></i> Full itinerary & driver</li>
+                <li><i class="ri-t-shirt-2-fill text-primary"></i> Dress & photoshoot</li>
+                <li><i class="ri-gift-2-fill text-primary"></i> Surprise box & letter</li>
+                <li><i class="ri-restaurant-2-fill text-primary"></i> Dinner & portrait</li>
+                <li><i class="ri-star-smile-fill text-primary"></i> Her forever story</li>
+              </ul>
+              <button class="bg-primary text-white px-8 py-3 !rounded-button text-lg font-bold hover:bg-primary/90 whitespace-nowrap cursor-pointer shadow-lg mt-auto book-btn" data-package="Our Forever Memory">Book Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-16">Our Services</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col items-center p-6">
+            <img src="https://www.photojaanic.com/blog/wp-content/uploads/sites/2/2018/07/Make-your-own-photo-albums.jpg" alt="Digital Memory Albums" class="w-48 h-48 object-cover rounded-lg mb-4" />
+            <h3 class="text-2xl font-bold mb-2">Digital Memory Albums</h3>
+            <p class="text-gray-600 text-center">Create beautiful, personalized albums for couples to remember their special moments.</p>
+          </div>
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col items-center p-6">
+            <img src="https://marketplace.canva.com/EAFVM_vyTDk/1/0/1600w/canva-beige-minimalist-sweet-2022-recap-memories-scrapbook-photo-collage-zSUcuFgHFhk.jpg" alt="Gift-Ready Digital Prints" class="w-48 h-48 object-cover rounded-lg mb-4" />
+            <h3 class="text-2xl font-bold mb-2">Gift-Ready Digital Prints</h3>
+            <p class="text-gray-600 text-center">High-quality digital portraits, collages, or themed photos ready for download or printing.</p>
+          </div>
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col items-center p-6">
+            <img src="https://th.bing.com/th/id/OIP.RVtLvXpaPLiQP53y9PpgZgHaHa?rs=1&pid=ImgDetMain" alt="Video Memory Books" class="w-48 h-48 object-cover rounded-lg mb-4" />
+            <h3 class="text-2xl font-bold mb-2">Video Memory Books</h3>
+            <p class="text-gray-600 text-center">Combine photos, videos, and heartfelt messages into one digital story.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="py-20">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-16">How It Works</h2>
+        <div class="grid md:grid-cols-3 gap-12">
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <i class="ri-heart-line text-primary text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Choose Experience</h3>
+            <p class="text-gray-600">
+              Select from our curated packages designed for every budget and
+              style.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <i class="ri-calendar-line text-primary text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Pick Your Date</h3>
+            <p class="text-gray-600">
+              Choose your preferred date and customize your experience.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <i class="ri-star-line text-primary text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">Enjoy The Moment</h3>
+            <p class="text-gray-600">
+              Relax and enjoy your perfectly planned romantic experience.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="partners" class="py-20 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-16">
+          Our Premium Partners
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div
+            class="bg-white p-8 rounded-lg shadow-sm flex items-center justify-center"
+          >
+            <i class="ri-restaurant-fill text-4xl text-gray-400"></i>
+          </div>
+          <div
+            class="bg-white p-8 rounded-lg shadow-sm flex items-center justify-center"
+          >
+            <i class="ri-store-2-fill text-4xl text-gray-400"></i>
+          </div>
+          <div
+            class="bg-white p-8 rounded-lg shadow-sm flex items-center justify-center"
+          >
+            <i class="ri-hotel-fill text-4xl text-gray-400"></i>
+          </div>
+          <div
+            class="bg-white p-8 rounded-lg shadow-sm flex items-center justify-center"
+          >
+            <i class="ri-plane-fill text-4xl text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="bg-primary/5 rounded-2xl p-12 text-center">
+          <h2 class="text-4xl font-bold mb-8">
+            Ready to Create Your Perfect Date?
+          </h2>
+          <p class="text-xl text-gray-600 mb-8">
+            Join the waitlist and be the first to experience Botswana's most
+            romantic platform.
+          </p>
+          <form class="max-w-md mx-auto">
+            <div class="flex gap-4">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                class="flex-1 px-4 py-3 rounded-button border-none bg-white"
+              />
+              <button
+                class="bg-primary text-white px-6 py-3 !rounded-button hover:bg-primary/90 whitespace-nowrap cursor-pointer"
+              >
+                Join Waitlist
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <a href="#" class="text-2xl font-['Pacifico'] text-white mb-4 block"
+              >logo</a
+            >
+            <p class="text-gray-400">
+              Crafting unforgettable romantic experiences in Botswana.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-bold mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Experiences</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Partners</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold mb-4">Contact</h3>
+            <ul class="space-y-2">
+              <li class="text-gray-400">Gaborone, Botswana</li>
+              <li class="text-gray-400">aybeeramogojwana21@gmail.com</li>
+              <li class="text-gray-400">+267 77 34 29 23</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold mb-4">Follow Us</h3>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="ri-instagram-line text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="ri-facebook-line text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="ri-twitter-x-line text-xl"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400"
+        >
+          <p>&copy; 2025 Bliss. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="fixed inset-0 z-[999] bg-black/40 flex items-center justify-center hidden">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-fade-in">
+        <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl focus:outline-none">
+          <i class="ri-close-line"></i>
+        </button>
+        <h2 class="text-2xl font-bold mb-4 text-primary" id="modalPackageName">Book Now</h2>
+        <form id="bookingForm" class="space-y-4">
+          <input type="hidden" id="modalPackageInput" name="package" />
+          <div>
+            <label class="block text-gray-700 mb-1 font-semibold">Your Name</label>
+            <input type="text" name="name" id="modalName" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-1 font-semibold">Phone Number</label>
+            <input type="tel" name="phone" id="modalPhone" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-1 font-semibold">Delivery Address</label>
+            <input type="text" name="address" id="modalAddress" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 mb-1 font-semibold">Additional Notes</label>
+            <textarea name="notes" id="modalNotes" rows="2" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary outline-none"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-primary text-white py-3 rounded-button font-bold text-lg hover:bg-primary/90 transition">Send to WhatsApp</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        window.addEventListener("scroll", function () {
+          if (window.scrollY > 0) {
+            nav.classList.add("shadow-sm");
+          } else {
+            nav.classList.remove("shadow-sm");
+          }
+        });
+
+        // Love Moments Card Carousel
+        const loveMomentsPackages = [
+          {
+            name: "I See You, Baby",
+            price: "P250–400",
+            desc: "Sanitary items, snacks, socks or heat pack, note, optional flowers. Her low days, your hug.",
+            btn: "Send Now",
+            img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"
+          },
+          {
+            name: "We Finally Date",
+            price: "P1,000–1,500",
+            desc: "Restaurant, optional guesthouse, pillow note, flowers or candles, letter. Your first epic date.",
+            btn: "Book Now",
+            img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+          },
+          {
+            name: "I Miss You Pack",
+            price: "P400–600",
+            desc: "Framed photo, QR voice note, snacks, flower, optional mug or bracelet. Love across miles.",
+            btn: "Send Now",
+            img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"
+          },
+          {
+            name: "Our Forever Memory",
+            price: "P2,000–4,000",
+            desc: "Itinerary, driver, dress, photoshoot, surprise box, letter, dinner, portrait. Her forever story.",
+            btn: "Book Now",
+            img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80"
+          },
+          {
+            name: "Bliss Surprise",
+            price: "P300–5,000",
+            desc: "Custom plan, random location, full logistics. Tell us her vibe, we make it magic.",
+            btn: "Build Now",
+            img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80"
+          },
+        ];
+        const loveMomentsCards = document.getElementById("loveMomentsCards");
+        loveMomentsCards.innerHTML = loveMomentsPackages.map(pkg => `
+          <div class='bg-white rounded-lg shadow-lg overflow-hidden min-w-[320px] max-w-xs w-full'>
+            <img src='${pkg.img}' class='w-full h-48 object-cover object-top' alt='${pkg.name}' />
+            <div class='p-6 flex flex-col h-full'>
+              <h3 class='text-2xl font-bold mb-2'>${pkg.name}</h3>
+              <span class='text-xl font-bold text-primary mb-2 block'>${pkg.price}</span>
+              <p class='text-gray-600 mb-4'>${pkg.desc}</p>
+              <button class='bg-primary text-white px-6 py-2 !rounded-button hover:bg-primary/90 whitespace-nowrap cursor-pointer mt-auto'>${pkg.btn}</button>
+            </div>
+          </div>
+        `).join("");
+        // Carousel scroll logic
+        const scrollContainer = document.getElementById("loveMomentsScroll");
+        const cardWidth = 340; // min-w + gap
+        let scrollIndex = 0;
+        function scrollToCard(idx) {
+          scrollContainer.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
+        }
+        document.getElementById("loveMomentsPrev").onclick = function () {
+          scrollIndex = Math.max(0, scrollIndex - 1);
+          scrollToCard(scrollIndex);
+        };
+        document.getElementById("loveMomentsNext").onclick = function () {
+          scrollIndex = Math.min(loveMomentsPackages.length - 3, scrollIndex + 1);
+          scrollToCard(scrollIndex);
+        };
+        // Responsive: update visible cards and scrollIndex on resize
+        function updateVisibleCards() {
+          if (window.innerWidth < 768) {
+            scrollIndex = Math.min(scrollIndex, loveMomentsPackages.length - 1);
+          } else {
+            scrollIndex = Math.min(scrollIndex, loveMomentsPackages.length - 3);
+          }
+          scrollToCard(scrollIndex);
+        }
+        window.addEventListener('resize', updateVisibleCards);
+        updateVisibleCards();
+
+        // Booking Modal Logic
+        const modal = document.getElementById('bookingModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const bookingForm = document.getElementById('bookingForm');
+        const modalPackageName = document.getElementById('modalPackageName');
+        const modalPackageInput = document.getElementById('modalPackageInput');
+        let currentPackage = '';
+        function attachBookBtnListeners() {
+          document.querySelectorAll('.book-btn').forEach(btn => {
+            btn.onclick = function() {
+              currentPackage = btn.getAttribute('data-package');
+              modal.classList.remove('hidden');
+              modalPackageName.textContent = `Book: ${currentPackage}`;
+              modalPackageInput.value = currentPackage;
+            };
+          });
+        }
+        attachBookBtnListeners();
+        closeModalBtn.onclick = function() {
+          modal.classList.add('hidden');
+        };
+        modal.onclick = function(e) {
+          if (e.target === modal) modal.classList.add('hidden');
+        };
+        bookingForm.onsubmit = function(e) {
+          e.preventDefault();
+          const name = document.getElementById('modalName').value;
+          const phone = document.getElementById('modalPhone').value;
+          const address = document.getElementById('modalAddress').value;
+          const notes = document.getElementById('modalNotes').value;
+          const pkg = modalPackageInput.value;
+          // Compose WhatsApp message
+          let msg = `Hello! I'd like to book the *${pkg}* package.%0A`;
+          msg += `Name: ${name}%0A`;
+          msg += `Phone: ${phone}%0A`;
+          msg += `Address: ${address}%0A`;
+          if (notes) msg += `Notes: ${notes}%0A`;
+          // WhatsApp link
+          const whatsapp = 'https://wa.me/26777342923?text=' + encodeURIComponent(msg);
+          window.open(whatsapp, '_blank');
+          modal.classList.add('hidden');
+          bookingForm.reset();
+        };
+      });
+    </script>
+  </body>
+</html>
+
+
+
+

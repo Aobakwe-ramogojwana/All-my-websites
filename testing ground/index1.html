@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ditlhaeletsanyo NetSys - Investment Opportunity</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .flyer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0a4f7c 0%, #1a7bb5 50%, #2ba3e0 100%);
+            color: white;
+            padding: 80px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23fff' stroke-width='0.5' opacity='0.1'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-tag {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        
+        .hero-subtitle {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffd700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Content Sections */
+        .section {
+            padding: 60px;
+        }
+        
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+        
+        .section-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        /* Problem Section */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .problem-card {
+            background: #fff5f5;
+            border-left: 4px solid #ff4444;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        
+        .problem-card h3 {
+            color: #ff4444;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .problem-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .problem-impact {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 30px;
+            border-radius: 12px;
+        }
+        
+        .problem-impact h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .problem-impact .big-number {
+            font-size: 64px;
+            font-weight: 900;
+            margin: 20px 0;
+        }
+        
+        /* Solution Section */
+        .solution {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .solution-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .solution-card {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .solution-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0a4f7c 0%, #2ba3e0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .solution-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+        
+        .solution-card p {
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        /* Packages Section */
+        .packages {
+            background: #fafafa;
+        }
+        
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .package-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        
+        .package-card.featured {
+            border: 3px solid #ffd700;
+        }
+        
+        .package-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffd700;
+            color: #1a1a1a;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .package-header {
+            padding: 40px 30px 30px;
+            background: linear-gradient(135deg, #0a4f7c 0%, #1a7bb5 100%);
+            color: white;
+        }
+        
+        .package-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .package-tagline {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+        
+        .package-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        
+        .currency {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .amount {
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 1;
+        }
+        
+        .period {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            opacity: 0.7;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        
+        .savings {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .package-body {
+            padding: 30px;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .features-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+            color: #444;
+        }
+        
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .check {
+            color: #22c55e;
+            font-weight: 900;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .package-cta {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0a4f7c 0%, #1a7bb5 100%);
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .package-cta:hover {
+            background: linear-gradient(135deg, #1a7bb5 0%, #2ba3e0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 79, 124, 0.3);
+        }
+        
+        /* Market Opportunity */
+        .market {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+        }
+        
+        .market-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .market-stat {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .market-stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .market-stat-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        /* Traction */
+        .traction-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
+        .traction-item {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #0a4f7c;
+        }
+        
+        .traction-item h4 {
+            color: #0a4f7c;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .traction-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Investment Ask */
+        .investment {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a1a;
+        }
+        
+        .investment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .investment-amount {
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+        
+        .investment-details {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        
+        .investment-details h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .use-of-funds {
+            list-style: none;
+        }
+        
+        .use-of-funds li {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .use-of-funds li:last-child {
+            border-bottom: none;
+        }
+        
+        .fund-item {
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .fund-amount {
+            font-weight: 700;
+            color: #0a4f7c;
+            font-size: 18px;
+        }
+        
+        /* Contact CTA */
+        .contact-cta {
+            background: linear-gradient(135deg, #0a4f7c 0%, #1a7bb5 100%);
+            color: white;
+            padding: 80px 60px;
+            text-align: center;
+        }
+        
+        .contact-cta h2 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+        
+        .contact-cta p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        
+        .contact-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-primary {
+            background: #ffd700;
+            color: #1a1a1a;
+        }
+        
+        .cta-primary:hover {
+            background: #ffed4e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .cta-secondary:hover {
+            background: white;
+            color: #0a4f7c;
+        }
+        
+        .contact-info {
+            margin-top: 40px;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+        }
+        
+        .contact-icon {
+            font-size: 24px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 60px;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        
+        .footer-tagline {
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        .footer-flag {
+            font-size: 24px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero {
+                padding: 60px 40px;
+            }
+            
+            .hero h1 {
+                font-size: 42px;
+            }
+            
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+            
+            .section {
+                padding: 40px 30px;
+            }
+            
+            .problem-grid,
+            .solution-cards,
+            .packages-grid,
+            .market-stats,
+            .traction-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .investment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+            
+            .flyer-container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer-container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-tag">🇧🇼 Investment Opportunity</div>
+                <h1>Ditlhaeletsanyo NetSys</h1>
+                <p class="hero-subtitle">Reshaping Telecommunications for Botswana SMEs</p>
+                
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">60%</div>
+                        <div class="stat-label">Cost Savings</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">8,000+</div>
+                        <div class="stat-label">Target SMEs</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">P300M</div>
+                        <div class="stat-label">Market Size</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime SLA</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Problem Section -->
+        <div class="section">
+            <h2 class="section-title">The Problem We're Solving</h2>
+            <p class="section-subtitle">Botswana businesses are bleeding money on outdated telecommunications</p>
+            
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>💸 Excessive Costs</h3>
+                    <p>Traditional PBX systems cost P50K-P180K upfront + P6K-P15K monthly. SMEs can't afford this.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3>📍 Location Locked</h3>
+                    <p>Owner travels → business goes silent. High Gaborone rents (P8K-P15K/month) force difficult choices.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3>📞 Missed Opportunities</h3>
+                    <p>No professional IVR, no voicemail, calls to personal mobiles. Lost credibility = lost customers.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3>🚫 Limited Flexibility</h3>
+                    <p>Can't support remote work. Rigid 3-year contracts. Expensive to scale up or down.</p>
+                </div>
+            </div>
+            
+            <div class="problem-impact">
+                <h3>Total Market Waste</h3>
+                <div class="big-number">P240M+</div>
+                <p>Annually wasted by Botswana SMEs on inefficient telecoms</p>
+            </div>
+        </div>
+        
+        <!-- Solution Section -->
+        <div class="section solution">
+            <h2 class="section-title">Our Solution</h2>
+            <p class="section-subtitle">Enterprise VoIP for SME budgets — professional, flexible, affordable</p>
+            
+            <div class="solution-cards">
+                <div class="solution-card">
+                    <div class="solution-icon">🎯</div>
+                    <h3>Sound Professional</h3>
+                    <p>Professional IVR systems, call recording, voicemail-to-email. Small businesses instantly sound like enterprises.</p>
+                </div>
+                
+                <div class="solution-card">
+                    <div class="solution-icon">🌍</div>
+                    <h3>Work Anywhere</h3>
+                    <p>Cloud-based. Leave "phone" in Masunga, manage from Gabs. Perfect for distributed teams and remote work.</p>
+                </div>
+                
+                <div class="solution-card">
+                    <div class="solution-icon">💰</div>
+                    <h3>Save 40-60%</h3>
+                    <p>No hardware costs. Monthly pricing. Cancel anytime. Average client saves P34K-P140K annually.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Packages Section -->
+        <div class="section packages">
+            <h2 class="section-title">Revenue Model: Three-Tier SaaS</h2>
+            <p class="section-subtitle">Predictable recurring revenue with clear upgrade paths</p>
+            
+            <div class="packages-grid">
+                <!-- Starter Package -->
+                <div class="package-card">
+                    <div class="package-header">
+                        <div class="package-name">STARTER</div>
+                        <div class="package-tagline">For Solo Entrepreneurs</div>
+                        <div class="package-price">
+                            <span class="currency">P</span>
+                            <span class="amount">999</span>
+                            <span class="period">/mo</span>
+                        </div>
+                        <div class="original-price">was P1,500</div>
+                        <div class="savings">Save P501/mo</div>
+                    </div>
+                    <div class="package-body">
+                        <ul class="features-list">
+                            <li><span class="check">✓</span> 1 Business number</li>
+                            <li><span class="check">✓</span> 3 Extensions</li>
+                            <li><span class="check">✓</span> Basic IVR menu</li>
+                            <li><span class="check">✓</span> Voicemail-to-email</li>
+                            <li><span class="check">✓</span> Mobile app access</li>
+                            <li><span class="check">✓</span> 200 min/month</li>
+                        </ul>
+                        <a href="#contact" class="package-cta">Get Started</a>
+                    </div>
+                </div>
+                
+                <!-- Professional Package -->
+                <div class="package-card featured">
+                    <div class="package-badge">MOST POPULAR</div>
+                    <div class="package-header">
+                        <div class="package-name">PROFESSIONAL</div>
+                        <div class="package-tagline">For Growing SMEs</div>
+                        <div class="package-price">
+                            <span class="currency">P</span>
+                            <span class="amount">2,999</span>
+                            <span class="period">/mo</span>
+                        </div>
+                        <div class="original-price">was P4,500</div>
+                        <div class="savings">Save P1,501/mo</div>
+                    </div>
+                    <div class="package-body">
+                        <ul class="features-list">
+                            <li><span class="check">✓</span> 3 Business numbers</li>
+                            <li><span class="check">✓</span> 10 Extensions</li>
+                            <li><span class="check">✓</span> Advanced IVR</li>
+                            <li><span class="check">✓</span> Ring groups</li>
+                            <li><span class="check">✓</span> Call recording</li>
+                            <li><span class="check">✓</span> Conference calling</li>
+                            <li><span class="check">✓</span> 1,000 min/month</li>
+                            <li><span class="check">✓</span> Priority support</li>
+                        </ul>
+                        <a href="#contact" class="package-cta">Get Started</a>
+                    </div>
+                </div>
+                
+                <!-- Enterprise Package -->
+                <div class="package-card">
+                    <div class="package-header">
+                        <div class="package-name">ENTERPRISE</div>
+                        <div class="package-tagline">For Established Businesses</div>
+                        <div class="package-price">
+                            <span class="currency">P</span>
+                            <span class="amount">5,999</span>
+                            <span class="period">/mo</span>
+                        </div>
+                        <div class="original-price">was P9,000</div>
+                        <div class="savings">Save P3,001/mo</div>
+                    </div>
+                    <div class="package-body">
+                        <ul class="features-list">
+                            <li><span class="check">✓</span> Unlimited numbers</li>
+                            <li><span class="check">✓</span> 25 Extensions</li>
+                            <li><span class="check">✓</span> Custom IVR + voice</li>
+                            <li><span class="check">✓</span> CRM integration</li>
+                            <li><span class="check">✓</span> Analytics dashboard</li>
+                            <li><span class="check">✓</span> Video conferencing</li>
+                            <li><span class="check">✓</span> 3,000 min/month</li>
+                            <li><span class="check">✓</span> 24/7 support + manager</li>
+                        </ul>
+                        <a href="#contact" class="package-cta">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Market Opportunity -->
+        <div class="section market">
+            <h2 class="section-title">Market Opportunity</h2>
+            <p class="section-subtitle">Massive underserved market in Botswana's growing digital economy</p>
+            
+            <div class="market-stats">
+                <div class="market-stat">
+                    <div class="market-stat-number">40,000+</div>
+                    <div class="market-stat-label">Registered Businesses (BIPA)</div>
+                </div>
+                <div class="market-stat">
+                    <div class="market-stat-number">8,000+</div>
+                    <div class="market-stat-label">Target SMEs (5-50 staff)</div>
+                </div>
+                <div class="market-stat">
+                    <div class="market-stat-number">P300M</div>
+                    <div class="market-stat-label">Total Addressable Market</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Traction -->
+        <div class="section">
+            <h2 class="section-title">Traction & Validation</h2>
+            <p class="section-subtitle">De-risked through technical proof and market validation</p>
+            
+            <div class="traction-items">
+                <div class="traction-item">
+                    <h4>✅ Technical Prototype Built</h4>
+                    <p>Fully functional Asterisk PBX system with IVR, voicemail, conferencing, and security. Academic validation (First Class honors).</p>
+                </div>
+                
+                <div class="traction-item">
+                    <h4>✅ Market Validation</h4>
+                    <p>15+ SMEs expressed interest. 3 LOIs signed. Clear product-market fit with Botswana businesses.</p>
+                </div>
+                
+                <div class="traction-item">
+                    <h4>✅ Technical Expertise</h4>
+                    <p>BSc Mobile & Web Technologies. Deep VoIP expertise (Asterisk, FreePBX, SIP protocols, network security).</p>
+                </div>
+                
+                <div class="traction-item">
+                    <h4>✅ Go-to-Market Ready</h4>
+                    <p>Pricing validated. Marketing materials ready. BOCRA application in progress. Ready to launch.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Investment Ask -->
+        <div class="section investment">
+            <h2 class="section-title">Investment Ask</h2>
+            
+            <div class="investment-grid">
+                <div>
+                    <div class="investment-amount">P100,000</div>
+                    <p style="font-size: 20px; margin-bottom: 30px;">Seed capital for 12-month runway to profitability</p>
+                    <p style="font-size: 16px; line-height: 1.8;">
+                        <strong>Target:</strong> 20 clients by Month 6, P50K MRR by Month 12<br>
+                        <strong>Equity:</strong> 15-20% for P100K investment<br>
+                        <strong>ROI Projection:</strong> 5x return in 5 years (35-40% IRR)<br>
+                        <strong>Exit:</strong> Acquisition by BTC/Mascom/Orange (3-5 years)
+                    </p>
+                </div>
+                
+                <div class="investment-details">
+                    <h3>Use of Funds</h3>
+                    <ul class="use-of-funds">
+                        <li>
+                            <span class="fund-item">Infrastructure & Tech</span>
+                            <span class="fund-amount">P30,000</span>
+                        </li>
+                        <li>
+                            <span class="fund-item">BOCRA Licensing</span>
+                            <span class="fund-amount">P15,000</span>
+                        </li>
+                        <li>
+                            <span class="fund-item">Marketing & Sales</span>
+                            <span class="fund-amount">P25,000</span>
+                        </li>
+                        <li>
+                            <span class="fund-item">Operations & Team</span>
+                            <span class="fund-amount">P20,000</span>
+                        </li>
+                        <li>
+                            <span class="fund-item">Working Capital</span>
+                            <span class="fund-amount">P10,000</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact CTA -->
+        <div class="contact-cta" id="contact">
+            <h2>Let's Build Botswana's VoIP Future Together</h2>
+            <p>Proven tech. Clear market. Strong fundamentals. Ready to scale.</p>
+            
+            <div class="contact-buttons">
+                <a href="tel:+26777342923" class="cta-button cta-primary">📞 Schedule Call</a>
+                <a href="mailto:aybeeramogojwana21@gmail.com" class="cta-button cta-secondary">📧 Request Deck</a>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span class="contact-icon">👤</span>
+                    <span>Aobakwe Ramogojwana, CEO & Founder</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📱</span>
+                    <span>+267 77 34 29 23</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📧</span>
+                    <span>aybeeramogojwana21@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📍</span>
+                    <span>Gaborone, Botswana</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-logo">DITLHAELETSANYO NETSYS</div>
+            <div class="footer-tagline">Connecting Botswana Businesses to the Future</div>
+            <div class="footer-flag">🇧🇼</div>
+        </div>
+    </div>
+    
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        // Print functionality
+        function printFlyer() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

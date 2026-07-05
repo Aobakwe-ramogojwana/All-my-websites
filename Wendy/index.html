@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wendy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F7F5F0;
+  --bg2:#EFEDE6;
+  --white:#FFFFFF;
+  --surface:#FAFAF8;
+  --border:#E8E4DC;
+  --border2:#D4CFC4;
+  --ink:#1A1916;
+  --ink2:#6B6860;
+  --ink3:#A09D96;
+  --lime:#BFED47;
+  --lime-dk:#8AB520;
+  --lime-bg:rgba(191,237,71,0.15);
+  --lime-border:rgba(191,237,71,0.4);
+  --sky:#3B8BFF;
+  --sky-bg:rgba(59,139,255,0.1);
+  --amber:#F5A623;
+  --amber-bg:rgba(245,166,35,0.1);
+  --red:#E8503A;
+  --red-bg:rgba(232,80,58,0.1);
+  --green:#2D9B5A;
+  --green-bg:rgba(45,155,90,0.1);
+  --fd:'Cabinet Grotesk',sans-serif;
+  --fb:'Instrument Sans',sans-serif;
+  --r:18px;--rsm:12px;--rxs:8px;
+}
+html,body{height:100%;background:linear-gradient(135deg,#E8E4DC 0%,#F0EDE5 50%,#E4E0D8 100%);display:flex;align-items:center;justify-content:center;font-family:var(--fb);overflow:hidden;}
+
+/* PHONE */
+.phone{width:393px;height:852px;background:var(--bg);border-radius:54px;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(0,0,0,0.08),0 32px 80px rgba(0,0,0,0.18),0 8px 24px rgba(0,0,0,0.08);}
+
+/* STATUS */
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:14px 32px 0;height:52px;flex-shrink:0;}
+.stime{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--ink);}
+.sicons{display:flex;align-items:center;gap:5px;}
+.sbat{width:24px;height:12px;border:1.5px solid var(--ink);border-radius:3px;position:relative;opacity:0.6;}
+.sbat::before{content:'';position:absolute;inset:2px;right:4px;background:var(--ink);border-radius:1px;}
+.sbat::after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:3px;height:6px;background:var(--ink);opacity:0.6;border-radius:0 2px 2px 0;}
+.swifi{font-size:13px;opacity:0.6;}
+
+/* SCREENS */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateX(30px);transition:opacity 0.28s cubic-bezier(0.4,0,0.2,1),transform 0.28s cubic-bezier(0.4,0,0.2,1);overflow:hidden;}
+.scr.active{opacity:1;pointer-events:all;transform:translateX(0);}
+.scr.out{opacity:0;transform:translateX(-30px);pointer-events:none;transition:opacity 0.2s,transform 0.2s;}
+.sbody{flex:1;overflow-y:auto;padding:0 24px;scrollbar-width:none;}
+.sbody::-webkit-scrollbar{display:none;}
+
+/* TYPE */
+.heading{font-family:var(--fd);font-size:30px;font-weight:800;color:var(--ink);letter-spacing:-0.5px;line-height:1.1;}
+.subhead{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;}
+.label{font-size:11px;font-weight:600;color:var(--ink3);letter-spacing:0.8px;text-transform:uppercase;}
+.body{font-size:15px;color:var(--ink2);line-height:1.5;}
+
+/* BTNS */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:17px 24px;border-radius:var(--r);border:none;cursor:pointer;font-family:var(--fd);font-size:17px;font-weight:700;letter-spacing:-0.2px;transition:transform 0.12s,box-shadow 0.12s,background 0.15s;position:relative;overflow:hidden;}
+.btn:active{transform:scale(0.97);}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);transition:background 0.15s;}
+.btn:hover::after{background:rgba(0,0,0,0.04);}
+.bprime{background:var(--ink);color:#F7F5F0;box-shadow:0 4px 20px rgba(26,25,22,0.2);}
+.blime{background:var(--lime);color:var(--ink);box-shadow:0 4px 20px rgba(191,237,71,0.4);}
+.bfill{background:var(--bg2);color:var(--ink);border:1.5px solid var(--border);}
+.boutl{background:transparent;color:var(--ink);border:1.5px solid var(--border2);}
+.bdang{background:var(--red-bg);color:var(--red);border:1.5px solid rgba(232,80,58,0.2);}
+.bsm{padding:12px 18px;font-size:15px;border-radius:var(--rsm);}
+.bxs{padding:9px 16px;font-size:13px;border-radius:var(--rxs);width:auto;}
+
+/* INPUTS */
+.inp{width:100%;padding:15px 16px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--rsm);color:var(--ink);font-family:var(--fb);font-size:16px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.inp::placeholder{color:var(--ink3);}
+.inp:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,25,22,0.06);}
+.sinp-w{position:relative;}
+.sico{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;opacity:0.35;}
+.sinp-w .inp{padding-left:42px;}
+
+/* CARDS */
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:20px;}
+.card-lime{background:var(--lime-bg);border-color:var(--lime-border);}
+.card-sky{background:var(--sky-bg);border-color:rgba(59,139,255,0.2);}
+.card-amber{background:var(--amber-bg);border-color:rgba(245,166,35,0.2);}
+.card-ink{background:var(--ink);border-color:var(--ink);}
+
+/* CHIPS */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:100px;font-size:12px;font-weight:600;}
+.chip-lime{background:var(--lime-bg);color:var(--lime-dk);border:1px solid var(--lime-border);}
+.chip-sky{background:var(--sky-bg);color:var(--sky);border:1px solid rgba(59,139,255,0.25);}
+.chip-amber{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,166,35,0.3);}
+.chip-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(232,80,58,0.2);}
+.chip-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(45,155,90,0.2);}
+.chip-ink{background:var(--ink);color:#F7F5F0;border:none;}
+
+/* MISC */
+.back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--ink2);font-family:var(--fb);font-size:15px;padding:8px 0;transition:color 0.15s;}
+.back:hover{color:var(--ink);}
+.div{height:1px;background:var(--border);margin:18px 0;}
+.s6{height:6px;}.s10{height:10px;}.s14{height:14px;}.s20{height:20px;}.s28{height:28px;}.s40{height:40px;}
+
+/* BOTTOM PAD */
+.bpad{padding:16px 24px 20px;flex-shrink:0;}
+.bpad2{padding:0 24px 20px;display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+
+/* BACK NAV */
+.topnav{padding:6px 24px 0;flex-shrink:0;}
+
+/* BNAV */
+.bnav{display:flex;border-top:1.5px solid var(--border);flex-shrink:0;background:var(--bg);}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 14px;cursor:pointer;opacity:0.35;transition:opacity 0.15s;}
+.bni.active{opacity:1;}
+.bni-ic{font-size:22px;}
+.bni-lbl{font-size:10px;font-weight:600;color:var(--ink);letter-spacing:0.3px;}
+.bni.active .bni-lbl{color:var(--ink);}
+
+/* PILL TAG */
+.ptag{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:100px;background:var(--bg2);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--ink2);}
+
+/* TOAST */
+.toast{position:absolute;top:60px;left:16px;right:16px;background:var(--ink);border-radius:var(--rsm);padding:14px 16px;display:flex;gap:12px;align-items:center;transform:translateY(-80px);opacity:0;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s;z-index:200;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* PROGRESS DOTS */
+.dots{display:flex;gap:6px;align-items:center;justify-content:center;padding:8px 0;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all 0.3s;}
+.dot.active{width:18px;border-radius:3px;background:var(--ink);}
+
+/* FARE BREAKDOWN */
+.fare-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.fare-row:last-child{border-bottom:none;}
+.fare-key{font-size:14px;color:var(--ink2);}
+.fare-val{font-size:14px;font-weight:600;color:var(--ink);}
+.fare-total .fare-key{font-size:15px;font-weight:700;color:var(--ink);}
+.fare-total .fare-val{font-size:18px;font-weight:800;color:var(--ink);font-family:var(--fd);}
+
+/* RIDER PILL */
+.rpill{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rsm);margin-bottom:8px;}
+.rav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;font-weight:800;flex-shrink:0;}
+.rav-a{background:#BFED47;color:var(--ink);}
+.rav-b{background:#3B8BFF;color:#fff;}
+.rav-c{background:#F5A623;color:var(--ink);}
+.rav-d{background:#E8503A;color:#fff;}
+.rav-e{background:#A78BFA;color:#fff;}
+
+/* ROUTE VIS */
+.route-vis{position:relative;padding:0 0 0 28px;}
+.route-line{position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:linear-gradient(to bottom,var(--ink),var(--border));}
+.route-node{display:flex;align-items:center;gap:14px;padding:10px 0;position:relative;}
+.route-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--ink);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:-28px;margin-right:8px;}
+.route-dot.filled{background:var(--ink);}
+.route-dot-inner{width:8px;height:8px;border-radius:50%;background:var(--ink);}
+
+/* WAITING ANIM */
+@keyframes ripple{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.2);opacity:0}}
+.rip-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:110px;height:110px;}
+.rip{position:absolute;width:60px;height:60px;border-radius:50%;border:2px solid var(--lime-dk);animation:ripple 2s ease-out infinite;}
+.rip:nth-child(2){animation-delay:0.6s;}
+.rip:nth-child(3){animation-delay:1.2s;}
+.rip-core{width:60px;height:60px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;z-index:2;}
+
+/* SPIN */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--ink);border-radius:50%;animation:spin 0.8s linear infinite;}
+
+/* POP */
+@keyframes pop{from{transform:scale(0) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.pop{animation:pop 0.45s cubic-bezier(0.34,1.56,0.64,1) both;}
+
+/* DEMAND BAR */
+.dbar-w{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;margin:10px 0 4px;}
+.dbar-f{height:100%;border-radius:3px;background:var(--lime);transition:width 0.5s;}
+
+/* PULSE DOT */
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:0.3}}
+.pdot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pdot 1.6s infinite;}
+.pdot-amber{background:var(--amber);}
+.pdot-red{background:var(--red);}
+
+/* TOGGLE */
+.tog{width:52px;height:28px;border-radius:100px;background:var(--border);border:none;position:relative;cursor:pointer;transition:background 0.25s;flex-shrink:0;}
+.tog.on{background:var(--lime);}
+.tog-th{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.15);transition:transform 0.25s;}
+.tog.on .tog-th{transform:translateX(24px);}
+
+/* DRIVER BADGE */
+.dbadge{position:absolute;top:-4px;right:-4px;background:var(--lime);border-radius:100px;font-size:10px;font-weight:700;color:var(--ink);padding:2px 6px;border:2px solid var(--white);}
+
+/*====================================
+  SPLASH
+====================================*/
+#ss{background:var(--ink);}
+.splash-noise{position:absolute;inset:0;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;}
+.splash-logo{font-family:var(--fd);font-size:80px;font-weight:900;letter-spacing:-4px;color:#F7F5F0;line-height:1;animation:sfade 0.7s ease both;}
+.splash-logo .acc{color:var(--lime);}
+.splash-tag{font-size:16px;color:rgba(247,245,240,0.5);margin-top:10px;animation:sfade 0.7s 0.15s ease both;font-family:var(--fb);}
+.splash-main{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;}
+.splash-btns{position:absolute;bottom:0;left:0;right:0;padding:0 24px 48px;display:flex;flex-direction:column;gap:10px;animation:sfade 0.7s 0.3s ease both;z-index:2;}
+@keyframes sfade{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.splash-deco{position:absolute;width:340px;height:340px;border-radius:50%;border:1px solid rgba(191,237,71,0.12);top:50%;left:50%;transform:translate(-50%,-60%);}
+.splash-deco2{position:absolute;width:220px;height:220px;border-radius:50%;border:1px solid rgba(191,237,71,0.08);top:50%;left:50%;transform:translate(-50%,-60%);}
+.blime-inv{background:var(--lime);color:var(--ink);font-size:17px;font-weight:800;}
+.bout-inv{background:transparent;color:#F7F5F0;border:1.5px solid rgba(247,245,240,0.2);font-size:15px;}
+
+/*====================================
+  AUTH
+====================================*/
+#sauth .sbody{padding-top:8px;}
+
+/*====================================
+  HOME
+====================================*/
+.home-greeting{font-size:14px;color:var(--ink2);margin-bottom:4px;}
+.home-name{font-family:var(--fd);font-size:34px;font-weight:900;color:var(--ink);letter-spacing:-1px;line-height:1;}
+.main-cta{width:100%;background:var(--ink);border-radius:22px;padding:22px 24px 22px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:none;transition:transform 0.12s,box-shadow 0.12s;}
+.main-cta:hover{box-shadow:0 8px 30px rgba(26,25,22,0.15);}
+.main-cta:active{transform:scale(0.98);}
+.main-cta-left{display:flex;flex-direction:column;align-items:flex-start;gap:4px;}
+.main-cta-label{font-size:12px;font-weight:600;color:rgba(247,245,240,0.4);letter-spacing:0.5px;text-transform:uppercase;}
+.main-cta-text{font-family:var(--fd);font-size:20px;font-weight:800;color:#F7F5F0;}
+.main-cta-arrow{width:48px;height:48px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;font-size:22px;}
+
+.livecard{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.lc-header{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;}
+.lc-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
+.lc-row:hover{background:var(--bg2);}
+.lc-row:active{background:var(--bg);}
+.lc-dest{font-weight:600;font-size:15px;color:var(--ink);}
+.lc-meta{font-size:12px;color:var(--ink3);margin-top:1px;}
+.lc-ico{width:40px;height:40px;border-radius:12px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.lc-count{font-family:var(--fd);font-size:22px;font-weight:800;color:var(--ink);text-align:right;}
+.lc-clabel{font-size:10px;color:var(--ink3);text-align:right;margin-top:1px;}
+.lc-fare{font-size:12px;font-weight:600;color:var(--lime-dk);}
+
+/*====================================
+  DEST SELECT
+====================================*/
+.rt-item{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1.5px solid var(--border);cursor:pointer;transition:opacity 0.15s;}
+.rt-item:hover{opacity:0.7;}
+.rt-item:active{opacity:0.5;}
+.rt-pin{width:46px;height:46px;border-radius:14px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1.5px solid var(--border);}
+.rt-name{font-family:var(--fd);font-size:18px;font-weight:700;color:var(--ink);}
+.rt-sub{font-size:13px;color:var(--ink3);margin-top:2px;}
+.rt-fare{font-family:var(--fd);font-size:16px;font-weight:800;color:var(--lime-dk);text-align:right;}
+.rt-dist{font-size:11px;color:var(--ink3);text-align:right;margin-top:2px;}
+
+/* Tags row */
+.tags-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 0;}
+.tags-row::-webkit-scrollbar{display:none;}
+
+/*====================================
+  MATCHING
+====================================*/
+.match-head{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--lime-dk);letter-spacing:0.8px;text-transform:uppercase;}
+.match-big{font-family:var(--fd);font-size:52px;font-weight:900;color:var(--ink);letter-spacing:-2px;line-height:1;}
+.match-big .unit{font-size:18px;font-weight:600;color:var(--ink2);letter-spacing:0;}
+.riders-row{display:flex;margin-top:4px;}
+.rav-sm{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:12px;font-weight:800;margin-left:-10px;border:3px solid var(--bg);flex-shrink:0;}
+.rav-sm:first-child{margin-left:0;}
+.rav-more{background:var(--bg2);color:var(--ink2);font-size:11px;font-weight:700;border:3px solid var(--bg);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-left:-10px;}
+
+.fare-card{background:var(--ink);border-radius:var(--r);padding:20px;color:#F7F5F0;}
+.fc-label{font-size:11px;font-weight:600;color:rgba(247,245,240,0.45);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;}
+.fc-amount{font-family:var(--fd);font-size:36px;font-weight:900;color:#F7F5F0;letter-spacing:-1px;line-height:1;}
+.fc-sub{font-size:13px;color:rgba(247,245,240,0.5);margin-top:4px;}
+.fc-breakdown{display:flex;flex-direction:column;gap:0;margin-top:14px;border-top:1px solid rgba(247,245,240,0.12);padding-top:14px;}
+.fcbr{display:flex;justify-content:space-between;padding:6px 0;}
+.fcbr-k{font-size:13px;color:rgba(247,245,240,0.5);}
+.fcbr-v{font-size:13px;font-weight:600;color:#F7F5F0;}
+
+.timer-big{font-family:var(--fd);font-size:42px;font-weight:900;color:var(--ink);letter-spacing:-2px;text-align:center;}
+.timer-sub{font-size:13px;color:var(--ink3);text-align:center;margin-top:4px;}
+
+/*====================================
+  WAITING
+====================================*/
+
+/*====================================
+  DRIVER
+====================================*/
+.drv-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.drv-stat{background:var(--white);border:1.5px solid var(--border);border-radius:var(--rsm);padding:14px 16px;}
+.ds-lbl{font-size:11px;color:var(--ink3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;}
+.ds-val{font-family:var(--fd);font-size:24px;font-weight:800;color:var(--ink);}
+.ds-sub{font-size:12px;color:var(--ink3);margin-top:2px;}
+
+.dc{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;}
+.dc:hover{border-color:var(--ink);box-shadow:0 4px 16px rgba(26,25,22,0.08);}
+.dc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.dc-route{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--ink);}
+.dc-pax{font-size:13px;color:var(--ink2);margin-top:3px;}
+.dc-fare{text-align:right;}
+.dc-total{font-family:var(--fd);font-size:24px;font-weight:900;color:var(--lime-dk);}
+.dc-each{font-size:12px;color:var(--ink3);margin-top:2px;}
+.dc-riders{display:flex;gap:0;margin-bottom:10px;}
+.dc-bottom{display:flex;justify-content:space-between;align-items:center;}
+
+/*====================================
+  CONFIRM
+====================================*/
+.confirm-icon{width:76px;height:76px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto;}
+.drv-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.drv-hd{padding:18px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);background:var(--surface);}
+.drv-av{width:54px;height:54px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:18px;font-weight:800;color:#F7F5F0;flex-shrink:0;}
+.drv-nm{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--ink);}
+.drv-rt{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);margin-top:3px;}
+.drv-bd{padding:0 20px;}
+.ir{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);}
+.ir:last-child{border-bottom:none;}
+.ik{font-size:13px;color:var(--ink2);}
+.iv{font-size:15px;font-weight:600;color:var(--ink);}
+.plate{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--ink);letter-spacing:1.5px;background:var(--bg2);padding:4px 10px;border-radius:6px;}
+
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="sbar">
+    <span class="stime">9:41</span>
+    <div class="sicons">
+      <span class="swifi">▲</span>
+      <div class="sbat"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span style="font-size:20px;">🚗</span>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:#F7F5F0;" id="toast-title">Driver assigned!</div>
+      <div style="font-size:12px;color:rgba(247,245,240,0.55);" id="toast-sub">Thabo is 3 min away</div>
+    </div>
+    <div style="margin-left:auto;"><div class="chip chip-lime">Now</div></div>
+  </div>
+
+  <!-- ═══════════════════ SPLASH ═══════════════════ -->
+  <div class="scr active" id="ss" style="background:var(--ink);overflow:hidden;">
+    <div class="splash-noise"></div>
+    <div class="splash-deco"></div>
+    <div class="splash-deco2"></div>
+    <div class="splash-main">
+      <div style="text-align:center;">
+        <div class="splash-logo">W<span class="acc">e</span>ndy<span class="acc">.</span></div>
+        <div class="splash-tag">Shared rides. Fair prices. Botswana.</div>
+      </div>
+    </div>
+    <div class="splash-btns">
+      <button class="btn blime-inv" onclick="goto('sauth')">
+        <span style="font-size:19px;">👋</span> Get Started
+      </button>
+      <button class="btn bout-inv" onclick="driverOnboard()">
+        <span style="font-size:19px;">🚗</span> I'm a Driver
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ AUTH ═══════════════════ -->
+  <div class="scr" id="sauth">
+    <div class="topnav"><div class="s14"></div><button class="back" onclick="goto('ss')">← Back</button></div>
+    <div class="sbody">
+      <div class="s14"></div>
+      <div class="heading">Quick intro<span style="color:var(--lime-dk);">.</span></div>
+      <div class="s6"></div>
+      <div class="body">No password. No OTP. Just your name and number.</div>
+      <div class="s28"></div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="label">Your name</div>
+          <input class="inp" id="aname" type="text" placeholder="e.g. Kefilwe" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="label">Phone number</div>
+          <input class="inp" id="aphone" type="tel" placeholder="+267 71 234 567" />
+        </div>
+      </div>
+      <div class="s40"></div>
+    </div>
+    <div class="bpad2">
+      <button class="btn bprime" onclick="doAuth('rider')">
+        <span style="font-size:18px;">🎒</span> Continue as Rider
+      </button>
+      <button class="btn boutl bsm" onclick="doAuth('driver')">Continue as Driver</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ HOME ═══════════════════ -->
+  <div class="scr" id="shome">
+    <div class="sbody">
+      <div class="s20"></div>
+      <div class="home-greeting">Good evening,</div>
+      <div class="home-name" id="hname">Kefilwe 👋</div>
+      <div class="s20"></div>
+
+      <!-- Main CTA -->
+      <button class="main-cta" onclick="goto('sdest')">
+        <div class="main-cta-left">
+          <span class="main-cta-label">Tap to ride</span>
+          <span class="main-cta-text">Where are you going?</span>
+        </div>
+        <div class="main-cta-arrow">→</div>
+      </button>
+
+      <div class="s20"></div>
+
+      <!-- Live demand card -->
+      <div class="livecard">
+        <div class="lc-header">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="pdot"></div>
+            <span class="label">Live now</span>
+          </div>
+          <div class="chip chip-lime">4 routes active</div>
+        </div>
+        <div class="lc-row" onclick="selRoute('Block 5',5,'P10',15,'inner-city')">
+          <div class="lc-ico">🏙️</div>
+          <div style="flex:1;">
+            <div class="lc-dest">Block 5</div>
+            <div class="lc-meta">~15 min · inner city</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="lc-count">5</div>
+            <div class="lc-clabel">waiting</div>
+            <div class="lc-fare">from P10</div>
+          </div>
+        </div>
+        <div class="lc-row" onclick="selRoute('Mochudi',4,'P15',60,'60 km')">
+          <div class="lc-ico">🏡</div>
+          <div style="flex:1;">
+            <div class="lc-dest">Mochudi</div>
+            <div class="lc-meta">~45 min · 60 km</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="lc-count">4</div>
+            <div class="lc-clabel">waiting</div>
+            <div class="lc-fare">from P15</div>
+          </div>
+        </div>
+        <div class="lc-row" onclick="selRoute('Old Naledi',3,'P10',20,'inner-city')">
+          <div class="lc-ico">🏘️</div>
+          <div style="flex:1;">
+            <div class="lc-dest">Old Naledi</div>
+            <div class="lc-meta">~20 min · inner city</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="lc-count">3</div>
+            <div class="lc-clabel">waiting</div>
+            <div class="lc-fare">from P10</div>
+          </div>
+        </div>
+        <div class="lc-row" onclick="selRoute('Lentsweletau',2,'P25',80,'80 km')">
+          <div class="lc-ico">🌾</div>
+          <div style="flex:1;">
+            <div class="lc-dest">Lentsweletau</div>
+            <div class="lc-meta">~1 hr · 80 km</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="lc-count">2</div>
+            <div class="lc-clabel">waiting</div>
+            <div class="lc-fare">from P25</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s20"></div>
+      <button class="btn boutl bsm" onclick="goto('sdriver')" style="font-size:14px;">
+        🚗 Switch to Driver Mode
+      </button>
+      <div class="s20"></div>
+    </div>
+    <div class="bnav">
+      <div class="bni active"><div class="bni-ic">🏠</div><div class="bni-lbl">Home</div></div>
+      <div class="bni" onclick="goto('sdest')"><div class="bni-ic">📍</div><div class="bni-lbl">Rides</div></div>
+      <div class="bni"><div class="bni-ic">⭐</div><div class="bni-lbl">History</div></div>
+      <div class="bni"><div class="bni-ic">👤</div><div class="bni-lbl">Profile</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ DEST SELECT ═══════════════════ -->
+  <div class="scr" id="sdest">
+    <div class="topnav"><div class="s6"></div><button class="back" onclick="goto('shome')">← Home</button></div>
+    <div class="sbody">
+      <div class="s10"></div>
+      <div class="heading">Where to<span style="color:var(--lime-dk);">?</span></div>
+      <div class="s6"></div>
+      <div class="body">Pick your destination. We'll match you to a group.</div>
+      <div class="s14"></div>
+      <div class="sinp-w"><span class="sico">🔍</span><input class="inp" type="text" placeholder="Search destination…" /></div>
+      <div class="s14"></div>
+
+      <!-- Filter tags -->
+      <div class="tags-row">
+        <div class="ptag" style="background:var(--ink);color:#F7F5F0;">All routes</div>
+        <div class="ptag">Inner city</div>
+        <div class="ptag">Long distance</div>
+        <div class="ptag">Leaving now</div>
+      </div>
+
+      <div class="s14"></div>
+
+      <div class="rt-item" onclick="selRoute('Block 5',5,'P10',15,'inner-city')">
+        <div class="rt-pin">🏙️</div>
+        <div style="flex:1;">
+          <div class="rt-name">Block 5</div>
+          <div class="rt-sub">Gaborone · inner city</div>
+        </div>
+        <div>
+          <div class="rt-fare">P10</div>
+          <div class="rt-dist">~15 min</div>
+        </div>
+      </div>
+      <div class="rt-item" onclick="selRoute('Old Naledi',3,'P10',20,'inner-city')">
+        <div class="rt-pin">🏘️</div>
+        <div style="flex:1;">
+          <div class="rt-name">Old Naledi</div>
+          <div class="rt-sub">Gaborone · inner city</div>
+        </div>
+        <div>
+          <div class="rt-fare">P10</div>
+          <div class="rt-dist">~20 min</div>
+        </div>
+      </div>
+      <div class="rt-item" onclick="selRoute('Mochudi',4,'P15',60,'long-distance')">
+        <div class="rt-pin">🏡</div>
+        <div style="flex:1;">
+          <div class="rt-name">Mochudi</div>
+          <div class="rt-sub">60 km · ~45 min</div>
+        </div>
+        <div>
+          <div class="rt-fare">P15</div>
+          <div class="rt-dist">per seat</div>
+        </div>
+      </div>
+      <div class="rt-item" onclick="selRoute('Lentsweletau',2,'P25',80,'long-distance')">
+        <div class="rt-pin">🌾</div>
+        <div style="flex:1;">
+          <div class="rt-name">Lentsweletau</div>
+          <div class="rt-sub">80 km · ~1 hour</div>
+        </div>
+        <div>
+          <div class="rt-fare">P25</div>
+          <div class="rt-dist">per seat</div>
+        </div>
+      </div>
+      <div style="padding:20px 0 6px;text-align:center;color:var(--ink3);font-size:14px;">💡 Don't see your stop? It'll be added soon.</div>
+      <div class="s20"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ MATCHING ═══════════════════ -->
+  <div class="scr" id="smatch">
+    <div class="topnav"><div class="s6"></div><button class="back" onclick="goto('sdest')">← Change route</button></div>
+    <div class="sbody">
+      <div class="s10"></div>
+      <div class="match-head" id="mdest-lbl">Going to Block 5</div>
+      <div class="s6"></div>
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <div class="match-big" id="mcount">5</div>
+        <div style="font-family:var(--fd);font-size:18px;font-weight:600;color:var(--ink2);">people going your way</div>
+      </div>
+      <div class="s10"></div>
+
+      <!-- Riders visual -->
+      <div class="riders-row" id="mravatars">
+        <div class="rav-sm rav-a" style="width:38px;height:38px;font-size:12px;font-weight:800;border:3px solid var(--bg);">KM</div>
+        <div class="rav-sm rav-b" style="width:38px;height:38px;font-size:12px;font-weight:800;border:3px solid var(--bg);">TS</div>
+        <div class="rav-sm rav-c" style="width:38px;height:38px;font-size:12px;font-weight:800;border:3px solid var(--bg);">BD</div>
+        <div class="rav-sm rav-d" style="width:38px;height:38px;font-size:12px;font-weight:800;border:3px solid var(--bg);">RL</div>
+        <div class="rav-more">+1</div>
+      </div>
+
+      <div class="s14"></div>
+
+      <!-- Fare card -->
+      <div class="fare-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="fc-label">Your fare</div>
+            <div class="fc-amount" id="fc-price">P10</div>
+            <div class="fc-sub" id="fc-sub">Split between 5 riders</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:rgba(247,245,240,0.4);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;">Cash only</div>
+            <div style="font-size:13px;color:rgba(247,245,240,0.65);">Pay driver</div>
+          </div>
+        </div>
+        <div class="fc-breakdown">
+          <div class="fcbr"><span class="fcbr-k">Base fare</span><span class="fcbr-v" id="fc-base">P8</span></div>
+          <div class="fcbr"><span class="fcbr-k">Distance fee</span><span class="fcbr-v" id="fc-dist">P2</span></div>
+          <div class="fcbr" style="border-top:1px solid rgba(247,245,240,0.12);margin-top:4px;padding-top:10px;">
+            <span class="fcbr-k" style="color:rgba(247,245,240,0.8);font-weight:600;">Total per rider</span>
+            <span class="fcbr-v" id="fc-total-inner" style="font-size:16px;font-family:var(--fd);">P10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="s14"></div>
+
+      <!-- Timer + status row -->
+      <div style="display:flex;gap:12px;">
+        <div class="card" style="flex:1;text-align:center;padding:16px 12px;">
+          <div class="label" style="margin-bottom:6px;">Wait time</div>
+          <div class="timer-big" id="mtimer">9:45</div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:4px;">Est. departure</div>
+        </div>
+        <div class="card" style="flex:1;text-align:center;padding:16px 12px;">
+          <div class="label" style="margin-bottom:6px;">Group status</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:6px 0;">
+            <div class="spin"></div>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);">Filling up</span>
+          </div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:4px;" id="mseats-left">1 seat left</div>
+        </div>
+      </div>
+
+      <div class="s14"></div>
+
+      <!-- Route viz -->
+      <div class="card" style="padding:16px 20px;">
+        <div class="label" style="margin-bottom:12px;">Route</div>
+        <div class="route-vis">
+          <div class="route-line"></div>
+          <div class="route-node">
+            <div class="route-dot filled"><div style="width:8px;height:8px;border-radius:50%;background:#F7F5F0;"></div></div>
+            <div>
+              <div style="font-weight:600;font-size:14px;color:var(--ink);">Main Mall Bus Stop</div>
+              <div style="font-size:12px;color:var(--ink3);">Pick-up point</div>
+            </div>
+          </div>
+          <div class="route-node">
+            <div class="route-dot"><div class="route-dot-inner"></div></div>
+            <div>
+              <div style="font-weight:600;font-size:14px;color:var(--ink);" id="rdest-node">Block 5</div>
+              <div style="font-size:12px;color:var(--ink3);" id="rdest-meta">~15 min · P10/person</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s20"></div>
+    </div>
+    <div class="bpad2">
+      <button class="btn blime" id="joinbtn" onclick="joinRide()">
+        👥 Join this ride
+      </button>
+      <button class="btn boutl bsm" onclick="goto('sdest')">See other routes</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ WAITING ═══════════════════ -->
+  <div class="scr" id="swaiting">
+    <div class="sbody" style="display:flex;flex-direction:column;align-items:center;">
+      <div class="s40"></div>
+      <div class="rip-wrap">
+        <div class="rip"></div>
+        <div class="rip"></div>
+        <div class="rip"></div>
+        <div class="rip-core">🚶</div>
+      </div>
+      <div class="s28"></div>
+      <div class="heading" style="text-align:center;">You're in!</div>
+      <div class="s6"></div>
+      <div style="font-size:16px;color:var(--ink2);text-align:center;max-width:260px;line-height:1.5;">Finding a driver near you. Usually under 5 minutes.</div>
+      <div class="s28"></div>
+
+      <!-- Group card -->
+      <div class="card" style="width:100%;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div class="label">Your group · <span id="wdest">Block 5</span></div>
+          <div class="chip chip-green">✓ Confirmed</div>
+        </div>
+        <div class="riders-row" style="margin-bottom:12px;">
+          <div class="rav-sm rav-a" style="width:40px;height:40px;font-size:13px;border:3px solid var(--white);">KM</div>
+          <div class="rav-sm rav-b" style="width:40px;height:40px;font-size:13px;border:3px solid var(--white);">TS</div>
+          <div class="rav-sm rav-c" style="width:40px;height:40px;font-size:13px;border:3px solid var(--white);">BD</div>
+          <div class="rav-sm rav-d" style="width:40px;height:40px;font-size:13px;border:3px solid var(--white);position:relative;">
+            YO
+            <div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);background:var(--ink);color:#F7F5F0;font-size:8px;font-weight:700;padding:2px 5px;border-radius:100px;white-space:nowrap;">YOU</div>
+          </div>
+          <div class="rav-sm rav-e" style="width:40px;height:40px;font-size:13px;border:3px solid var(--white);background:var(--bg2);color:var(--ink2);">+1</div>
+        </div>
+        <div class="div" style="margin:0 0 12px;"></div>
+        <div style="display:flex;justify-content:space-between;">
+          <div><div class="label">Your fare</div><div style="font-family:var(--fd);font-size:20px;font-weight:800;color:var(--ink);margin-top:2px;" id="wfare">P10 cash</div></div>
+          <div style="text-align:right;"><div class="label">Status</div><div style="font-size:14px;font-weight:600;color:var(--amber);margin-top:2px;display:flex;align-items:center;gap:5px;"><div class="pdot pdot-amber"></div>Driver searching</div></div>
+        </div>
+      </div>
+
+      <div class="s14"></div>
+
+      <div class="card card-lime" style="width:100%;text-align:center;padding:16px;">
+        <div class="label" style="margin-bottom:6px;">Estimated wait</div>
+        <div class="timer-big" id="wtimer" style="font-size:36px;">4:52</div>
+        <div style="font-size:12px;color:var(--ink2);margin-top:4px;">Driver matching in progress</div>
+      </div>
+
+      <div class="s14"></div>
+    </div>
+    <div class="bpad2">
+      <button class="btn bdang bsm" onclick="goto('shome')">Leave group</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ DRIVER MODE ═══════════════════ -->
+  <div class="scr" id="sdriver">
+    <div class="sbody">
+      <div class="s20"></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-family:var(--fd);font-size:13px;font-weight:700;color:var(--lime-dk);letter-spacing:0.8px;text-transform:uppercase;">Driver mode</div>
+          <div class="subhead" id="dname-h">Thabo's Dashboard</div>
+        </div>
+        <button class="back" onclick="goto('shome')" style="margin-top:4px;">← Rider</button>
+      </div>
+      <div class="s14"></div>
+
+      <!-- Toggle -->
+      <div style="display:flex;align-items:center;justify-content:space-between;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:18px 20px;">
+        <div>
+          <div class="label" style="margin-bottom:4px;">Availability</div>
+          <div style="font-family:var(--fd);font-size:17px;font-weight:700;color:var(--ink);" id="dtog-status">Offline</div>
+          <div style="font-size:12px;color:var(--ink3);margin-top:2px;" id="dtog-sub">Go online to see demand</div>
+        </div>
+        <button class="tog" id="dtog" onclick="togDriver()"><div class="tog-th"></div></button>
+      </div>
+
+      <div class="s20"></div>
+
+      <!-- Stats -->
+      <div class="drv-stats">
+        <div class="drv-stat">
+          <div class="ds-lbl">Today's rides</div>
+          <div class="ds-val">7</div>
+          <div class="ds-sub">+2 from yesterday</div>
+        </div>
+        <div class="drv-stat">
+          <div class="ds-lbl">Today's earnings</div>
+          <div class="ds-val" style="color:var(--lime-dk);">P245</div>
+          <div class="ds-sub">cash collected</div>
+        </div>
+      </div>
+
+      <div class="label">Demand near you</div>
+      <div class="s10"></div>
+
+      <div id="dcards" style="opacity:0.3;pointer-events:none;transition:opacity 0.3s;">
+
+        <div class="dc" onclick="accRide('Block 5',5,'P10',50)">
+          <div class="dc-top">
+            <div>
+              <div class="dc-route">→ Block 5</div>
+              <div class="dc-pax">5 riders · inner city</div>
+            </div>
+            <div class="dc-fare">
+              <div class="dc-total">P50</div>
+              <div class="dc-each">P10 × 5 riders</div>
+            </div>
+          </div>
+          <div class="dbar-w"><div class="dbar-f" style="width:83%"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <div style="display:flex;gap:6px;">
+              <div class="chip chip-lime">🔥 Hot route</div>
+              <div class="chip chip-sky">~15 min</div>
+            </div>
+            <button class="btn blime bxs" onclick="event.stopPropagation();accRide('Block 5',5,'P10',50)">Accept</button>
+          </div>
+          <div class="dc-riders" style="margin-top:10px;">
+            <div class="rav-sm rav-a" style="width:30px;height:30px;font-size:10px;border:2px solid var(--white);">KM</div>
+            <div class="rav-sm rav-b" style="width:30px;height:30px;font-size:10px;border:2px solid var(--white);">TS</div>
+            <div class="rav-sm rav-c" style="width:30px;height:30px;font-size:10px;border:2px solid var(--white);">BD</div>
+            <div class="rav-sm rav-d" style="width:30px;height:30px;font-size:10px;border:2px solid var(--white);">RL</div>
+            <div class="rav-more" style="width:30px;height:30px;font-size:10px;border:2px solid var(--white);">+1</div>
+          </div>
+        </div>
+
+        <div class="dc" onclick="accRide('Mochudi',4,'P15',60)">
+          <div class="dc-top">
+            <div>
+              <div class="dc-route">→ Mochudi</div>
+              <div class="dc-pax">4 riders · 60 km</div>
+            </div>
+            <div class="dc-fare">
+              <div class="dc-total">P60</div>
+              <div class="dc-each">P15 × 4 riders</div>
+            </div>
+          </div>
+          <div class="dbar-w"><div class="dbar-f" style="width:65%"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <div style="display:flex;gap:6px;">
+              <div class="chip chip-sky">Long distance</div>
+              <div class="chip chip-amber">~45 min</div>
+            </div>
+            <button class="btn blime bxs" onclick="event.stopPropagation();accRide('Mochudi',4,'P15',60)">Accept</button>
+          </div>
+        </div>
+
+        <div class="dc" onclick="accRide('Lentsweletau',2,'P25',50)">
+          <div class="dc-top">
+            <div>
+              <div class="dc-route">→ Lentsweletau</div>
+              <div class="dc-pax">2 riders · 80 km</div>
+            </div>
+            <div class="dc-fare">
+              <div class="dc-total">P50</div>
+              <div class="dc-each">P25 × 2 riders</div>
+            </div>
+          </div>
+          <div class="dbar-w"><div class="dbar-f" style="width:38%"></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <div style="display:flex;gap:6px;">
+              <div class="chip chip-red">Needs riders</div>
+              <div class="chip chip-amber">~1 hr</div>
+            </div>
+            <button class="btn bprime bxs" onclick="event.stopPropagation();accRide('Lentsweletau',2,'P25',50)">Accept</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="s20"></div>
+    </div>
+    <div class="bnav">
+      <div class="bni" onclick="goto('shome')"><div class="bni-ic">🏠</div><div class="bni-lbl">Home</div></div>
+      <div class="bni active"><div class="bni-ic">🚗</div><div class="bni-lbl">Drive</div></div>
+      <div class="bni"><div class="bni-ic">📊</div><div class="bni-lbl">Earnings</div></div>
+      <div class="bni"><div class="bni-ic">👤</div><div class="bni-lbl">Profile</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ CONFIRM ═══════════════════ -->
+  <div class="scr" id="sconfirm">
+    <div class="sbody">
+      <div class="s40"></div>
+      <div class="confirm-icon pop">✓</div>
+      <div class="s20"></div>
+      <div class="heading" style="text-align:center;">Ride confirmed<span style="color:var(--lime-dk);">!</span></div>
+      <div class="s6"></div>
+      <div style="font-size:15px;color:var(--ink2);text-align:center;" id="cconfirm-msg">Your driver is on the way</div>
+      <div class="s28"></div>
+
+      <div class="drv-card">
+        <div class="drv-hd">
+          <div class="drv-av" id="cdrv-av">TM</div>
+          <div style="flex:1;">
+            <div class="drv-nm" id="cdrv-name">Thabo Molefe</div>
+            <div class="drv-rt">⭐ 4.8 &nbsp;·&nbsp; <span>143 rides</span></div>
+          </div>
+          <div class="chip chip-green" id="ceta">~3 min</div>
+        </div>
+        <div class="drv-bd">
+          <div class="ir"><span class="ik">Vehicle</span><span class="iv" id="ccar">White Toyota Corolla</span></div>
+          <div class="ir"><span class="ik">Plate number</span><span class="iv"><span class="plate" id="cplate">B 456 FGK</span></span></div>
+          <div class="ir"><span class="ik">Destination</span><span class="iv" id="cdest">Block 5</span></div>
+          <div class="ir"><span class="ik">Your fare</span><span class="iv" style="color:var(--lime-dk);font-family:var(--fd);font-size:18px;font-weight:800;" id="cfare">P10 cash</span></div>
+          <div class="ir"><span class="ik">Group</span><span class="iv" id="cgroup">5 riders total</span></div>
+        </div>
+      </div>
+
+      <div class="s14"></div>
+
+      <div class="card card-lime">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <span style="font-size:20px;">💡</span>
+          <div>
+            <div style="font-weight:600;font-size:14px;color:var(--ink);margin-bottom:3px;">Pay cash on board</div>
+            <div style="font-size:13px;color:var(--ink2);line-height:1.5;">Hand <strong id="ccash-amount">P10</strong> directly to your driver. No app payment needed for now.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s20"></div>
+    </div>
+    <div class="bpad2">
+      <button class="btn bprime" onclick="goto('shome')">🏠 Back to Home</button>
+      <button class="btn boutl bsm" onclick="showToast('💬 Message sent','Connecting you with Thabo…')">💬 Message Driver</button>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ─── STATE ───
+let CUR='ss', uname='Kefilwe', urole='rider';
+let driverOnline=false;
+let selDest='Block 5', selCount=5, selFare='P10', selDist=15, selKm='inner-city';
+let matchS=585, waitS=292, mInt=null, wInt=null;
+
+// ─── NAV ───
+function goto(id){
+  if(id===CUR)return;
+  const p=document.getElementById(CUR);
+  const n=document.getElementById(id);
+  if(!n)return;
+  p.classList.add('out');
+  setTimeout(()=>{p.classList.remove('active','out');n.classList.add('active');CUR=id;},220);
+}
+
+function driverOnboard(){uname='';goto('sauth');}
+
+// ─── AUTH ───
+function doAuth(role){
+  const nm=document.getElementById('aname').value.trim();
+  if(!nm){const i=document.getElementById('aname');i.style.borderColor='var(--red)';i.focus();return;}
+  document.getElementById('aname').style.borderColor='';
+  uname=nm; urole=role;
+  document.getElementById('hname').textContent=nm+' 👋';
+  document.getElementById('dname-h').textContent=nm+"'s Dashboard";
+  goto(role==='driver'?'sdriver':'shome');
+}
+
+// ─── ROUTE SELECT ───
+function selRoute(dest,count,fare,dist,km){
+  selDest=dest; selCount=count; selFare=fare; selDist=dist; selKm=km;
+
+  // calc fare breakdown
+  const base=parseInt(fare.replace('P',''));
+  const distFee=Math.round(base*0.2);
+  const baseFare=base-distFee;
+
+  document.getElementById('mdest-lbl').textContent='Going to '+dest;
+  document.getElementById('mcount').textContent=count;
+  document.getElementById('fc-price').textContent=fare;
+  document.getElementById('fc-sub').textContent='Split between '+count+' riders · '+km;
+  document.getElementById('fc-base').textContent='P'+baseFare;
+  document.getElementById('fc-dist').textContent='P'+distFee;
+  document.getElementById('fc-total-inner').textContent=fare;
+  document.getElementById('rdest-node').textContent=dest;
+  document.getElementById('rdest-meta').textContent='~'+dist+' min · '+fare+'/person';
+  document.getElementById('mseats-left').textContent=(count<4?'1 seat left':'Group forming');
+  document.getElementById('joinbtn').textContent='👥 Join this ride · '+fare;
+
+  if(mInt)clearInterval(mInt);
+  matchS=585;
+  document.getElementById('mtimer').textContent=fmt(matchS);
+  mInt=setInterval(()=>{matchS=Math.max(0,matchS-1);document.getElementById('mtimer').textContent=fmt(matchS);},1000);
+
+  goto('smatch');
+}
+
+// ─── JOIN ───
+function joinRide(){
+  const b=document.getElementById('joinbtn');
+  b.disabled=true; b.textContent='✓ Joined!';
+  if(mInt)clearInterval(mInt);
+
+  document.getElementById('wdest').textContent=selDest;
+  document.getElementById('wfare').textContent=selFare+' cash';
+
+  if(wInt)clearInterval(wInt);
+  waitS=292;
+  document.getElementById('wtimer').textContent=fmt(waitS);
+  wInt=setInterval(()=>{waitS=Math.max(0,waitS-1);document.getElementById('wtimer').textContent=fmt(waitS);},1000);
+
+  setTimeout(()=>goto('swaiting'),500);
+  setTimeout(()=>{if(wInt)clearInterval(wInt);assignDriver();},5000);
+}
+
+// ─── ASSIGN ───
+function assignDriver(){
+  document.getElementById('cdest').textContent=selDest;
+  document.getElementById('cfare').textContent=selFare+' cash';
+  document.getElementById('ccash-amount').textContent=selFare;
+  document.getElementById('cgroup').textContent=selCount+' riders total';
+  document.getElementById('cconfirm-msg').textContent='Driver is heading to '+selDest+' route';
+  showToast('🚗 Driver assigned!','Thabo is 3 min away');
+  setTimeout(()=>goto('sconfirm'),1400);
+}
+
+// ─── DRIVER TOGGLE ───
+function togDriver(){
+  driverOnline=!driverOnline;
+  document.getElementById('dtog').classList.toggle('on',driverOnline);
+  document.getElementById('dtog-status').textContent=driverOnline?'Online · Available':'Offline';
+  document.getElementById('dtog-sub').textContent=driverOnline?'Showing live demand near you':'Go online to see demand';
+  const dc=document.getElementById('dcards');
+  dc.style.opacity=driverOnline?'1':'0.3';
+  dc.style.pointerEvents=driverOnline?'all':'none';
+}
+
+// ─── ACCEPT RIDE (driver) ───
+function accRide(dest,pax,perPerson,total){
+  if(!driverOnline)return;
+  document.getElementById('cdest').textContent=dest;
+  document.getElementById('cfare').textContent='P'+total+' total';
+  document.getElementById('ccash-amount').textContent='P'+total;
+  document.getElementById('cgroup').textContent=pax+' riders';
+  document.getElementById('cconfirm-msg').textContent='You accepted · '+dest+' · '+pax+' riders';
+  document.getElementById('cdrv-name').textContent=uname||'You (Driver)';
+  document.getElementById('cdrv-av').textContent=(uname||'D')[0].toUpperCase();
+  document.getElementById('ceta').textContent=pax+' riders';
+  document.getElementById('ccar').textContent='Your vehicle';
+  document.getElementById('cplate').textContent='B ??? BWP';
+  goto('sconfirm');
+}
+
+// ─── TOAST ───
+function showToast(title,sub){
+  if(title)document.getElementById('toast-title').textContent=title;
+  if(sub)document.getElementById('toast-sub').textContent=sub;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ─── UTILS ───
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+
+// start background timer
+mInt=setInterval(()=>{matchS=Math.max(0,matchS-1);const e=document.getElementById('mtimer');if(e)e.textContent=fmt(matchS);},1000);
+</script>
+</body>
+</html>

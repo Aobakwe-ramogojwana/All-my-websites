@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>B&M Hardware - Powering Boko's Homes</title>
+    <meta
+      name="description"
+      content="Quality hardware supplies for Boko's housing boom. Order cement, tools, and building materials for delivery across Gaborone."
+    />
+    <meta
+      name="keywords"
+      content="hardware, building materials, cement, tools, Gaborone, Boko, construction"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#e53e3e", secondary: "#4a5568" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+
+      .whatsapp-button {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 100;
+      }
+
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+
+      input[type=number] {
+          -moz-appearance: textfield;
+      }
+
+      .custom-checkbox {
+          position: relative;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+      }
+
+      .custom-checkbox input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+      }
+
+      .checkmark {
+          height: 20px;
+          width: 20px;
+          background-color: #fff;
+          border: 2px solid #cbd5e0;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .custom-checkbox input:checked ~ .checkmark {
+          background-color: #e53e3e;
+          border-color: #e53e3e;
+      }
+
+      .checkmark:after {
+          content: "";
+          display: none;
+      }
+
+      .custom-checkbox input:checked ~ .checkmark:after {
+          display: block;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+      }
+
+      .custom-select {
+          position: relative;
+      }
+
+      .custom-select-options {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          z-index: 10;
+          max-height: 200px;
+          overflow-y: auto;
+      }
+
+      .custom-select.active .custom-select-options {
+          display: block;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-800">
+    <!-- Header Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div
+        class="container mx-auto px-4 py-3 flex justify-between items-center"
+      >
+        <a href="#" class="text-2xl font-['Pacifico'] text-primary">logo</a>
+
+        <nav class="hidden md:flex space-x-6">
+          <a
+            href="#products"
+            class="text-gray-700 hover:text-primary transition"
+            >Products</a
+          >
+          <a href="#quote" class="text-gray-700 hover:text-primary transition"
+            >Request Quote</a
+          >
+          <a href="#contact" class="text-gray-700 hover:text-primary transition"
+            >Contact</a
+          >
+        </nav>
+
+        <div class="flex items-center space-x-4">
+          <a
+            href="tel:+2673922338"
+            class="hidden md:flex items-center text-gray-700 hover:text-primary"
+          >
+            <div class="w-5 h-5 flex items-center justify-center mr-2">
+              <i class="ri-phone-line"></i>
+            </div>
+            <span>+267 392 2338</span>
+          </a>
+          <button
+            class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700"
+            id="mobileMenuBtn"
+          >
+            <i class="ri-menu-line ri-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div class="md:hidden hidden bg-white w-full" id="mobileMenu">
+        <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+          <a
+            href="#products"
+            class="text-gray-700 py-2 border-b border-gray-100"
+            >Products</a
+          >
+          <a href="#quote" class="text-gray-700 py-2 border-b border-gray-100"
+            >Request Quote</a
+          >
+          <a href="#contact" class="text-gray-700 py-2">Contact</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative">
+      <div
+        class="absolute inset-0 bg-cover bg-center"
+        style="background-image: url('https://readdy.ai/api/search-image?query=Construction%20site%20with%20hardware%20tools%20and%20building%20materials%20in%20Botswana%2C%20showing%20cement%20bags%2C%20power%20tools%2C%20and%20construction%20workers%20building%20homes.%20Natural%20lighting%2C%20warm%20tones%2C%20high-quality%20professional%20photography%20with%20clear%20details%20of%20construction%20materials.%20Left%20side%20has%20gradient%20to%20white%20for%20text%20overlay.&width=1280&height=600&seq=1&orientation=landscape');"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"
+      ></div>
+      <div class="container mx-auto px-4 py-16 md:py-24 relative">
+        <div class="w-full md:w-1/2 text-left">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Powering Boko's Homes!
+          </h1>
+          <p class="text-lg md:text-xl text-gray-700 mb-8">
+            Quality hardware and building materials to support Gaborone's
+            recovery and growth. Fast delivery, competitive prices.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="#products"
+              class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-primary/90 transition shadow-sm whitespace-nowrap"
+            >
+              <div class="flex items-center justify-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                  <i class="ri-store-2-line"></i>
+                </div>
+                <span>Shop Products</span>
+              </div>
+            </a>
+            <a
+              href="#quote"
+              class="bg-white text-primary border border-primary px-6 py-3 rounded-button font-medium hover:bg-gray-50 transition whitespace-nowrap"
+            >
+              <div class="flex items-center justify-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                  <i class="ri-file-list-3-line"></i>
+                </div>
+                <span>Request Quote</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="py-12 bg-white">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-center mb-8">
+          Top Categories
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <a href="#cement" class="group">
+            <div
+              class="bg-gray-100 rounded overflow-hidden aspect-square relative"
+            >
+              <img
+                src="https://readdy.ai/api/search-image?query=Stacked%20cement%20bags%20in%20a%20hardware%20store%20with%20clean%20white%20background%2C%20professional%20product%20photography%20showing%20cement%20bags%20with%20visible%20branding%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=400&seq=2&orientation=squarish"
+                alt="Cement"
+                class="w-full h-full object-cover object-top transition group-hover:scale-105"
+              />
+            </div>
+            <h3 class="mt-3 text-center font-medium">Cement & Concrete</h3>
+          </a>
+          <a href="#tools" class="group">
+            <div
+              class="bg-gray-100 rounded overflow-hidden aspect-square relative"
+            >
+              <img
+                src="https://readdy.ai/api/search-image?query=Professional%20power%20tools%20arranged%20neatly%20on%20white%20background%2C%20including%20drills%2C%20saws%20and%20measuring%20tools%2C%20high-quality%20product%20photography%20with%20clear%20lighting%20showing%20details%20of%20construction%20tools&width=400&height=400&seq=3&orientation=squarish"
+                alt="Tools"
+                class="w-full h-full object-cover object-top transition group-hover:scale-105"
+              />
+            </div>
+            <h3 class="mt-3 text-center font-medium">Tools & Equipment</h3>
+          </a>
+          <a href="#plumbing" class="group">
+            <div
+              class="bg-gray-100 rounded overflow-hidden aspect-square relative"
+            >
+              <img
+                src="https://readdy.ai/api/search-image?query=Plumbing%20supplies%20and%20pipes%20arranged%20neatly%20on%20white%20background%2C%20including%20PVC%20pipes%2C%20copper%20fittings%20and%20plumbing%20tools%2C%20high-quality%20product%20photography%20with%20clear%20lighting%20showing%20details%20of%20plumbing%20materials&width=400&height=400&seq=4&orientation=squarish"
+                alt="Plumbing"
+                class="w-full h-full object-cover object-top transition group-hover:scale-105"
+              />
+            </div>
+            <h3 class="mt-3 text-center font-medium">Plumbing</h3>
+          </a>
+          <a href="#electrical" class="group">
+            <div
+              class="bg-gray-100 rounded overflow-hidden aspect-square relative"
+            >
+              <img
+                src="https://readdy.ai/api/search-image?query=Electrical%20supplies%20arranged%20neatly%20on%20white%20background%2C%20including%20wires%2C%20switches%2C%20sockets%20and%20electrical%20tools%2C%20high-quality%20product%20photography%20with%20clear%20lighting%20showing%20details%20of%20electrical%20materials&width=400&height=400&seq=5&orientation=squarish"
+                alt="Electrical"
+                class="w-full h-full object-cover object-top transition group-hover:scale-105"
+              />
+            </div>
+            <h3 class="mt-3 text-center font-medium">Electrical</h3>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Catalog -->
+    <section id="products" class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-bold mb-8">Our Products</h2>
+
+        <!-- Filter Controls -->
+        <div class="mb-8">
+          <div class="bg-white p-4 rounded shadow-sm">
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+              <div class="relative flex-grow">
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Search products..."
+                  class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded text-sm"
+                />
+                <div
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-search-line"></i>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <div
+                  class="inline-flex items-center bg-gray-100 rounded-full px-1 py-1"
+                >
+                  <button
+                    class="category-filter px-3 py-1 rounded-full bg-primary text-white text-sm whitespace-nowrap"
+                    data-category="all"
+                  >
+                    All
+                  </button>
+                  <button
+                    class="category-filter px-3 py-1 rounded-full text-gray-700 text-sm whitespace-nowrap"
+                    data-category="cement"
+                  >
+                    Cement
+                  </button>
+                  <button
+                    class="category-filter px-3 py-1 rounded-full text-gray-700 text-sm whitespace-nowrap"
+                    data-category="tools"
+                  >
+                    Tools
+                  </button>
+                  <button
+                    class="category-filter px-3 py-1 rounded-full text-gray-700 text-sm whitespace-nowrap"
+                    data-category="plumbing"
+                  >
+                    Plumbing
+                  </button>
+                  <button
+                    class="category-filter px-3 py-1 rounded-full text-gray-700 text-sm whitespace-nowrap"
+                    data-category="electrical"
+                  >
+                    Electrical
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          id="productsGrid"
+        >
+          <!-- Cement Products -->
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="cement"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Bag%20of%20PPC%20cement%20on%20white%20background%2C%20professional%20product%20photography%20showing%20cement%20bag%20with%20visible%20branding%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=6&orientation=landscape"
+                alt="PPC Cement 42.5N"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">PPC Cement 42.5N</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                50kg bag - General purpose cement
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 89.99</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="PPC Cement 42.5N"
+                  data-price="89.99"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="cement"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Bag%20of%20Afrisam%20cement%20on%20white%20background%2C%20professional%20product%20photography%20showing%20cement%20bag%20with%20visible%20branding%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=7&orientation=landscape"
+                alt="Afrisam All Purpose Cement"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">Afrisam All Purpose</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                50kg bag - For concrete, mortar & plaster
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 87.50</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="Afrisam All Purpose Cement"
+                  data-price="87.50"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="cement"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Bag%20of%20ready-mix%20concrete%20on%20white%20background%2C%20professional%20product%20photography%20showing%20concrete%20mix%20bag%20with%20visible%20branding%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=8&orientation=landscape"
+                alt="Ready Mix Concrete"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">Ready Mix Concrete</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                25kg bag - Just add water
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 65.00</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="Ready Mix Concrete"
+                  data-price="65.00"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools Products -->
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="tools"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Professional%20cordless%20drill%20on%20white%20background%2C%20high-quality%20product%20photography%20showing%20power%20drill%20with%20battery%20pack%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=9&orientation=landscape"
+                alt="Cordless Drill"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">Bosch Cordless Drill</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                18V with 2 batteries & charger
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 1,299.00</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="Bosch Cordless Drill"
+                  data-price="1299.00"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="tools"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Professional%20angle%20grinder%20on%20white%20background%2C%20high-quality%20product%20photography%20showing%20power%20tool%20with%20grinding%20disc%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=10&orientation=landscape"
+                alt="Angle Grinder"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">Makita Angle Grinder</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                850W - 115mm with 5 cutting discs
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 749.00</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="Makita Angle Grinder"
+                  data-price="749.00"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="tools"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Professional%20wheelbarrow%20on%20white%20background%2C%20high-quality%20product%20photography%20showing%20construction%20wheelbarrow%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=11&orientation=landscape"
+                alt="Wheelbarrow"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">Builder's Wheelbarrow</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                Heavy duty - 65L capacity
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 495.00</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="Builder's Wheelbarrow"
+                  data-price="495.00"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plumbing Products -->
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="plumbing"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=PVC%20pipes%20and%20fittings%20on%20white%20background%2C%20professional%20product%20photography%20showing%20plumbing%20materials%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=12&orientation=landscape"
+                alt="PVC Pipes"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">PVC Pipes (110mm)</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                6m length - Drainage pipes
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 189.00</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="PVC Pipes (110mm)"
+                  data-price="189.00"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="plumbing"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Bathroom%20sink%20tap%20on%20white%20background%2C%20professional%20product%20photography%20showing%20chrome%20bathroom%20faucet%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=13&orientation=landscape"
+                alt="Bathroom Tap"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">Chrome Basin Mixer</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">
+                Modern design - 5 year warranty
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 349.00</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="Chrome Basin Mixer"
+                  data-price="349.00"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Electrical Products -->
+          <div
+            class="product-card bg-white rounded shadow-sm overflow-hidden"
+            data-category="electrical"
+          >
+            <div class="aspect-video bg-gray-100 overflow-hidden">
+              <img
+                src="https://readdy.ai/api/search-image?query=Electrical%20cable%20roll%20on%20white%20background%2C%20professional%20product%20photography%20showing%20electrical%20wiring%2C%20high%20resolution%2C%20clear%20lighting&width=400&height=250&seq=14&orientation=landscape"
+                alt="Electrical Cable"
+                class="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-medium">2.5mm² Electrical Cable</h3>
+                <span
+                  class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                  >In Stock</span
+                >
+              </div>
+              <p class="text-gray-600 text-sm mb-3">50m roll - SABS approved</p>
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-bold">BWP 399.00</span>
+                <button
+                  class="order-btn bg-primary text-white px-4 py-2 rounded-button text-sm hover:bg-primary/90 transition whitespace-nowrap"
+                  data-product="2.5mm² Electrical Cable"
+                  data-price="399.00"
+                >
+                  <div class="flex items-center justify-center">
+                    <div class="w-4 h-4 flex items-center justify-center mr-1">
+                      <i class="ri-shopping-cart-line"></i>
+                    </div>
+                    <span>Order Now</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="mt-8 text-center">
+          <button
+            id="loadMoreBtn"
+            class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-button font-medium hover:bg-gray-50 transition whitespace-nowrap"
+          >
+            <div class="flex items-center justify-center">
+              <div class="w-5 h-5 flex items-center justify-center mr-2">
+                <i class="ri-refresh-line"></i>
+              </div>
+              <span>Load More Products</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote Request Form -->
+    <section id="quote" class="py-12 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-2xl md:text-3xl font-bold mb-2">
+            Request Bulk Order Quote
+          </h2>
+          <p class="text-gray-600 mb-8">
+            Get special pricing for large orders and construction projects
+          </p>
+
+          <form id="quoteForm" class="bg-gray-50 p-6 rounded shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label
+                  for="name"
+                  class="block text-gray-700 mb-2 text-sm font-medium"
+                  >Full Name</label
+                >
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="w-full px-4 py-2 border border-gray-300 rounded text-sm"
+                  placeholder="Your name"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="company"
+                  class="block text-gray-700 mb-2 text-sm font-medium"
+                  >Company Name (Optional)</label
+                >
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  class="w-full px-4 py-2 border border-gray-300 rounded text-sm"
+                  placeholder="Your company"
+                />
+              </div>
+              <div>
+                <label
+                  for="email"
+                  class="block text-gray-700 mb-2 text-sm font-medium"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="w-full px-4 py-2 border border-gray-300 rounded text-sm"
+                  placeholder="your.email@example.com"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="phone"
+                  class="block text-gray-700 mb-2 text-sm font-medium"
+                  >Phone Number</label
+                >
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="w-full px-4 py-2 border border-gray-300 rounded text-sm"
+                  placeholder="+267 ..."
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-gray-700 mb-2 text-sm font-medium"
+                >Products Needed</label
+              >
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <label class="custom-checkbox">
+                  <input type="checkbox" name="products[]" value="Cement" />
+                  <span class="checkmark mr-2"></span>
+                  <span>Cement & Concrete</span>
+                </label>
+                <label class="custom-checkbox">
+                  <input type="checkbox" name="products[]" value="Tools" />
+                  <span class="checkmark mr-2"></span>
+                  <span>Tools & Equipment</span>
+                </label>
+                <label class="custom-checkbox">
+                  <input type="checkbox" name="products[]" value="Plumbing" />
+                  <span class="checkmark mr-2"></span>
+                  <span>Plumbing Supplies</span>
+                </label>
+                <label class="custom-checkbox">
+                  <input type="checkbox" name="products[]" value="Electrical" />
+                  <span class="checkmark mr-2"></span>
+                  <span>Electrical Supplies</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label
+                for="project"
+                class="block text-gray-700 mb-2 text-sm font-medium"
+                >Project Details</label
+              >
+              <textarea
+                id="project"
+                name="project"
+                rows="4"
+                class="w-full px-4 py-2 border border-gray-300 rounded text-sm"
+                placeholder="Describe your project and the materials you need..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="mb-6">
+              <label
+                for="delivery"
+                class="block text-gray-700 mb-2 text-sm font-medium"
+                >Delivery Location</label
+              >
+              <input
+                type="text"
+                id="delivery"
+                name="delivery"
+                class="w-full px-4 py-2 border border-gray-300 rounded text-sm"
+                placeholder="Delivery address"
+                required
+              />
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                type="submit"
+                class="bg-primary text-white px-6 py-3 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap"
+              >
+                <div class="flex items-center justify-center">
+                  <div class="w-5 h-5 flex items-center justify-center mr-2">
+                    <i class="ri-send-plane-line"></i>
+                  </div>
+                  <span>Submit Quote Request</span>
+                </div>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-12 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-center mb-12">
+          Why Choose B&M Hardware
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded shadow-sm text-center">
+            <div
+              class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center text-primary"
+            >
+              <i class="ri-truck-line ri-2x"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Fast Delivery</h3>
+            <p class="text-gray-600">
+              Same-day delivery available in Gaborone and next-day delivery to
+              surrounding areas.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded shadow-sm text-center">
+            <div
+              class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center text-primary"
+            >
+              <i class="ri-price-tag-3-line ri-2x"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Competitive Prices</h3>
+            <p class="text-gray-600">
+              We offer the best prices in Botswana with special discounts for
+              bulk orders.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded shadow-sm text-center">
+            <div
+              class="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center text-primary"
+            >
+              <i class="ri-customer-service-2-line ri-2x"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Expert Advice</h3>
+            <p class="text-gray-600">
+              Our team provides professional guidance on all your building and
+              renovation needs.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 bg-white">
+      <div class="container mx-auto px-4">
+        <h2 class="text-2xl md:text-3xl font-bold mb-8">Contact Us</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <div class="bg-gray-50 p-6 rounded shadow-sm h-full">
+              <div class="flex items-start mb-6">
+                <div
+                  class="w-10 h-10 flex items-center justify-center mr-4 bg-primary/10 rounded-full text-primary"
+                >
+                  <i class="ri-map-pin-line"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium mb-1">Our Location</h3>
+                  <p class="text-gray-600">
+                    Plot 1234, Molepolole Road<br />Gaborone, Botswana
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start mb-6">
+                <div
+                  class="w-10 h-10 flex items-center justify-center mr-4 bg-primary/10 rounded-full text-primary"
+                >
+                  <i class="ri-phone-line"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium mb-1">Phone</h3>
+                  <p class="text-gray-600">+267 392 2338</p>
+                </div>
+              </div>
+
+              <div class="flex items-start mb-6">
+                <div
+                  class="w-10 h-10 flex items-center justify-center mr-4 bg-primary/10 rounded-full text-primary"
+                >
+                  <i class="ri-mail-line"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium mb-1">Email</h3>
+                  <p class="text-gray-600">info@bmhardware.co.bw</p>
+                </div>
+              </div>
+
+              <div class="flex items-start">
+                <div
+                  class="w-10 h-10 flex items-center justify-center mr-4 bg-primary/10 rounded-full text-primary"
+                >
+                  <i class="ri-time-line"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium mb-1">Business Hours</h3>
+                  <p class="text-gray-600">
+                    Monday - Friday: 7:30 AM - 5:00 PM<br />Saturday: 8:00 AM -
+                    1:00 PM<br />Sunday: Closed
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="bg-gray-100 rounded shadow-sm overflow-hidden h-full">
+              <div
+                class="w-full h-full min-h-[300px]"
+                style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-position: center; background-size: cover;"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-['Pacifico'] mb-4">logo</h3>
+            <p class="text-gray-400 mb-4">
+              Your trusted partner for quality building materials and hardware
+              supplies in Botswana.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-facebook-fill"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white transition">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-instagram-line"></i>
+                </div>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white transition">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-whatsapp-line"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-medium mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#products"
+                  class="text-gray-400 hover:text-white transition"
+                  >Products</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#quote"
+                  class="text-gray-400 hover:text-white transition"
+                  >Request Quote</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-gray-400 hover:text-white transition"
+                  >Contact Us</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-medium mb-4">Product Categories</h4>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#cement"
+                  class="text-gray-400 hover:text-white transition"
+                  >Cement & Concrete</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#tools"
+                  class="text-gray-400 hover:text-white transition"
+                  >Tools & Equipment</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#plumbing"
+                  class="text-gray-400 hover:text-white transition"
+                  >Plumbing Supplies</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#electrical"
+                  class="text-gray-400 hover:text-white transition"
+                  >Electrical Supplies</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-medium mb-4">Payment Methods</h4>
+            <div class="flex flex-wrap gap-3">
+              <div
+                class="w-10 h-6 bg-white rounded flex items-center justify-center text-gray-800"
+              >
+                <i class="ri-visa-fill"></i>
+              </div>
+              <div
+                class="w-10 h-6 bg-white rounded flex items-center justify-center text-gray-800"
+              >
+                <i class="ri-mastercard-fill"></i>
+              </div>
+              <div
+                class="w-10 h-6 bg-white rounded flex items-center justify-center text-gray-800"
+              >
+                <i class="ri-bank-card-line"></i>
+              </div>
+              <div
+                class="w-10 h-6 bg-white rounded flex items-center justify-center text-gray-800"
+              >
+                <i class="ri-money-dollar-circle-line"></i>
+              </div>
+            </div>
+
+            <h4 class="text-lg font-medium mt-6 mb-4">Newsletter</h4>
+            <form class="flex">
+              <input
+                type="email"
+                placeholder="Your email"
+                class="px-4 py-2 rounded-l border-none text-gray-800 text-sm w-full"
+                required
+              />
+              <button
+                type="submit"
+                class="bg-primary text-white px-4 py-2 rounded-r border-none hover:bg-primary/90 transition whitespace-nowrap"
+              >
+                <div class="w-5 h-5 flex items-center justify-center">
+                  <i class="ri-send-plane-line"></i>
+                </div>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 mt-6 text-center text-gray-400 text-sm"
+        >
+          <p>&copy; 2025 B&M Hardware. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <a
+      href="https://wa.me/2673922338"
+      class="whatsapp-button bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition"
+    >
+      <div class="w-6 h-6 flex items-center justify-center">
+        <i class="ri-whatsapp-line ri-lg"></i>
+      </div>
+    </a>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        mobileMenuBtn.addEventListener("click", function () {
+          mobileMenu.classList.toggle("hidden");
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Product Filtering
+        const categoryFilters = document.querySelectorAll(".category-filter");
+        const productCards = document.querySelectorAll(".product-card");
+        const searchInput = document.getElementById("searchInput");
+
+        // Filter by category
+        categoryFilters.forEach((filter) => {
+          filter.addEventListener("click", function () {
+            const category = this.getAttribute("data-category");
+
+            // Update active filter button
+            categoryFilters.forEach((btn) => {
+              btn.classList.remove("bg-primary", "text-white");
+              btn.classList.add("text-gray-700");
+            });
+            this.classList.add("bg-primary", "text-white");
+            this.classList.remove("text-gray-700");
+
+            // Filter products
+            productCards.forEach((card) => {
+              if (
+                category === "all" ||
+                card.getAttribute("data-category") === category
+              ) {
+                card.style.display = "block";
+              } else {
+                card.style.display = "none";
+              }
+            });
+          });
+        });
+
+        // Search functionality
+        searchInput.addEventListener("input", function () {
+          const searchTerm = this.value.toLowerCase();
+
+          productCards.forEach((card) => {
+            const productName = card.querySelector("h3").textContent.toLowerCase();
+            const productDesc = card.querySelector("p").textContent.toLowerCase();
+
+            if (
+              productName.includes(searchTerm) ||
+              productDesc.includes(searchTerm)
+            ) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // WhatsApp Order Button
+        const orderButtons = document.querySelectorAll(".order-btn");
+
+        orderButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const product = this.getAttribute("data-product");
+            const price = this.getAttribute("data-price");
+
+            const message = `Hello B&M Hardware, I would like to order: ${product} (BWP ${price}). Please contact me to confirm my order.`;
+            const whatsappUrl = `https://wa.me/2673922338?text=${encodeURIComponent(message)}`;
+
+            window.open(whatsappUrl, "_blank");
+          });
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Quote Form Submission
+        const quoteForm = document.getElementById("quoteForm");
+
+        quoteForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Get form data
+          const formData = new FormData(quoteForm);
+          let products = [];
+
+          document
+            .querySelectorAll('input[name="products[]"]:checked')
+            .forEach((checkbox) => {
+              products.push(checkbox.value);
+            });
+
+          // Show success message (in a real scenario, you would send this data to a server)
+          alert(
+            "Thank you for your quote request! We will contact you within 24 hours.",
+          );
+          quoteForm.reset();
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Load More Button (simulated)
+        const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+        loadMoreBtn.addEventListener("click", function () {
+          // In a real scenario, you would load more products from a database
+          // For this demo, we'll just show a message
+          this.innerHTML =
+            '<div class="flex items-center justify-center"><span>All products loaded</span></div>';
+          this.disabled = true;
+          this.classList.add("opacity-50");
+        });
+      });
+    </script>
+  </body>
+</html>

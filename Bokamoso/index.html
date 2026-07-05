@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BokaTurbo - Bokamoso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#007AFF",
+              secondary: "#005BBB",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="min-h-screen bg-white">
+    <header class="border-b">
+      <div
+        class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between"
+      >
+        <div class="flex-1 text-center">
+          <span class="font-['Pacifico'] text-3xl text-primary">BokaTurbo</span>
+          <span class="text-3xl font-bold"> - Bokamoso</span>
+        </div>
+        <div class="relative" id="languageSelector">
+          <button
+            class="flex items-center gap-2 px-4 py-2 border border-primary text-primary !rounded-button cursor-pointer"
+          >
+            <span>English</span>
+            <i class="ri-arrow-down-s-line"></i>
+          </button>
+          <div
+            class="hidden absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded shadow-lg z-10"
+            id="languageDropdown"
+          >
+            <div class="py-1">
+              <a class="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >English</a
+              >
+              <a class="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >Setswana</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <div class="grid grid-cols-2 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow-sm border">
+          <h2 class="text-xl font-semibold mb-6">Offline Booking</h2>
+          <div class="mb-6">
+            <div class="relative">
+              <i
+                class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              ></i>
+              <input
+                type="text"
+                placeholder="Search for services (e.g. GP, March 17)"
+                class="w-full pl-10 pr-4 py-2 border border-gray-200 !rounded-button"
+              />
+            </div>
+            <button
+              class="mt-4 w-full bg-primary text-white py-2 !rounded-button hover:bg-secondary whitespace-nowrap cursor-pointer"
+            >
+              Book Offline
+            </button>
+          </div>
+          <div class="space-y-4" id="bookingList"></div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-sm border">
+          <h2 class="text-xl font-semibold mb-6">Smart Queue Slayer</h2>
+          <div class="text-center mb-6">
+            <p class="text-3xl font-bold mb-2">15 mins</p>
+            <p class="text-gray-600">Current estimated wait time</p>
+          </div>
+          <button
+            class="w-full bg-primary text-white py-2 !rounded-button hover:bg-secondary whitespace-nowrap cursor-pointer"
+          >
+            Check In Now
+          </button>
+        </div>
+      </div>
+    </main>
+    <footer class="border-t mt-auto">
+      <div class="max-w-7xl mx-auto px-4 py-4 text-center text-gray-500">
+        Built by Aobakwe, Gabs 2025
+      </div>
+    </footer>
+    <div
+      id="notification"
+      class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded shadow-lg"
+    ></div>
+    <script>
+      const translations = {
+        en: {
+          search: "Search for services (e.g. GP, March 17)",
+          bookOffline: "Book Offline",
+          waitTime: "Current estimated wait time",
+          checkIn: "Check In Now",
+          footer: "Built by Aobakwe, Gabs 2025",
+          syncMessage: "Booking saved! Will sync when online.",
+          cancelMessage: "Booking cancelled successfully",
+          checkInMessage: "Patient Cleared! Please proceed to the waiting area.",
+        },
+        tn: {
+          search: "Batla ditirelo (sk. Ngaka, Mopitlwe 17)",
+          bookOffline: "Buka Offline",
+          waitTime: "Nako e e solofetsweng ya go leta",
+          checkIn: "Tsena Jaanong",
+          footer: "E agilwe ke Aobakwe, Gabs 2025",
+          syncMessage: "Booking e bolokilwe! E tla sync fa go na le internet.",
+          cancelMessage: "Booking e phimoletswe",
+          checkInMessage:
+            "O letleletswe! Tswee-tswee tswelela kwa lefelong la go leta.",
+        },
+      };
+      let currentLang = "en";
+      let mockBookings = JSON.parse(localStorage.getItem("bookings")) || [
+        { service: "General Practitioner", date: "March 17, 2025", time: "09:00 AM" },
+        { service: "Dental Check-up", date: "March 18, 2025", time: "02:30 PM" },
+        { service: "Eye Examination", date: "March 19, 2025", time: "11:15 AM" },
+      ];
+      function showNotification(message) {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.classList.remove("hidden");
+        setTimeout(() => {
+          notification.classList.add("hidden");
+        }, 3000);
+      }
+      function renderBookings() {
+        const bookingList = document.getElementById("bookingList");
+        bookingList.innerHTML = mockBookings
+          .map(
+            (booking) => `
+          <div class="p-4 border border-gray-200 rounded">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-semibold">${booking.service}</h3>
+                <p class="text-sm text-gray-600">${booking.date} at ${booking.time}</p>
+              </div>
+              <button class="text-red-500 hover:text-red-700" onclick="cancelBooking(this)">
+                <i class="ri-close-line"></i>
+              </button>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      }
+      function cancelBooking(button) {
+        const bookingElement = button.closest(".p-4");
+        const index = Array.from(bookingElement.parentNode.children).indexOf(
+          bookingElement,
+        );
+        mockBookings.splice(index, 1);
+        localStorage.setItem("bookings", JSON.stringify(mockBookings));
+        renderBookings();
+        showNotification(translations[currentLang].cancelMessage);
+      }
+      function addBooking(service, date, time) {
+        mockBookings.push({ service, date, time });
+        localStorage.setItem("bookings", JSON.stringify(mockBookings));
+        renderBookings();
+        showNotification(translations[currentLang].syncMessage);
+      }
+      function updateLanguage(lang) {
+        currentLang = lang;
+        document.querySelector('input[type="text"]').placeholder =
+          translations[lang].search;
+        document.querySelector("button.w-full.bg-primary").textContent =
+          translations[lang].bookOffline;
+        document.querySelector(".text-gray-600").textContent =
+          translations[lang].waitTime;
+        document.querySelector("button.w-full.bg-primary:last-of-type").textContent =
+          translations[lang].checkIn;
+        document.querySelector("footer div").textContent = translations[lang].footer;
+      }
+      document
+        .getElementById("languageSelector")
+        .addEventListener("click", function () {
+          document.getElementById("languageDropdown").classList.toggle("hidden");
+        });
+      document.querySelectorAll("#languageDropdown a").forEach((link) => {
+        link.addEventListener("click", function () {
+          const lang = this.textContent.toLowerCase() === "english" ? "en" : "tn";
+          updateLanguage(lang);
+          document.getElementById("languageDropdown").classList.add("hidden");
+        });
+      });
+      document
+        .querySelector('input[type="text"]')
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter" && this.value.trim()) {
+            const now = new Date();
+            addBooking(
+              this.value.trim(),
+              now.toLocaleDateString(),
+              now.toLocaleTimeString(),
+            );
+            this.value = "";
+          }
+        });
+      document
+        .querySelector("button.w-full.bg-primary:last-of-type")
+        .addEventListener("click", function () {
+          showNotification(translations[currentLang].checkInMessage);
+        });
+      renderBookings();
+      updateLanguage(currentLang);
+    </script>
+  </body>
+</html>

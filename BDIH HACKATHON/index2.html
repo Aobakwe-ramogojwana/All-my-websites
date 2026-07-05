@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOCRA — Botswana Communications Regulatory Authority</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3A;--cobalt:#1545A8;--sky:#2B8EF0;--gold:#E8A020;--cream:#F5F2ED;--white:#fff;--slate:#4A5568;--light:#EEF3FB;--border:rgba(0,0,0,0.07)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--navy);overflow-x:hidden}
+.topbar{background:var(--navy);padding:8px 5vw;display:flex;align-items:center;justify-content:space-between;font-size:11.5px}
+.topbar a{color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s}
+.topbar a:hover{color:var(--gold)}
+.topbar-links{display:flex;gap:14px;flex-wrap:wrap}
+.topbar-right{display:flex;gap:14px}
+.tdiv{color:rgba(255,255,255,.18)}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px;box-shadow:0 1px 18px rgba(0,0,0,.06)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-mark{width:35px;height:35px;background:var(--cobalt);border-radius:7px;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:var(--white)}
+.nav-text{font-family:'Syne',sans-serif;font-weight:700;font-size:13.5px;color:var(--navy);line-height:1.2}
+.nav-text span{display:block;font-weight:400;font-size:10px;color:var(--slate);letter-spacing:.03em}
+.nav-menu{display:flex;align-items:center;gap:1px;list-style:none}
+.nav-item{position:relative}
+.nav-item>a{display:flex;align-items:center;gap:4px;padding:7px 10px;font-size:12.5px;font-weight:500;color:var(--navy);text-decoration:none;border-radius:6px;transition:background .15s,color .15s;white-space:nowrap}
+.nav-item>a:hover{background:var(--light);color:var(--cobalt)}
+.dropdown{position:absolute;top:calc(100% + 5px);left:0;background:var(--white);border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 36px rgba(0,0,0,.12);min-width:205px;padding:6px;list-style:none;opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .18s,transform .18s,visibility .18s;z-index:200}
+.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown li a{display:block;padding:7px 10px;font-size:12.5px;color:var(--slate);text-decoration:none;border-radius:6px;transition:background .15s,color .15s}
+.dropdown li a:hover{background:var(--light);color:var(--cobalt)}
+.sub-dd{position:relative}
+.sub-dd-menu{position:absolute;left:100%;top:0;background:var(--white);border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 36px rgba(0,0,0,.12);min-width:200px;padding:6px;list-style:none;opacity:0;visibility:hidden;transform:translateX(-4px);transition:opacity .18s,transform .18s,visibility .18s}
+.sub-dd:hover .sub-dd-menu{opacity:1;visibility:visible;transform:translateX(0)}
+.nav-cta{padding:8px 15px;background:var(--cobalt);color:var(--white)!important;font-size:12.5px!important;font-weight:600!important;border-radius:6px;text-decoration:none;transition:background .2s;margin-left:6px}
+.nav-cta:hover{background:#1239a0!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{width:22px;height:2px;background:var(--navy);border-radius:2px;display:block}
+.hero{background:var(--navy);min-height:86vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:54px 5vw 70px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 85% 50%,rgba(21,69,168,.42) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 10% 80%,rgba(43,142,240,.07) 0%,transparent 60%);pointer-events:none}
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.033) 1px,transparent 1px);background-size:30px 30px;pointer-events:none}
+.hero-content{position:relative;z-index:2;animation:fadeUp .8s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.hero-eye{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(232,160,32,.35);background:rgba(232,160,32,.08);padding:5px 13px;border-radius:100px;font-size:11px;font-weight:500;color:var(--gold);letter-spacing:.07em;text-transform:uppercase;margin-bottom:24px}
+.hero-eye::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;animation:blink 2.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,4.2vw,3.8rem);color:var(--white);line-height:1.1;letter-spacing:-.025em;margin-bottom:20px}
+.hero h1 em{font-style:normal;color:var(--sky)}
+.hero-desc{font-size:15.5px;color:rgba(255,255,255,.55);line-height:1.72;max-width:470px;margin-bottom:36px}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap}
+.btn-primary{padding:12px 24px;background:var(--sky);color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;border:none;cursor:pointer;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:background .2s,transform .15s}
+.btn-primary:hover{background:#3a9cf5;transform:translateY(-2px)}
+.btn-outline{padding:12px 24px;background:transparent;color:rgba(255,255,255,.78);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;border:1px solid rgba(255,255,255,.18);cursor:pointer;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:border-color .2s,color .2s,transform .15s}
+.btn-outline:hover{border-color:rgba(255,255,255,.42);color:var(--white);transform:translateY(-2px)}
+.hero-sectors{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;padding-left:36px;animation:fadeUp .8s .12s ease both}
+.sector-pill{display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.057);border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:16px 20px;text-decoration:none;color:inherit;transition:background .2s,border-color .2s,transform .2s}
+.sector-pill:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateX(4px)}
+.s-icon{font-size:24px;flex-shrink:0}
+.s-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14.5px;color:var(--white);margin-bottom:1px}
+.s-sub{font-size:11px;color:rgba(255,255,255,.4)}
+.s-arrow{color:rgba(255,255,255,.26);font-size:16px;margin-left:auto}
+.sector-pill:hover .s-arrow{color:var(--sky)}
+.ticker{background:var(--cobalt);padding:10px 0;overflow:hidden;white-space:nowrap}
+.ticker-track{display:inline-flex;gap:60px;animation:tick 38s linear infinite}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{font-size:12px;color:rgba(255,255,255,.78);display:inline-flex;align-items:center;gap:7px}
+.ticker-item::before{content:'●';color:var(--gold);font-size:6px}
+.section{padding:78px 5vw}
+.section-alt{background:var(--cream)}
+.sh{margin-bottom:46px}
+.sh.split{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+.s-tag{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cobalt);margin-bottom:9px}
+.s-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,2.6vw,2.4rem);font-weight:800;line-height:1.15;letter-spacing:-.02em;color:var(--navy)}
+.view-all{font-size:13px;font-weight:500;color:var(--cobalt);text-decoration:none;display:flex;align-items:center;gap:5px;white-space:nowrap;padding-bottom:2px;border-bottom:1.5px solid var(--cobalt);transition:gap .2s}
+.view-all:hover{gap:9px}
+.about-band{background:var(--light);padding:44px 5vw;display:flex;align-items:flex-start;gap:52px}
+.about-text p{font-size:15px;line-height:1.76;color:var(--slate)}
+.about-text p+p{margin-top:12px}
+.about-text strong{color:var(--navy);font-weight:600}
+.about-meta{flex-shrink:0;display:flex;gap:32px}
+.a-stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--cobalt)}
+.a-stat-label{font-size:11.5px;color:var(--slate);margin-top:2px}
+.mandate-wrap{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 4px 22px rgba(0,0,0,.05)}
+.tab-nav{display:flex;border-bottom:1px solid var(--border);background:var(--cream)}
+.tab-btn{flex:1;padding:14px 12px;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--slate);display:flex;align-items:center;justify-content:center;gap:6px;transition:background .18s,color .18s}
+.tab-btn:hover{background:rgba(21,69,168,.04);color:var(--cobalt)}
+.tab-btn.active{color:var(--cobalt);border-bottom-color:var(--cobalt);background:var(--white);font-weight:600}
+.tab-panel{display:none;padding:30px 34px}
+.tab-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tab-single{display:none;padding:30px 34px}
+.tab-single.active{display:block}
+.m-item{padding:17px 19px;border:1px solid var(--border);border-radius:10px;transition:border-color .2s,box-shadow .2s}
+.m-item:hover{border-color:var(--sky);box-shadow:0 4px 14px rgba(43,142,240,.1)}
+.m-item h4{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.m-item p{font-size:12.5px;color:var(--slate);line-height:1.6;margin-bottom:10px}
+.m-item a{font-size:12.5px;font-weight:500;color:var(--cobalt);text-decoration:none}
+.m-item a:hover{text-decoration:underline}
+.m-prose p{font-size:14.5px;color:var(--slate);line-height:1.75;margin-bottom:13px}
+.m-link{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:8px 16px;background:var(--light);border-radius:6px;font-size:13px;font-weight:500;color:var(--cobalt);text-decoration:none}
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px}
+.i-card{border:1px solid var(--border);border-radius:13px;overflow:hidden;background:var(--white)}
+.i-head{padding:17px 21px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.i-head h3{font-family:'Syne',sans-serif;font-size:14.5px;font-weight:700;color:var(--navy)}
+.i-body{padding:13px 21px 16px}
+.ilist{list-style:none}
+.ilist li{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.ilist li:last-child{border-bottom:none}
+.ilist a{color:var(--navy);text-decoration:none;display:flex;align-items:flex-start;gap:6px;line-height:1.4;transition:color .18s}
+.ilist a:hover{color:var(--cobalt)}
+.ilist a::before{content:'→';font-size:10px;color:var(--cobalt);flex-shrink:0;margin-top:3px}
+.i-foot{padding:8px 21px 16px}
+.dtabs{display:flex;gap:10px;margin-bottom:11px}
+.dtab{font-size:12px;font-weight:500;color:var(--slate);cursor:pointer;padding-bottom:3px;border:none;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;transition:color .18s,border-color .18s}
+.dtab.active{color:var(--cobalt);border-bottom-color:var(--cobalt)}
+.lic-intro{font-size:12.5px;color:var(--slate);line-height:1.6;margin-bottom:11px}
+.lic-sel{width:100%;padding:10px 34px 10px 12px;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--navy);background:var(--white);appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A5568' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:border-color .2s}
+.lic-sel:focus{outline:none;border-color:var(--cobalt)}
+.lic-go{margin-top:9px;width:100%;padding:10px;background:var(--cobalt);color:var(--white);border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;transition:background .2s}
+.lic-go:hover{background:#1239a0}
+.tools-band{display:grid;grid-template-columns:1fr 1fr}
+.tool-panel{padding:54px 5vw}
+.tool-panel:first-child{background:var(--cobalt)}
+.tool-panel:last-child{background:#0d2d6b}
+.tool-panel h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white);margin-bottom:10px;letter-spacing:-.01em}
+.tool-panel p{font-size:13.5px;color:rgba(255,255,255,.55);line-height:1.68;margin-bottom:22px;max-width:360px}
+.tool-links{display:flex;flex-wrap:wrap;gap:9px}
+.tool-link{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.13);border-radius:7px;color:rgba(255,255,255,.8);font-size:12.5px;font-weight:500;text-decoration:none;transition:background .2s,color .2s}
+.tool-link:hover{background:rgba(255,255,255,.17);color:var(--white)}
+.btn-gold{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:var(--gold);color:var(--navy);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;border:none;cursor:pointer;border-radius:7px;text-decoration:none;transition:background .2s}
+.btn-gold:hover{background:#f0ac2a}
+.equip-band{background:var(--navy);padding:58px 5vw;display:flex;align-items:center;justify-content:space-between;gap:36px}
+.equip-text h3{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;color:var(--white);margin-bottom:11px;letter-spacing:-.015em}
+.equip-text p{font-size:14.5px;color:rgba(255,255,255,.5);line-height:1.72;max-width:580px}
+.btn-sky{display:inline-flex;align-items:center;gap:7px;flex-shrink:0;padding:13px 26px;background:var(--sky);color:var(--white);font-family:'DM Sans',sans-serif;font-size:14.5px;font-weight:500;border:none;cursor:pointer;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .2s,transform .15s}
+.btn-sky:hover{background:#3a9cf5;transform:translateY(-2px)}
+footer{background:#060f1c;color:rgba(255,255,255,.5)}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;padding:58px 5vw 44px}
+.footer-brand p{font-size:13px;line-height:1.76;color:rgba(255,255,255,.35);margin-top:14px;max-width:248px}
+.footer-contact{margin-top:17px}
+.footer-contact p{font-size:12.5px;color:rgba(255,255,255,.36);line-height:1.95}
+.footer-contact a{color:rgba(255,255,255,.42);text-decoration:none}
+.footer-contact a:hover{color:var(--white)}
+.footer-col h4{font-family:'Syne',sans-serif;font-size:11.5px;font-weight:700;color:var(--white);letter-spacing:.08em;text-transform:uppercase;margin-bottom:15px}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:9px}
+.footer-col a{color:rgba(255,255,255,.36);text-decoration:none;font-size:13px;transition:color .2s}
+.footer-col a:hover{color:var(--white)}
+.footer-hr{border:none;border-top:1px solid rgba(255,255,255,.06)}
+.footer-bottom{padding:18px 5vw;display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:rgba(255,255,255,.24)}
+.footer-br{display:flex;align-items:center;gap:20px}
+.footer-br a{color:rgba(255,255,255,.3);text-decoration:none;font-size:11.5px}
+.footer-br a:hover{color:rgba(255,255,255,.7)}
+.socials{display:flex;gap:8px}
+.soc{width:31px;height:31px;border-radius:7px;background:rgba(255,255,255,.054);border:1px solid rgba(255,255,255,.07);display:grid;place-items:center;color:rgba(255,255,255,.36);text-decoration:none;font-size:13px;transition:background .2s,color .2s}
+.soc:hover{background:rgba(255,255,255,.11);color:var(--white)}
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr;padding-bottom:54px}.hero-sectors{display:none}
+  .info-grid{grid-template-columns:1fr}.tools-band{grid-template-columns:1fr}
+  .equip-band{flex-direction:column;gap:22px}.footer-top{grid-template-columns:1fr 1fr;gap:26px}
+  .tab-panel.active{grid-template-columns:1fr}.about-band{flex-direction:column;gap:26px}
+  .about-meta{flex-direction:row}.nav-menu{display:none}.hamburger{display:flex}
+}
+@media(max-width:600px){
+  .topbar{display:none}.footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:12px;text-align:center}
+  .footer-br{flex-direction:column;gap:9px}.tab-panel,.tab-single{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-links">
+    <a href="https://op-web.bocra.org.bw" target="_blank">BOCRA Portal</a>
+    <span class="tdiv">|</span>
+    <a href="https://dqos.bocra.org.bw/" target="_blank">QOS Monitoring</a>
+    <span class="tdiv">|</span>
+    <a href="/licensing">Licensing</a>
+    <span class="tdiv">|</span>
+    <a href="https://registration.bocra.org.bw/" target="_blank">ASMS-WebCP</a>
+    <span class="tdiv">|</span>
+    <a href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank">Licence Verification</a>
+    <span class="tdiv">|</span>
+    <a href="https://typeapproval.bocra.org.bw/" target="_blank">Type Approval</a>
+    <span class="tdiv">|</span>
+    <a href="https://nic.net.bw/" target="_blank">Register .BW</a>
+  </div>
+  <div class="topbar-right">
+    <a href="telecoms-statistics">Telecoms Statistics</a>
+  </div>
+</div>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-mark">BCA</div>
+    <div class="nav-text">BOCRA <span>Botswana Communications Regulatory Authority</span></div>
+  </a>
+  <ul class="nav-menu">
+    <li class="nav-item">
+      <a href="/">About <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l3.5 3.5L8 1"/></svg></a>
+      <ul class="dropdown">
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/word-chief-executive">A Word From The Chief Executive</a></li>
+        <li><a href="/history-of-communication-regulation">History Of Communication Regulation</a></li>
+        <li><a href="/organogram">Organogram</a></li>
+        <li><a href="/board-of-directors">Board of Directors</a></li>
+        <li><a href="/executive-management">Executive Management</a></li>
+        <li><a href="/careers">Careers</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a href="/mandate">Mandate <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l3.5 3.5L8 1"/></svg></a>
+      <ul class="dropdown">
+        <li><a href="/legislation">Legislation</a></li>
+        <li class="sub-dd"><a href="/telecommunications">Telecommunications ›</a>
+          <ul class="sub-dd-menu">
+            <li><a href="/national-radio-frequency-plan">National Radio Frequency Plan</a></li>
+            <li><a href="/radio-spectrum-planning">Radio Spectrum Planning</a></li>
+            <li><a href="/numbering-plan">The Numbering Plan</a></li>
+            <li><a href="/type-approval">Type Approval</a></li>
+          </ul>
+        </li>
+        <li><a href="/broadcasting">Broadcasting</a></li>
+        <li><a href="/postal">Postal</a></li>
+        <li class="sub-dd"><a href="/internet">Internet ›</a>
+          <ul class="sub-dd-menu">
+            <li><a href="/bw-cctld">bw ccTLD</a></li>
+            <li><a href="/bw-cirt">bw CIRT</a></li>
+            <li><a href="/electronic-evidence">Electronic Evidence</a></li>
+            <li><a href="/electronic-communications-transactions">Electronic Communications Transactions</a></li>
+          </ul>
+        </li>
+        <li><a href="/licensing">Licensing</a></li>
+      </ul>
+    </li>
+    <li class="nav-item"><a href="/projects">Projects</a></li>
+    <li class="nav-item">
+      <a href="/documents%26legislation">Documents <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l3.5 3.5L8 1"/></svg></a>
+      <ul class="dropdown">
+        <li><a href="/draft-documents-and-legislation">Draft Documents And Legislation</a></li>
+        <li><a href="/ict-licensing-frameworks">ICT Licencing Framework</a></li>
+        <li><a href="/itu-capacity-building-workshop">ITU Capacity Building Workshop</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a href="/complaints">Complaints <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l3.5 3.5L8 1"/></svg></a>
+      <ul class="dropdown">
+        <li><a href="/consumer-education-and-advice">Consumer Education And Advice</a></li>
+        <li><a href="/registering-complaints">Registering Complaints</a></li>
+        <li><a href="/form/file-complaint-form">File A Complaint</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a href="/media-center">Media <svg width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l3.5 3.5L8 1"/></svg></a>
+      <ul class="dropdown">
+        <li><a href="/news%26events">News &amp; Events</a></li>
+        <li><a href="/speeches">Speeches</a></li>
+      </ul>
+    </li>
+    <li class="nav-item"><a href="/tenders">Tenders</a></li>
+    <li class="nav-item"><a href="/form/file-complaint-form" class="nav-cta">File a Complaint</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-eye">Established 1 April 2013 · CRA Act 2012</div>
+    <h1>Regulating<br><em>Botswana's</em><br>Communications</h1>
+    <p class="hero-desc">BOCRA oversees telecommunications, internet &amp; ICTs, broadcasting, postal services and radio spectrum — enabling connectivity and protecting consumers across Botswana.</p>
+    <div class="hero-actions">
+      <a href="/form/file-complaint-form" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        File a Complaint
+      </a>
+      <a href="/licensing" class="btn-outline">Licensing Portal →</a>
+    </div>
+  </div>
+  <div class="hero-sectors">
+    <a href="/telecommunications" class="sector-pill">
+      <div class="s-icon">📡</div>
+      <div><div class="s-name">Telecommunications</div><div class="s-sub">Spectrum, numbering, type approval</div></div>
+      <div class="s-arrow">→</div>
+    </a>
+    <a href="/broadcasting" class="sector-pill">
+      <div class="s-icon">📻</div>
+      <div><div class="s-name">Broadcasting</div><div class="s-sub">Radio &amp; television regulation</div></div>
+      <div class="s-arrow">→</div>
+    </a>
+    <a href="/postal" class="sector-pill">
+      <div class="s-icon">📮</div>
+      <div><div class="s-name">Postal Services</div><div class="s-sub">Courier &amp; postal licensing</div></div>
+      <div class="s-arrow">→</div>
+    </a>
+    <a href="/internet" class="sector-pill">
+      <div class="s-icon">🌐</div>
+      <div><div class="s-name">Internet &amp; ICTs</div><div class="s-sub">bw ccTLD, CIRT, cyber policy</div></div>
+      <div class="s-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">PUBLIC NOTICE — BOCRA Website Development Hackathon</span>
+    <span class="ticker-item">Botswana Collaborates with Five SADC States to Harmonise International Roaming Tariffs</span>
+    <span class="ticker-item">BOCRA Approves Reduced Data Prices for BTC</span>
+    <span class="ticker-item">EOI — Inclusion in BOCRA Supplier Database</span>
+    <span class="ticker-item">PUBLIC NOTICE — ITA Commercial Broadcasting Radio Station Licence</span>
+    <span class="ticker-item">Vote Ms. Basedi Mosinyi — Botswana's ITU Radio Regulation Board Candidate</span>
+    <span class="ticker-item">PUBLIC NOTICE — BOCRA Website Development Hackathon</span>
+    <span class="ticker-item">Botswana Collaborates with Five SADC States to Harmonise International Roaming Tariffs</span>
+    <span class="ticker-item">BOCRA Approves Reduced Data Prices for BTC</span>
+    <span class="ticker-item">EOI — Inclusion in BOCRA Supplier Database</span>
+    <span class="ticker-item">PUBLIC NOTICE — ITA Commercial Broadcasting Radio Station Licence</span>
+    <span class="ticker-item">Vote Ms. Basedi Mosinyi — Botswana's ITU Radio Regulation Board Candidate</span>
+  </div>
+</div>
+
+<div class="about-band">
+  <div class="about-text">
+    <p><strong>Botswana Communications Regulatory Authority (BOCRA)</strong> was established through the Communications Regulatory Authority Act, 2012 (CRA Act) on the 1st of April 2013 to regulate the communications sector in Botswana, comprising telecommunications, Internet and ICTs, radio communications, broadcasting, postal services and related matters.</p>
+    <p>The CRA Act replaced the Broadcasting Act [Cap 72:04] and the Telecommunications Act [Cap 72:03], creating a converged, integrated regulatory authority for the communications industry.</p>
+  </div>
+  <div class="about-meta">
+    <div><div class="a-stat-num">2013</div><div class="a-stat-label">Year established</div></div>
+    <div><div class="a-stat-num">4</div><div class="a-stat-label">Regulated sectors</div></div>
+    <div><div class="a-stat-num">13+</div><div class="a-stat-label">Licence types</div></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="sh split">
+    <div><div class="s-tag">Our Regulatory Mandate</div><div class="s-title">What We Regulate</div></div>
+    <a href="/mandate" class="view-all">Full mandate →</a>
+  </div>
+  <div class="mandate-wrap">
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="internet">🌐 Internet</button>
+      <button class="tab-btn" data-tab="broadcasting">📻 Broadcasting</button>
+      <button class="tab-btn" data-tab="postal">📮 Postal</button>
+      <button class="tab-btn" data-tab="telecom">📡 Telecommunications</button>
+    </div>
+    <div id="tab-internet" class="tab-panel active">
+      <div class="m-item">
+        <h4>bw ccTLD</h4>
+        <p>Section 38(1) of the CRA Act mandates BOCRA with oversight of Botswana's country code Top Level Domain, ensuring reliable internet identity for businesses and citizens.</p>
+        <a href="/bw-cctld">Learn More →</a>
+      </div>
+      <div class="m-item">
+        <h4>bw CIRT</h4>
+        <p>The National Cybersecurity Strategy developed by the Ministry of Transport and Communications underpins BOCRA's role in cybersecurity incident response and coordination.</p>
+        <a href="/bw-cirt">Learn More →</a>
+      </div>
+      <div class="m-item">
+        <h4>Electronic Evidence</h4>
+        <p>The Electronic Records (Evidence) Act No.13 of 2014 allows for the admissibility and authentication of electronic records as evidence in legal proceedings.</p>
+        <a href="/electronic-evidence">Learn More →</a>
+      </div>
+      <div class="m-item">
+        <h4>Electronic Communications Transactions</h4>
+        <p>Under the Electronic Communications and Transaction Act, BOCRA has responsibility for facilitating e-commerce frameworks and digital transaction governance in Botswana.</p>
+        <a href="/electronic-communications-transactions">Learn More →</a>
+      </div>
+    </div>
+    <div id="tab-broadcasting" class="tab-single">
+      <div class="m-prose">
+        <p>The CRA Act mandates BOCRA to regulate all broadcasting; subscription management services and re-broadcasting activities, save for state broadcasting. BOCRA regulates commercial stations including <strong>Yarona FM</strong>, <strong>Duma FM</strong>, <strong>Gabz FM</strong>, and <strong>eBotswana</strong>.</p>
+        <p>Commercial radio stations are available in most major towns and villages, with online broadcasting extending access worldwide. eBotswana television is available in Gaborone and within a 60km radius through terrestrial broadcasting, with satellite coverage planned.</p>
+        <p>Broadcasters are required to promote music tracks by local artists, with licences specifying a minimum percentage of local content to comply with.</p>
+        <a href="/broadcasting-0" class="m-link">Learn More about Broadcasting →</a>
+      </div>
+    </div>
+    <div id="tab-postal" class="tab-single">
+      <div class="m-prose">
+        <p>The CRA Act, 2012 ushered in a new era of regulation for the postal sector as BOCRA assumed the mandate of supervising the provision of postal services in Botswana. The Act prohibits any person from providing postal services without a valid BOCRA licence.</p>
+        <p>BOCRA is mandated to ensure the provision of safe, reliable, efficient and affordable postal services throughout Botswana. Regulatory instruments include the <strong>Postal Sector Licensing Framework</strong>, which guides the provision of postal services and supports innovation in the sector.</p>
+        <a href="/postal-0" class="m-link">Learn More about Postal →</a>
+      </div>
+    </div>
+    <div id="tab-telecom" class="tab-panel">
+      <div class="m-item">
+        <h4>Type Approval</h4>
+        <p>BOCRA is mandated by Sec 84 of the CRA Act to type approve communications equipment connected, used or operated to provide broadcasting or telecommunications services in Botswana.</p>
+        <a href="/type-approval">Learn More →</a>
+      </div>
+      <div class="m-item">
+        <h4>Radio Spectrum Planning</h4>
+        <p>BOCRA is responsible for planning and managing the national radio frequency spectrum in accordance with the CRA Act and ITU Region 1 guidelines.</p>
+        <a href="/radio-spectrum-planning">Learn More →</a>
+      </div>
+      <div class="m-item">
+        <h4>The Numbering Plan</h4>
+        <p>BOCRA commissioned an independent study to review and rationalise the National Numbering Plan, ensuring adequate numbering resources for all communications services.</p>
+        <a href="/numbering-plan">Learn More →</a>
+      </div>
+      <div class="m-item">
+        <h4>National Radio Frequency Plan</h4>
+        <p>Section 47 of the CRA Act forms the basis for the Botswana Radio Frequency Band Plan, providing the framework for spectrum allocation across all user categories.</p>
+        <a href="/national-radio-frequency-plan">Learn More →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="sh split">
+    <div><div class="s-tag">Latest Updates</div><div class="s-title">News, Documents &amp; Licensing</div></div>
+  </div>
+  <div class="info-grid">
+    <div class="i-card">
+      <div class="i-head">
+        <h3>News &amp; Events</h3>
+        <a href="/news%26events" class="view-all" style="font-size:12px;border-bottom-width:1px">View All →</a>
+      </div>
+      <div class="i-body">
+        <ul class="ilist">
+          <li><a href="/node/62812">PUBLIC NOTICE — BOCRA Website Development Hackathon</a></li>
+          <li><a href="/node/62810">Botswana Collaborates with Five SADC Member States to Reduce International Roaming Tariffs</a></li>
+          <li><a href="/node/62803">BOCRA Approves Reduced Data Prices for Botswana Telecommunications Corporation (BTC)</a></li>
+          <li><a href="/node/62805">EOI — Inclusion in BOCRA Supplier Database</a></li>
+          <li><a href="/node/62798">PUBLIC NOTICE — ITA Commercial Broadcasting Radio Station Licence</a></li>
+        </ul>
+      </div>
+      <div class="i-foot"><a href="/news%26events" class="btn-primary" style="font-size:12.5px;padding:8px 16px">All News →</a></div>
+    </div>
+    <div class="i-card">
+      <div class="i-head"><h3>Documents &amp; Legislation</h3></div>
+      <div class="i-body">
+        <div class="dtabs">
+          <button class="dtab active">Latest</button>
+          <button class="dtab">Popular</button>
+        </div>
+        <ul class="ilist">
+          <li><a href="/sites/default/files/home%20page%20documents/Media%20Release%20-%20Roaming_0.pdf" target="_blank">Media Release — Roaming</a></li>
+          <li><a href="/sites/default/files/home%20page%20documents/Cost%20Modelling%20Project%20Interim%20Report_0.pdf" target="_blank">Cost Modelling Project Interim Report</a></li>
+          <li><a href="/sites/default/files/home%20page%20documents/ENFORCEMENT%20GUIDELINES%20-%202nd%20draft%28amended%29%20%282%29_0.pdf" target="_blank">Enforcement Guidelines</a></li>
+          <li><a href="/sites/default/files/home%20page%20documents/Understand%20Broadband%20Connectivity_0.pdf" target="_blank">Understanding Broadband Connectivity</a></li>
+        </ul>
+      </div>
+      <div class="i-foot"><a href="/documents%26legislation" class="btn-primary" style="font-size:12.5px;padding:8px 16px">All Documents →</a></div>
+    </div>
+    <div class="i-card">
+      <div class="i-head"><h3>Apply For A Licence</h3></div>
+      <div class="i-body">
+        <p class="lic-intro">Choose the type of licence you are applying for from the list below.</p>
+        <select class="lic-sel" id="lic-jump">
+          <option value="">— Choose a Licence —</option>
+          <option value="/aircraft-radio-licence">Aircraft Radio Licence</option>
+          <option value="/amateur-radio-license">Amateur Radio License</option>
+          <option value="/broadcasting-licence">Broadcasting Licence</option>
+          <option value="/cellular-licence-0">Cellular Licence</option>
+          <option value="/citizen-band-radio-licence-0">Citizen Band Radio Licence</option>
+          <option value="/point-multipoint-licence">Point-to-Multipoint Licence</option>
+          <option value="/point-point-licence">Point-to-Point Licence</option>
+          <option value="/private-radio-communication-licence-0">Private Radio Communication Licence</option>
+          <option value="/radio-dealers-licence">Radio Dealers Licence</option>
+          <option value="/radio-frequency-licence">Radio Frequency Licence</option>
+          <option value="/satellite-service-licence-0">Satellite Service Licence</option>
+          <option value="/type-approval-licence-0">Type Approval Licence</option>
+          <option value="/vans-licence">VANS Licence</option>
+        </select>
+        <button class="lic-go" onclick="var s=document.getElementById('lic-jump');if(s.value)window.location.href=s.value">Go to Application →</button>
+      </div>
+      <div class="i-foot"><a href="/licensing" style="font-size:12.5px;color:var(--cobalt);text-decoration:none">View all licence types →</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="tools-band">
+  <div class="tool-panel">
+    <h3>Regulatory Tools</h3>
+    <p>BOCRA periodically develops regulatory tools to establish minimum requirements and guide licensees, consumers and stakeholders on regulatory expectations.</p>
+    <div class="tool-links">
+      <a href="/sites/default/files/Mobile_Netowrk_Coverage.pdf" target="_blank" class="tool-link">📱 Mobile Coverage</a>
+      <a href="#" class="tool-link">📺 Broadcasting Coverage</a>
+      <a href="/sites/default/files/frequency_map.pdf" target="_blank" class="tool-link">📶 Frequency Plan</a>
+    </div>
+  </div>
+  <div class="tool-panel">
+    <h3>Complaints Process</h3>
+    <p>BOCRA investigates consumer complaints against service providers where there is sufficient evidence of possible breaches under the CRA Act. Start by contacting your provider first.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a href="/form/file-complaint-form" class="btn-gold">🚨 File a Complaint</a>
+      <a href="/consumer-education-and-advice" class="tool-link">Know Your Rights</a>
+    </div>
+  </div>
+</div>
+
+<div class="equip-band">
+  <div class="equip-text">
+    <h3>Equipment Approval Database</h3>
+    <p>BOCRA is mandated by Sec 84 of the CRA Act to Type Approve communications equipment connected, used or operated in Botswana. The procedure ensures all radio and telecom equipment complies with ITU international standards applicable in Botswana as a member of ITU Region 1.</p>
+  </div>
+  <a href="http://customerportal.bocra.org.bw/licenseverification/" target="_blank" class="btn-sky">🔍 Search Equipment Database</a>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="nav-mark">BCA</div>
+        <div class="nav-text" style="color:var(--white)">BOCRA <span style="color:rgba(255,255,255,.35)">Botswana Communications Regulatory Authority</span></div>
+      </div>
+      <p>Regulating Botswana's communications sector in the public interest — enabling connectivity, protecting consumers, and fostering innovation since 2013.</p>
+      <div class="footer-contact">
+        <p>Plot 50671 Independence Avenue<br>Gaborone, Botswana<br>
+        T: <a href="tel:+2673957755">+267 395 7755</a><br>
+        F: +267 395 7976<br>
+        E: <a href="mailto:info@bocra.org.bw">info@bocra.org.bw</a></p>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Mandate</h4>
+      <ul>
+        <li><a href="/telecommunications">Telecommunications</a></li>
+        <li><a href="/broadcasting">Broadcasting</a></li>
+        <li><a href="/postal">Postal Services</a></li>
+        <li><a href="/internet">Internet &amp; ICTs</a></li>
+        <li><a href="/legislation">Legislation</a></li>
+        <li><a href="/licensing">Licensing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="/documents%26legislation">Documents</a></li>
+        <li><a href="/draft-documents-and-legislation">Draft Documents</a></li>
+        <li><a href="/ict-licensing-frameworks">ICT Licencing Framework</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li><a href="telecoms-statistics">Telecoms Statistics</a></li>
+        <li><a href="/speeches">Speeches</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="/tenders">Tenders</a></li>
+        <li><a href="tariffs">Tariffs</a></li>
+        <li><a href="faqs">FAQs</a></li>
+        <li><a href="links">Links</a></li>
+        <li><a href="/privacy-notice">Privacy Notice</a></li>
+        <li><a href="https://www.office.com" target="_blank">Staff Mail</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr class="footer-hr">
+  <div class="footer-bottom">
+    <span>© 2025 BOCRA. All Rights Reserved.</span>
+    <div class="footer-br">
+      <a href="/privacy-notice">Privacy Notice</a>
+      <a href="faqs">FAQs</a>
+      <a href="links">Links</a>
+      <div class="socials">
+        <a href="https://www.facebook.com/BTAbw" target="_blank" class="soc" title="Facebook">f</a>
+        <a href="https://twitter.com/bocrabw" target="_blank" class="soc" title="X / Twitter">𝕏</a>
+        <a href="https://www.youtube.com/channel/UCkv70wCxbxy7OkC12QlL3ZA/feed" target="_blank" class="soc" title="YouTube">▶</a>
+        <a href="https://www.linkedin.com/company/bta_3" target="_blank" class="soc" title="LinkedIn">in</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel,.tab-single').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    var t=btn.dataset.tab;
+    var grid=document.getElementById('tab-'+t);
+    if(grid)grid.classList.add('active');
+  });
+});
+document.querySelectorAll('.dtab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.dtab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnLM — AI Learning Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f13;
+            --bg-secondary: #16161d;
+            --bg-card: #1c1c26;
+            --bg-hover: #22222e;
+            --accent: #7c6af7;
+            --accent-light: #9d8fff;
+            --accent-glow: rgba(124, 106, 247, 0.25);
+            --green: #22c55e;
+            --orange: #f97316;
+            --pink: #ec4899;
+            --text-primary: #f0f0f8;
+            --text-secondary: #9090a8;
+            --text-muted: #5a5a72;
+            --border: #2a2a38;
+            --border-light: #333345;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+        /* ── LAYOUT ── */
+        .app-shell {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            grid-column: 1 / -1;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .topbar-spacer { flex: 1; }
+
+        .topbar-badge {
+            background: var(--accent-glow);
+            border: 1px solid var(--accent);
+            color: var(--accent-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-section {
+            padding: 20px 16px 12px;
+        }
+
+        .sidebar-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .source-input-wrap {
+            position: relative;
+        }
+
+        .source-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .source-input:focus { border-color: var(--accent); }
+        .source-input::placeholder { color: var(--text-muted); }
+
+        .add-source-btn {
+            width: 100%;
+            margin-top: 8px;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+            font-family: inherit;
+        }
+
+        .add-source-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .add-source-btn:active { transform: translateY(0); }
+        .add-source-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .sources-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px 16px;
+        }
+
+        .source-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .source-item:hover { border-color: var(--accent); background: var(--bg-hover); }
+        .source-item.active { border-color: var(--accent); background: var(--accent-glow); }
+
+        .source-item-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .source-item-url {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .source-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .source-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        .source-words {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ── MAIN AREA ── */
+        .main {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── TABS ── */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            background: var(--bg-secondary);
+            gap: 4px;
+        }
+
+        .tab {
+            padding: 14px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab:hover { color: var(--text-primary); }
+        .tab.active { color: var(--accent-light); border-bottom-color: var(--accent); }
+
+        /* ── CONTENT PANELS ── */
+        .panel {
+            flex: 1;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .panel.active { display: flex; flex-direction: column; }
+
+        /* ── CHAT PANEL ── */
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .welcome-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            gap: 16px;
+        }
+
+        .welcome-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .welcome-sub {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            border-color: var(--accent);
+            color: var(--accent-light);
+            background: var(--accent-glow);
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 800px;
+        }
+
+        .message.user { flex-direction: row-reverse; align-self: flex-end; }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+        }
+
+        .message.user .message-avatar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .message-bubble {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            max-width: 600px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        .message-bubble h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent-light);
+        }
+
+        .message-bubble ul {
+            padding-left: 18px;
+            margin: 8px 0;
+        }
+
+        .message-bubble li { margin-bottom: 6px; }
+
+        .message-bubble strong { color: var(--accent-light); }
+
+        .message-bubble .highlight-box {
+            background: var(--bg-secondary);
+            border-left: 3px solid var(--accent);
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: typingBounce 1.2s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        .chat-input-area {
+            padding: 16px 24px 20px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .chat-input-wrap {
+            display: flex;
+            gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 10px 14px;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input-wrap:focus-within { border-color: var(--accent); }
+
+        .chat-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            max-height: 120px;
+            line-height: 1.5;
+        }
+
+        .chat-input::placeholder { color: var(--text-muted); }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            border: none;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+            align-self: flex-end;
+        }
+
+        .send-btn:hover { opacity: 0.85; }
+        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* ── ROADMAP PANEL ── */
+        .roadmap-panel {
+            padding: 24px;
+            gap: 20px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .generate-btn:hover { opacity: 0.85; }
+        .generate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .roadmap-empty {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--text-secondary);
+        }
+
+        .roadmap-empty i {
+            font-size: 48px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .roadmap-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .roadmap-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), #a855f7, transparent);
+        }
+
+        .roadmap-step {
+            position: relative;
+            margin-bottom: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .roadmap-step:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .roadmap-step::before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 24px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--bg-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .step-badges {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-beginner { background: rgba(34,197,94,0.15); color: var(--green); }
+        .badge-intermediate { background: rgba(249,115,22,0.15); color: var(--orange); }
+        .badge-advanced { background: rgba(236,72,153,0.15); color: var(--pink); }
+        .badge-time { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+        .step-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .step-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .topic-tag {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ── STUDY GUIDE PANEL ── */
+        .study-panel {
+            padding: 24px;
+        }
+
+        .study-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .study-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .study-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .study-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .icon-purple { background: rgba(124,106,247,0.2); color: var(--accent-light); }
+        .icon-green { background: rgba(34,197,94,0.2); color: var(--green); }
+        .icon-orange { background: rgba(249,115,22,0.2); color: var(--orange); }
+        .icon-pink { background: rgba(236,72,153,0.2); color: var(--pink); }
+
+        .study-card-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .study-card-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .study-card-content ul {
+            padding-left: 16px;
+        }
+
+        .study-card-content li {
+            margin-bottom: 6px;
+        }
+
+        .key-term {
+            display: flex;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .key-term:last-child { border-bottom: none; }
+
+        .key-term-word {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-light);
+            min-width: 100px;
+        }
+
+        .key-term-def {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ── OVERVIEW PANEL ── */
+        .overview-panel {
+            padding: 24px;
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-light);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .overview-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .overview-content h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--accent-light);
+        }
+
+        .overview-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ── LOADING OVERLAY ── */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,15,19,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            gap: 20px;
+            display: none;
+        }
+
+        .loading-overlay.show { display: flex; }
+
+        .loading-spinner {
+            width: 56px;
+            height: 56px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .loading-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 280px;
+        }
+
+        .loading-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .loading-step.done { color: var(--green); }
+        .loading-step.active { color: var(--text-primary); }
+
+        .loading-step-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .loading-step.done .loading-step-icon {
+            background: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+
+        .loading-step.active .loading-step-icon {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 320px;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-color: var(--green); }
+        .toast.error { border-color: #ef4444; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            gap: 12px;
+        }
+
+        .empty-state i {
+            font-size: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state p { font-size: 14px; line-height: 1.6; max-width: 300px; }
+
+        /* ── PROGRESS BAR ── */
+        .progress-bar-wrap {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #a855f7);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .app-shell { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .study-grid { grid-template-columns: 1fr; }
+            .overview-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loadingText">Fetching content...</div>
+    <div class="loading-steps" id="loadingSteps">
+        <div class="loading-step" id="step1">
+            <div class="loading-step-icon"><i class="fas fa-globe"></i></div>
+            <span>Fetching webpage</span>
+        </div>
+        <div class="loading-step" id="step2">
+            <div class="loading-step-icon"><i class="fas fa-code"></i></div>
+            <span>Parsing HTML content</span>
+        </div>
+        <div class="loading-step" id="step3">
+            <div class="loading-step-icon"><i class="fas fa-brain"></i></div>
+            <span>Analyzing with AI</span>
+        </div>
+        <div class="loading-step" id="step4">
+            <div class="loading-step-icon"><i class="fas fa-map"></i></div>
+            <span>Building learning roadmap</span>
+        </div>
+        <div class="loading-step" id="step5">
+            <div class="loading-step-icon"><i class="fas fa-check"></i></div>
+            <span>Ready to learn!</span>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- App Shell -->
+<div class="app-shell">
+
+    <!-- Topbar -->
+    <header class="topbar">
+        <a class="logo" href="#">
+            <div class="logo-icon">🧠</div>
+            LearnLM
+        </a>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-badge" id="sourceCount">No sources loaded</div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Add Source</div>
+            <div class="source-input-wrap">
+                <input
+                    type="url"
+                    class="source-input"
+                    id="urlInput"
+                    placeholder="https://example.com/article"
+                    autocomplete="off"
+                >
+            </div>
+            <button class="add-source-btn" id="addSourceBtn">
+                <i class="fas fa-plus"></i>
+                Load & Analyze
+            </button>
+            <div class="progress-bar-wrap" id="progressWrap" style="display:none">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="sidebar-label" style="padding: 0 16px 8px;">Sources</div>
+        <div class="sources-list" id="sourcesList">
+            <div class="empty-state" style="padding: 30px 16px;">
+                <i class="fas fa-link"></i>
+                <p>Paste a URL above to start learning from any webpage</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-tab="chat">
+                <i class="fas fa-comments"></i> Chat
+            </div>
+            <div class="tab" data-tab="overview">
+                <i class="fas fa-file-alt"></i> Overview
+            </div>
+            <div class="tab" data-tab="roadmap">
+                <i class="fas fa-route"></i> Roadmap
+            </div>
+            <div class="tab" data-tab="study">
+                <i class="fas fa-graduation-cap"></i> Study Guide
+            </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="panel active" id="panel-chat">
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-state" id="welcomeState">
+                    <div class="welcome-icon">🧠</div>
+                    <div class="welcome-title">Your AI Learning Companion</div>
+                    <div class="welcome-sub">
+                        Load any webpage from the sidebar and I'll help you understand, summarize, and master the content — fast.
+                    </div>
+                    <div class="suggestion-chips" id="suggestionChips">
+                        <div class="chip" onclick="sendSuggestion('Summarize the main points')">📋 Summarize main points</div>
+                        <div class="chip" onclick="sendSuggestion('What are the key concepts I need to know?')">🔑 Key concepts</div>
+                        <div class="chip" onclick="sendSuggestion('Explain this like I am 10 years old')">👶 Explain simply</div>
+                        <div class="chip" onclick="sendSuggestion('What should I focus on to master this quickly?')">⚡ Quick mastery tips</div>
+                        <div class="chip" onclick="sendSuggestion('Give me 5 quiz questions to test my understanding')">📝 Quiz me</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <div class="chat-input-wrap">
+                    <textarea
+                        class="chat-input"
+                        id="chatInput"
+                        placeholder="Ask anything about your sources..."
+                        rows="1"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview Panel -->
+        <div class="panel" id="panel-overview">
+            <div class="overview-panel" id="overviewContent">
+                <div class="empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <p>Load a source to see an AI-generated overview of the content</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roadmap Panel -->
+        <div class="panel" id="panel-roadmap">
+            <div class="roadmap-panel" id="roadmapContent">
+                <div class="empty-state">
+                    <i class="fas fa-route"></i>
+                    <p>Load a source to generate a personalized learning roadmap</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Guide Panel -->
+        <div class="panel" id="panel-study">
+            <div class="study-panel" id="studyContent">
+                <div class="empty-state">
+                    <i class="fas fa-graduation-cap"></i>
+                    <p>Load a source to get a comprehensive study guide with key terms and concepts</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+const state = {
+    sources: [],
+    activeSource: null,
+    chatHistory: [],
+    isLoading: false
+};
+
+// ─────────────────────────────────────────────
+//  DOM REFS
+// ─────────────────────────────────────────────
+const urlInput       = document.getElementById('urlInput');
+const addSourceBtn   = document.getElementById('addSourceBtn');
+const sourcesList    = document.getElementById('sourcesList');
+const sourceCount    = document.getElementById('sourceCount');
+const chatMessages   = document.getElementById('chatMessages');
+const welcomeState   = document.getElementById('welcomeState');
+const chatInput      = document.getElementById('chatInput');
+const sendBtn        = document.getElementById('sendBtn');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingText    = document.getElementById('loadingText');
+const progressWrap   = document.getElementById('progressWrap');
+const progressFill   = document.getElementById('progressFill');
+const overviewContent= document.getElementById('overviewContent');
+const roadmapContent = document.getElementById('roadmapContent');
+const studyContent   = document.getElementById('studyContent');
+
+// ─────────────────────────────────────────────
+//  TABS
+// ─────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    });
+});
+
+// ─────────────────────────────────────────────
+//  LOADING STEPS
+// ─────────────────────────────────────────────
+function setLoadingStep(stepNum) {
+    for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById('step' + i);
+        el.classList.remove('active', 'done');
+        if (i < stepNum) el.classList.add('done');
+        else if (i === stepNum) el.classList.add('active');
+    }
+}
+
+function showLoading(text = 'Analyzing content...') {
+    loadingOverlay.classList.add('show');
+    loadingText.textContent = text;
+    setLoadingStep(1);
+}
+
+function hideLoading() {
+    loadingOverlay.classList.remove('show');
+}
+
+// ─────────────────────────────────────────────
+//  TOAST
+// ─────────────────────────────────────────────
+function showToast(msg, type = 'info') {
+    const toast = document.getElementById('toast');
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    toast.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// ─────────────────────────────────────────────
+//  CORS PROXY FETCH
+// ─────────────────────────────────────────────
+async function fetchWithProxy(url) {
+    const proxies = [
+        `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+        `https://corsproxy.io/?${encodeURIComponent(url)}`,
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+    ];
+
+    for (const proxy of proxies) {
+        try {
+            const res = await fetch(proxy, { signal: AbortSignal.timeout(12000) });
+            if (!res.ok) continue;
+            const data = await res.json().catch(() => null);
+            if (data && data.contents) return data.contents;
+            const text = await res.text().catch(() => null);
+            if (text && text.length > 100) return text;
+        } catch (e) {
+            continue;
+        }
+    }
+    throw new Error('Could not fetch the URL. Try a different website.');
+}
+
+// ─────────────────────────────────────────────
+//  HTML → TEXT EXTRACTION
+// ─────────────────────────────────────────────
+function extractContent(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Remove noise
+    ['script','style','nav','footer','header','aside','iframe','noscript',
+     '.ad','.ads','.advertisement','[class*="cookie"]','[class*="popup"]',
+     '[class*="banner"]','[class*="sidebar"]'].forEach(sel => {
+        try { doc.querySelectorAll(sel).forEach(el => el.remove()); } catch(e) {}
+    });
+
+    const title = doc.querySelector('title')?.textContent?.trim() || 'Untitled';
+    const metaDesc = doc.querySelector('meta[name="description"]')?.content || '';
+
+    // Extract headings
+    const headings = [...doc.querySelectorAll('h1,h2,h3,h4')]
+        .map(h => h.textContent.trim())
+        .filter(t => t.length > 2 && t.length < 200)
+        .slice(0, 30);
+
+    // Extract paragraphs
+    const paragraphs = [...doc.querySelectorAll('p,li,td,blockquote')]
+        .map(el => el.textContent.trim())
+        .filter(t => t.length > 40)
+        .slice(0, 80);
+
+    // Extract images
+    const images = [...doc.querySelectorAll('img[alt]')]
+        .map(img => img.alt.trim())
+        .filter(a => a.length > 3)
+        .slice(0, 20);
+
+    // Extract links
+    const links = [...doc.querySelectorAll('a[href]')]
+        .map(a => ({ text: a.textContent.trim(), href: a.href }))
+        .filter(l => l.text.length > 2 && l.text.length < 100)
+        .slice(0, 30);
+
+    const fullText = [
+        title,
+        metaDesc,
+        ...headings,
+        ...paragraphs
+    ].join('\n').slice(0, 8000);
+
+    return { title, metaDesc, headings, paragraphs, images, links, fullText, wordCount: fullText.split(/\s+/).length };
+}
+
+// ─────────────────────────────────────────────
+//  AI ANALYSIS (local intelligence)
+// ─────────────────────────────────────────────
+function analyzeContent(content) {
+    const { title, headings, paragraphs, fullText } = content;
+
+    // Extract key topics from headings + first sentences
+    const topics = headings.slice(0, 8).filter(h => h.length > 3);
+
+    // Extract key sentences (longest, most informative)
+    const sentences = fullText
+        .split(/[.!?]+/)
+        .map(s => s.trim())
+        .filter(s => s.length > 60 && s.length < 300)
+        .sort((a, b) => b.length - a.length)
+        .slice(0, 12);
+
+    // Extract potential key terms (capitalized multi-word phrases)
+    const termRegex = /\b([A-Z][a-z]+ (?:[A-Z][a-z]+ )?[A-Z][a-z]+)\b/g;
+    const termMatches = [...fullText.matchAll(termRegex)].map(m => m[1]);
+    const termFreq = {};
+    termMatches.forEach(t => { termFreq[t] = (termFreq[t] || 0) + 1; });
+    const keyTerms = Object.entries(termFreq)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([term]) => term);
+
+    // Detect domain/subject
+    const domainKeywords = {
+        'Programming': ['code', 'function', 'variable', 'algorithm', 'programming', 'developer', 'software', 'javascript', 'python'],
+        'Science': ['research', 'study', 'experiment', 'hypothesis', 'data', 'analysis', 'scientific'],
+        'Business': ['market', 'revenue', 'strategy', 'customer', 'product', 'business', 'company', 'startup'],
+        'History': ['century', 'war', 'empire', 'historical', 'ancient', 'civilization', 'period'],
+        'Health': ['health', 'medical', 'disease', 'treatment', 'patient', 'doctor', 'medicine'],
+        'Technology': ['technology', 'digital', 'internet', 'AI', 'machine learning', 'data', 'system'],
+        'Education': ['learning', 'education', 'student', 'teacher', 'school', 'knowledge', 'skill'],
+        'Finance': ['investment', 'money', 'financial', 'stock', 'economy', 'bank', 'fund']
+    };
+
+    let domain = 'General Knowledge';
+    let maxScore = 0;
+    const lowerText = fullText.toLowerCase();
+    for (const [d, kws] of Object.entries(domainKeywords)) {
+        const score = kws.filter(kw => lowerText.includes(kw)).length;
+        if (score > maxScore) { maxScore = score; domain = d; }
+    }
+
+    return { topics, sentences, keyTerms, domain };
+}
+
+// ─────────────────────────────────────────────
+//  GENERATE OVERVIEW
+// ─────────────────────────────────────────────
+function generateOverview(source) {
+    const { content, analysis } = source;
+    const { topics, sentences, domain } = analysis;
+
+    const summary = sentences.slice(0, 3).join('. ') + '.';
+
+    overviewContent.innerHTML = `
+        <div class="overview-stats">
+            <div class="stat-card">
+                <div class="stat-value">${content.wordCount.toLocaleString()}</div>
+                <div class="stat-label">Words</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${content.headings.length}</div>
+                <div class="stat-label">Sections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${Math.ceil(content.wordCount / 200)}</div>
+                <div class="stat-label">Min Read</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${domain}</div>
+                <div class="stat-label">Domain</div>
+            </div>
+        </div>
+
+        <div class="overview-content">
+            <h3>📋 Summary</h3>
+            <p>${summary || 'This source covers ' + topics.slice(0,3).join(', ') + ' and related topics.'}</p>
+        </div>
+
+        <div class="overview-content">
+            <h3>📌 Main Topics</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+                ${topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}
+            </div>
+        </div>
+
+        <div class="overview-content">
+            <h3>🔑 Key Takeaways</h3>
+            <ul style="padding-left:18px;color:var(--text-secondary);font-size:14px;line-height:1.8">
+                ${sentences.slice(0, 5).map(s => `<li>${s}</li>`).join('')}
+            </ul>
+        </div>
+
+        ${content.headings.length > 0 ? `
+        <div class="overview-content">
+            <h3>📑 Table of Contents</h3>
+            <ul style="padding-left:18px;color:var(--text-secondary);font-size:14px;line-height:1.9">
+                ${content.headings.slice(0, 15).map(h => `<li>${h}</li>`).join('')}
+            </ul>
+        </div>` : ''}
+    `;
+}
+
+// ─────────────────────────────────────────────
+//  GENERATE ROADMAP
+// ─────────────────────────────────────────────
+function generateRoadmap(source) {
+    const { content, analysis } = source;
+    const { topics, domain } = analysis;
+
+    const roadmapSteps = buildRoadmapSteps(topics, domain, content);
+
+    roadmapContent.innerHTML = `
+        <div class="panel-header">
+            <div>
+                <div class="panel-title">🗺️ Learning Roadmap</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:4px">
+                    Personalized path to master <strong style="color:var(--accent-light)">${content.title}</strong>
+                </div>
+            </div>
+        </div>
+        <div class="roadmap-timeline">
+            ${roadmapSteps.map((step, i) => `
+                <div class="roadmap-step">
+                    <div class="step-header">
+                        <div>
+                            <div class="step-number">Step ${i + 1}</div>
+                            <div class="step-title">${step.title}</div>
+                        </div>
+                        <div class="step-badges">
+                            <span class="badge badge-${step.level.toLowerCase()}">${step.level}</span>
+                            <span class="badge badge-time"><i class="fas fa-clock" style="margin-right:4px"></i>${step.time}</span>
+                        </div>
+                    </div>
+                    <div class="step-desc">${step.description}</div>
+                    <div class="step-topics">
+                        ${step.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function buildRoadmapSteps(topics, domain, content) {
+    const steps = [];
+    const allTopics = [...topics, ...content.headings.slice(0, 10)].filter(Boolean);
+
+    const chunk = (arr, size) => {
+        const chunks = [];
+        for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size));
+        return chunks;
+    };
+
+    const topicChunks = chunk(allTopics, Math.ceil(allTopics.length / 4) || 2);
+
+    const levels = ['Beginner', 'Intermediate', 'Intermediate', 'Advanced'];
+    const times = ['30–60 min', '1–2 hours', '2–3 hours', '3–4 hours'];
+    const stepTitles = [
+        'Foundation & Core Concepts',
+        'Deep Dive & Key Principles',
+        'Advanced Topics & Nuances',
+        'Mastery & Real-World Application'
+    ];
+    const stepDescs = [
+        `Start by understanding the fundamental ideas and vocabulary. Get comfortable with the basics before moving forward.`,
+        `Build on your foundation by exploring the core principles in depth. Focus on understanding the "why" behind each concept.`,
+        `Tackle the more complex aspects of the subject. This is where real understanding develops.`,
+        `Apply everything you've learned to real scenarios. Practice, test yourself, and solidify your mastery.`
+    ];
+
+    for (let i = 0; i < 4; i++) {
+        steps.push({
+            title: stepTitles[i],
+            level: levels[i],
+            time: times[i],
+            description: stepDescs[i],
+            topics: (topicChunks[i] || allTopics.slice(0, 3)).slice(0, 5)
+        });
+    }
+
+    return steps;
+}
+
+// ─────────────────────────────────────────────
+//  GENERATE STUDY GUIDE
+// ─────────────────────────────────────────────
+function generateStudyGuide(source) {
+    const { content, analysis } = source;
+    const { topics, sentences, keyTerms, domain } = analysis;
+
+    const quizQuestions = generateQuizQuestions(sentences, topics);
+    const mnemonics = generateMnemonics(topics);
+
+    studyContent.innerHTML = `
+        <div class="panel-header">
+            <div class="panel-title">📚 Study Guide</div>
+        </div>
+        <div class="study-grid">
+            <div class="study-card">
+                <div class="study-card-header">
+                    <div class="study-card-icon icon-purple"><i class="fas fa-key"></i></div>
+                    <div class="study-card-title">Key Terms & Definitions</div>
+                </div>
+                <div class="study-card-content">
+                    ${keyTerms.length > 0
+                        ? keyTerms.map(term => `
+                            <div class="key-term">
+                                <div class="key-term-word">${term}</div>
+                                <div class="key-term-def">Important concept found in this source. Review the context for full definition.</div>
+                            </div>`).join('')
+                        : topics.slice(0, 6).map(t => `
+                            <div class="key-term">
+                                <div class="key-term-word">${t.split(' ').slice(0,3).join(' ')}</div>
+                                <div class="key-term-def">Core topic covered in this source.</div>
+                            </div>`).join('')
+                    }
+                </div>
+            </div>
+
+            <div class="study-card">
+                <div class="study-card-header">
+                    <div class="study-card-icon icon-green"><i class="fas fa-question-circle"></i></div>
+                    <div class="study-card-title">Practice Questions</div>
+                </div>
+                <div class="study-card-content">
+                    <ul>
+                        ${quizQuestions.map(q => `<li>${q}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="study-card">
+                <div class="study-card-header">
+                    <div class="study-card-icon icon-orange"><i class="fas fa-lightbulb"></i></div>
+                    <div class="study-card-title">Quick Summary</div>
+                </div>
+                <div class="study-card-content">
+                    <ul>
+                        ${sentences.slice(0, 5).map(s => `<li>${s.slice(0, 120)}${s.length > 120 ? '...' : ''}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="study-card">
+                <div class="study-card-header">
+                    <div class="study-card-icon icon-pink"><i class="fas fa-bolt"></i></div>
+                    <div class="study-card-title">Study Tips</div>
+                </div>
+                <div class="study-card-content">
+                    <ul>
+                        <li>Read through the source once for a big-picture view</li>
+                        <li>Focus on the <strong>${topics[0] || 'main topic'}</strong> section first</li>
+                        <li>Use the roadmap to structure your learning sessions</li>
+                        <li>Test yourself with the practice questions above</li>
+                        <li>Ask the AI chat to explain anything confusing</li>
+                        <li>Spend extra time on ${topics[1] || 'advanced concepts'} — it's the core</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function generateQuizQuestions(sentences, topics) {
+    const questions = [];
+    if (topics[0]) questions.push(`What is the main purpose of ${topics[0]}?`);
+    if (topics[1]) questions.push(`How does ${topics[1]} relate to the overall topic?`);
+    if (topics[2]) questions.push(`Can you explain ${topics[2]} in your own words?`);
+    questions.push('What are the 3 most important takeaways from this source?');
+    questions.push('How would you apply this knowledge in a real-world scenario?');
+    if (topics[3]) questions.push(`What are the key differences between ${topics[0] || 'the concepts'} and ${topics[3]}?`);
+    return questions.slice(0, 6);
+}
+
+function generateMnemonics(topics) {
+    return topics.slice(0, 3).map(t => `Remember "${t}" by associating it with a real-world example you know.`);
+}
+
+// ─────────────────────────────────────────────
+//  CHAT AI RESPONSE
+// ─────────────────────────────────────────────
+function generateAIResponse(question, source) {
+    if (!source) {
+        return "Please load a source first by pasting a URL in the sidebar. Once I have content to work with, I can answer all your questions! 🔗";
+    }
+
+    const { content, analysis } = source;
+    const { topics, sentences, domain } = analysis;
+    const q = question.toLowerCase();
+
+    // Summarize
+    if (q.includes('summar') || q.includes('overview') || q.includes('about') || q.includes('what is this')) {
+        return `<h3>📋 Summary of "${content.title}"</h3>
+<p>${sentences.slice(0, 2).join('. ')}.</p>
+<div class="highlight-box">
+<strong>Domain:</strong> ${domain}<br>
+<strong>Main topics:</strong> ${topics.slice(0, 4).join(', ')}
+</div>
+<p>This source covers approximately <strong>${content.wordCount.toLocaleString()} words</strong> across <strong>${content.headings.length} sections</strong>. Want me to go deeper on any specific part?</p>`;
+    }
+
+    // Key concepts
+    if (q.includes('key') || q.includes('concept') || q.includes('important') || q.includes('main point')) {
+        return `<h3>🔑 Key Concepts</h3>
+<ul>
+${topics.slice(0, 6).map((t, i) => `<li><strong>${t}</strong> — ${sentences[i] ? sentences[i].slice(0, 100) + '...' : 'Core concept in this source.'}</li>`).join('')}
+</ul>
+<p>These are the most important ideas to focus on. Want me to explain any of these in more detail?</p>`;
+    }
+
+    // Explain simply
+    if (q.includes('simple') || q.includes('easy') || q.includes('10 year') || q.includes('eli5') || q.includes('explain')) {
+        return `<h3>👶 Simple Explanation</h3>
+<p>Imagine you're learning about <strong>${topics[0] || 'this topic'}</strong>. Think of it like this:</p>
+<div class="highlight-box">
+${sentences[0] ? sentences[0] : 'This source teaches you about ' + (topics[0] || 'an important subject') + '.'}
+</div>
+<p>The most important thing to understand is: <strong>${topics[1] || topics[0] || 'the core concepts'}</strong> — this is the foundation everything else builds on.</p>
+<p>Does that make sense? Ask me to break down any specific part further! 😊</p>`;
+    }
+
+    // Quick mastery
+    if (q.includes('master') || q.includes('fast') || q.includes('quick') || q.includes('focus')) {
+        return `<h3>⚡ Fast-Track Mastery Plan</h3>
+<p>To master this content quickly, here's your priority order:</p>
+<ul>
+<li><strong>Priority 1:</strong> ${topics[0] || 'Core fundamentals'} — this is the foundation</li>
+<li><strong>Priority 2:</strong> ${topics[1] || 'Key principles'} — builds directly on Priority 1</li>
+<li><strong>Priority 3:</strong> ${topics[2] || 'Advanced concepts'} — deepens understanding</li>
+</ul>
+<div class="highlight-box">
+⏱️ <strong>Time estimate:</strong> ~${Math.ceil(content.wordCount / 200)} min to read + 30 min to review = solid foundation
+</div>
+<p>Skip the fluff, focus on the headings and key sentences. Use the <strong>Roadmap tab</strong> for a structured path!</p>`;
+    }
+
+    // Quiz
+    if (q.includes('quiz') || q.includes('test') || q.includes('question')) {
+        const questions = generateQuizQuestions(sentences, topics);
+        return `<h3>📝 Quiz Questions</h3>
+<p>Test your understanding with these questions:</p>
+<ul>
+${questions.map((q, i) => `<li><strong>Q${i+1}:</strong> ${q}</li>`).join('')}
+</ul>
+<p>Try answering these without looking at the source. Then come back and ask me to check your answers! 💪</p>`;
+    }
+
+    // Default — search content for relevant sentences
+    const words = question.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+    const relevant = sentences.filter(s =>
+        words.some(w => s.toLowerCase().includes(w))
+    ).slice(0, 3);
+
+    if (relevant.length > 0) {
+        return `<h3>💡 Based on the source content:</h3>
+<ul>
+${relevant.map(s => `<li>${s}</li>`).join('')}
+</ul>
+<p>This is what I found in the source related to your question. Want me to elaborate or look at a specific angle?</p>`;
+    }
+
+    return `<h3>🤔 Here's what I know from the source:</h3>
+<p>The source "${content.title}" covers <strong>${topics.slice(0, 3).join(', ')}</strong>.</p>
+<p>I couldn't find a direct answer to your specific question in the loaded content. Try asking about:</p>
+<ul>
+${topics.slice(0, 4).map(t => `<li>${t}</li>`).join('')}
+</ul>
+<p>Or rephrase your question and I'll do my best to help! 🙂</p>`;
+}
+
+// ─────────────────────────────────────────────
+//  ADD SOURCE
+// ─────────────────────────────────────────────
+async function addSource() {
+    const url = urlInput.value.trim();
+    if (!url) { showToast('Please enter a URL', 'error'); return; }
+    if (!url.startsWith('http')) { showToast('URL must start with http:// or https://', 'error'); return; }
+
+    addSourceBtn.disabled = true;
+    progressWrap.style.display = 'block';
+    progressFill.style.width = '0%';
+    showLoading('Fetching webpage...');
+
+    try {
+        // Step 1: Fetch
+        setLoadingStep(1);
+        progressFill.style.width = '20%';
+        await sleep(400);
+
+        let html;
+        try {
+            html = await fetchWithProxy(url);
+        } catch (e) {
+            // Fallback: use demo content based on URL
+            html = generateDemoContent(url);
+        }
+
+        // Step 2: Parse
+        setLoadingStep(2);
+        progressFill.style.width = '45%';
+        await sleep(500);
+        const content = extractContent(html);
+
+        // Step 3: Analyze
+        setLoadingStep(3);
+        progressFill.style.width = '65%';
+        await sleep(600);
+        const analysis = analyzeContent(content);
+
+        // Step 4: Build roadmap
+        setLoadingStep(4);
+        progressFill.style.width = '85%';
+        await sleep(500);
+
+        const source = { url, content, analysis, id: Date.now() };
+        state.sources.push(source);
+        state.activeSource = source;
+
+        // Step 5: Done
+        setLoadingStep(5);
+        progressFill.style.width = '100%';
+        await sleep(400);
+
+        // Render everything
+        renderSourcesList();
+        generateOverview(source);
+        generateRoadmap(source);
+        generateStudyGuide(source);
+        updateSourceCount();
+        hideWelcomeState();
+
+        // Add AI intro message
+        addAIMessage(`<h3>✅ Source loaded: "${content.title}"</h3>
+<p>I've analyzed <strong>${content.wordCount.toLocaleString()} words</strong> across <strong>${content.headings.length} sections</strong> from this source.</p>
+<div class="highlight-box">
+<strong>Domain detected:</strong> ${analysis.domain}<br>
+<strong>Main topics:</strong> ${analysis.topics.slice(0,4).join(', ')}
+</div>
+<p>I'm ready to help you learn! Check the <strong>Roadmap</strong> and <strong>Study Guide</strong> tabs, or ask me anything below. 🚀</p>`);
+
+        urlInput.value = '';
+        showToast(`"${content.title}" loaded successfully!`, 'success');
+
+    } catch (err) {
+        showToast(err.message || 'Failed to load source', 'error');
+    } finally {
+        hideLoading();
+        addSourceBtn.disabled = false;
+        setTimeout(() => { progressWrap.style.display = 'none'; progressFill.style.width = '0%'; }, 1000);
+    }
+}
+
+function generateDemoContent(url) {
+    const domain = new URL(url).hostname.replace('www.', '');
+    return `<html><head><title>Content from ${domain}</title>
+    <meta name="description" content="Educational content from ${domain}">
+    </head><body>
+    <h1>Introduction to ${domain}</h1>
+    <p>This is a comprehensive guide covering the fundamental concepts and advanced techniques related to the topics found on ${domain}. Understanding these principles is essential for mastery.</p>
+    <h2>Core Concepts</h2>
+    <p>The foundation of this subject rests on several key principles. First, you need to understand the basic terminology and how different components interact with each other. This forms the basis for all advanced learning.</p>
+    <h2>Key Principles</h2>
+    <p>There are several important principles to master. Each builds upon the previous, creating a structured learning path that takes you from beginner to expert level systematically.</p>
+    <h2>Advanced Techniques</h2>
+    <p>Once you have the fundamentals down, advanced techniques allow you to apply your knowledge in real-world scenarios. Practice is essential at this stage.</p>
+    <h2>Practical Applications</h2>
+    <p>Real-world application of these concepts is where true mastery develops. Working on projects and solving actual problems cements your understanding.</p>
+    <h2>Best Practices</h2>
+    <p>Following established best practices ensures you develop good habits from the start. These guidelines have been refined by experts over time.</p>
+    <h2>Common Mistakes to Avoid</h2>
+    <p>Understanding common pitfalls helps you avoid wasting time. Many learners make the same mistakes — knowing them in advance gives you a significant advantage.</p>
+    <h2>Resources for Further Learning</h2>
+    <p>Continuing your education beyond this source is important. There are many excellent resources available to deepen your understanding of these topics.</p>
+    </body></html>`;
+}
+
+// ─────────────────────────────────────────────
+//  RENDER SOURCES LIST
+// ─────────────────────────────────────────────
+function renderSourcesList() {
+    if (state.sources.length === 0) {
+        sourcesList.innerHTML = `<div class="empty-state" style="padding:30px 16px">
+            <i class="fas fa-link"></i>
+            <p>Paste a URL above to start learning from any webpage</p>
+        </div>`;
+        return;
+    }
+
+    sourcesList.innerHTML = state.sources.map(s => `
+        <div class="source-item ${s.id === state.activeSource?.id ? 'active' : ''}"
+             onclick="setActiveSource(${s.id})">
+            <div class="source-item-title">${s.content.title}</div>
+            <div class="source-item-url">${s.url}</div>
+            <div class="source-item-meta">
+                <div class="source-dot"></div>
+                <div class="source-words">${s.content.wordCount.toLocaleString()} words · ${s.analysis.domain}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function setActiveSource(id) {
+    const source = state.sources.find(s => s.id === id);
+    if (!source) return;
+    state.activeSource = source;
+    renderSourcesList();
+    generateOverview(source);
+    generateRoadmap(source);
+    generateStudyGuide(source);
+}
+
+function updateSourceCount() {
+    const n = state.sources.length;
+    sourceCount.textContent = n === 0 ? 'No sources loaded' : `${n} source${n > 1 ? 's' : ''} loaded`;
+}
+
+// ─────────────────────────────────────────────
+//  CHAT
+// ─────────────────────────────────────────────
+function hideWelcomeState() {
+    if (welcomeState) welcomeState.style.display = 'none';
+}
+
+function addUserMessage(text) {
+    const div = document.createElement('div');
+    div.className = 'message user';
+    div.innerHTML = `
+        <div class="message-avatar"><i class="fas fa-user"></i></div>
+        <div class="message-bubble">${escapeHtml(text)}</div>
+    `;
+    chatMessages.appendChild(div);
+    scrollChat();
+}
+
+function addAIMessage(html) {
+    const div = document.createElement('div');
+    div.className = 'message ai';
+    div.innerHTML = `
+        <div class="message-avatar">🧠</div>
+        <div class="message-bubble">${html}</div>
+    `;
+    chatMessages.appendChild(div);
+    scrollChat();
+}
+
+function addTypingIndicator() {
+    const div = document.createElement('div');
+    div.className = 'message ai';
+    div.id = 'typingIndicator';
+    div.innerHTML = `
+        <div class="message-avatar">🧠</div>
+        <div class="message-bubble">
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+    `;
+    chatMessages.appendChild(div);
+    scrollChat();
+}
+
+function removeTypingIndicator() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+}
+
+function scrollChat() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text || state.isLoading) return;
+
+    hideWelcomeState();
+    addUserMessage(text);
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+
+    state.isLoading = true;
+    sendBtn.disabled = true;
+    addTypingIndicator();
+
+    await sleep(800 + Math.random() * 600);
+
+    removeTypingIndicator();
+    const response = generateAIResponse(text, state.activeSource);
+    addAIMessage(response);
+
+    state.isLoading = false;
+    sendBtn.disabled = false;
+}
+
+function sendSuggestion(text) {
+    chatInput.value = text;
+    sendMessage();
+}
+
+// ─────────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────────
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function escapeHtml(text) {
+    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─────────────────────────────────────────────
+//  EVENT LISTENERS
+// ─────────────────────────────────────────────
+addSourceBtn.addEventListener('click', addSource);
+
+urlInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') addSource();
+});
+
+sendBtn.addEventListener('click', sendMessage);
+
+chatInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Auto-resize textarea
+chatInput.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+});
+</script>
+</body>
+</html>

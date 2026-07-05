@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aobakwe Ramogojwana — Mobile Systems Engineer</title>
+  <meta name="description" content="Aobakwe Ramogojwana is a Mobile Systems Engineer from Gaborone, Botswana. BSc (Hons) Mobile Technologies. Available for hire, freelance, and collaborations." />
+  <meta name="author" content="Aobakwe Ramogojwana" />
+  <meta property="og:title" content="Aobakwe Ramogojwana — Mobile Systems Engineer" />
+  <meta property="og:description" content="4 years of elite mobile engineering training. Android. Cross-platform. Security. UI/UX. Let's build something serious." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+  <!-- Noise overlay -->
+  <div class="noise"></div>
+
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+
+  <!-- ═══════════════════════════ NAV ═══════════════════════════ -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav-logo">AO<span>.</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#journey">Journey</a>
+      <a href="#simulator">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="nav-cv-btn" onclick="window.print()">Download CV</button>
+  </nav>
+
+  <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-left">
+      <div class="hero-tag">
+        <span class="live-dot"></span> Available for hire & freelance
+      </div>
+
+      <h1 class="hero-heading">
+        <span class="line" data-text="Building">Building</span>
+        <span class="line accent" data-text="Mobile">Mobile</span>
+        <span class="line" data-text="Systems">Systems</span>
+        <span class="line sub" data-text="That Matter.">That Matter.</span>
+      </h1>
+
+      <p class="hero-desc">
+        I'm <strong>Aobakwe Ramogojwana</strong> — a Mobile Systems Engineer from Gaborone, Botswana. 
+        I don't just write apps. I architect, secure, and ship digital products built to last.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#simulator" class="btn-main">See My Work <span>→</span></a>
+        <a href="#contact" class="btn-ghost">Let's Talk</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" data-count="420">0</span><span class="stat-suffix">Cr</span>
+          <span class="stat-label">Credits Earned</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="4">0</span><span class="stat-suffix">Yrs</span>
+          <span class="stat-label">Elite Training</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="20">0</span><span class="stat-suffix">+</span>
+          <span class="stat-label">Modules Cleared</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <!-- Profile Image + Business Card -->
+      <div class="card-scene" id="card-scene">
+        <div class="biz-card" id="biz-card">
+          <!-- FRONT -->
+          <div class="biz-front">
+            <div class="biz-shine" id="biz-shine"></div>
+            <div class="biz-top">
+              <!-- Profile photo placeholder -->
+              <div class="biz-avatar">
+                <img src="profile.jpg" alt="Aobakwe" id="biz-avatar-img" onerror="this.style.display='none';document.getElementById('biz-avatar-fallback').style.display='flex'">
+                <div class="biz-avatar-fallback" id="biz-avatar-fallback">AR</div>
+              </div>
+              <div class="biz-header-text">
+                <div class="biz-monogram">AR</div>
+                <div class="biz-loc">📍 Gaborone, Botswana</div>
+              </div>
+            </div>
+            <div class="biz-mid">
+              <div class="biz-name">Aobakwe Ramogojwana</div>
+              <div class="biz-title">Mobile Systems Engineer</div>
+              <div class="biz-degree">BSc (Hons) Mobile Technologies — Year 4</div>
+            </div>
+            <div class="biz-bot">
+              <div class="biz-tags">
+                <span>Android</span><span>Flutter</span><span>Security</span><span>UX</span>
+              </div>
+              <button class="biz-flip-btn" id="flip-to-back">QR Code →</button>
+            </div>
+          </div>
+
+          <!-- BACK -->
+          <div class="biz-back">
+            <div class="biz-shine" id="biz-shine-back"></div>
+            <div class="biz-back-inner">
+              <div class="qr-wrap">
+                <img id="portfolio-qr" src="" alt="Portfolio QR" />
+                <span>Scan to visit portfolio</span>
+              </div>
+              <div class="biz-back-info">
+                <p class="biz-back-name">A. Ramogojwana</p>
+                <p>ID: mtec22-005</p>
+                <ul>
+                  <li>Native & Cross-Platform Apps</li>
+                  <li>Telecom & Network Systems</li>
+                  <li>Mobile & Web Security</li>
+                  <li>Product Design & UX</li>
+                </ul>
+              </div>
+            </div>
+            <button class="biz-flip-btn" id="flip-to-front">← Flip Back</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-hint">Hover to tilt · Click to flip</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ ABOUT / WHY ME ═══════════════════════════ -->
+  <section class="about" id="about">
+    <div class="section-label">01 — About</div>
+    <div class="about-grid">
+      <div class="about-left">
+        <h2 class="section-heading">Why hire me<br>over anyone else?</h2>
+        <!-- Big profile image for this section -->
+        <div class="about-img-frame">
+          <img src="profile.jpg" alt="Aobakwe Ramogojwana" class="about-img" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'about-img-placeholder\'>AR</div>'">
+        </div>
+      </div>
+      <div class="about-right">
+        <p class="about-intro">
+          Most developers learn mobile from a weekend bootcamp. I spent <strong>4 years</strong> studying the engineering underneath — the networks, the security, the system design, the UX psychology.
+          That's the difference between someone who follows tutorials and someone who builds real products.
+        </p>
+
+        <div class="value-cards">
+          <div class="value-card" data-index="0">
+            <div class="vc-icon">⚙️</div>
+            <div class="vc-content">
+              <h3>System-Level Thinking</h3>
+              <p>I understand how apps communicate with towers, how packets move through networks, how memory constraints affect performance. That knowledge makes everything I build faster and more reliable.</p>
+            </div>
+          </div>
+          <div class="value-card" data-index="1">
+            <div class="vc-icon">🔒</div>
+            <div class="vc-content">
+              <h3>Security By Default</h3>
+              <p>Not a plugin I add at the end — security is baked into every line I write. OAuth2, AES encryption, SQL injection prevention. Your users' data stays safe.</p>
+            </div>
+          </div>
+          <div class="value-card" data-index="2">
+            <div class="vc-icon">📱</div>
+            <div class="vc-content">
+              <h3>One Team, Two Platforms</h3>
+              <p>Cross-platform expertise means I can ship iOS and Android simultaneously with one codebase. That's 50% of the budget saved before we even start.</p>
+            </div>
+          </div>
+          <div class="value-card" data-index="3">
+            <div class="vc-icon">🎯</div>
+            <div class="vc-content">
+              <h3>Product + Design Mindset</h3>
+              <p>Currently studying Product Development and User Experience Design. I think in terms of user journeys, not just code. If it doesn't feel good to use, it's not finished.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ SKILLS ═══════════════════════════ -->
+  <section class="skills" id="skills">
+    <div class="section-label">02 — What I Do</div>
+    <h2 class="section-heading center">The Tech Stack.</h2>
+    <p class="section-sub center">Click any skill to understand what it means for your business.</p>
+
+    <div class="skills-grid">
+      <div class="skill-pill" data-info="Build native Android apps using Kotlin — the most direct path to fast, reliable Android performance with full access to every device feature.">
+        <span class="sp-icon">🤖</span> Android / Kotlin
+      </div>
+      <div class="skill-pill" data-info="Build iOS & Android apps from a single codebase using Flutter. Ship to both platforms simultaneously, cutting dev costs in half.">
+        <span class="sp-icon">🦋</span> Flutter
+      </div>
+      <div class="skill-pill" data-info="React Native lets me write JavaScript once and deploy it to iOS and Android — perfect for rapid product launches.">
+        <span class="sp-icon">⚛️</span> React Native
+      </div>
+      <div class="skill-pill" data-info="Design and query relational databases (SQL/SQLite/Room). This keeps your app's data fast, consistent, and crash-free even under heavy load.">
+        <span class="sp-icon">🗄️</span> SQL & Databases
+      </div>
+      <div class="skill-pill" data-info="AES encryption, OAuth2 auth flows, HTTPS enforcement, injection prevention — your app won't be the next data breach headline.">
+        <span class="sp-icon">🔒</span> Mobile Security
+      </div>
+      <div class="skill-pill" data-info="TCP/IP, cellular handover, bandwidth optimization — I know how apps talk to servers. That means faster load times even on weak 3G.">
+        <span class="sp-icon">📡</span> Network Engineering
+      </div>
+      <div class="skill-pill" data-info="Translate user psychology into intuitive layouts. Thumb-friendly navigation, clear information hierarchy, reduced friction — apps people actually enjoy.">
+        <span class="sp-icon">🎨</span> UX Design
+      </div>
+      <div class="skill-pill" data-info="Git, CI/CD pipelines, Agile/Scrum sprints — I work well in teams and ship consistently without chaos.">
+        <span class="sp-icon">🚀</span> Agile & DevOps
+      </div>
+      <div class="skill-pill" data-info="From identifying the problem to shipping the solution — I understand SaaS models, user retention strategies, and go-to-market thinking.">
+        <span class="sp-icon">📦</span> Product Development
+      </div>
+    </div>
+
+    <div class="skill-decoder" id="skill-decoder">
+      <span class="sd-icon">💡</span>
+      <p id="skill-decoder-text">Click any skill above to understand its real-world business value.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ JOURNEY ═══════════════════════════ -->
+  <section class="journey" id="journey">
+    <div class="section-label">03 — Academic Journey</div>
+    <h2 class="section-heading center">4 Years. 420 Credits.<br>Zero Shortcuts.</h2>
+    <p class="section-sub center">
+      My degree wasn't just coursework — it was a structured deep-dive into every layer of mobile engineering.
+      Here's what each year built in me. <em>Click any year to explore.</em>
+    </p>
+
+    <div class="journey-tabs">
+      <button class="jt-btn active" data-year="1">Year 1<br><small>Foundation</small></button>
+      <button class="jt-btn" data-year="2">Year 2<br><small>Core Mobile</small></button>
+      <button class="jt-btn" data-year="3">Year 3<br><small>Enterprise</small></button>
+      <button class="jt-btn" data-year="4">Year 4<br><small>Advanced</small></button>
+    </div>
+
+    <div class="journey-content" id="journey-content">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ SIMULATOR ═══════════════════════════ -->
+  <section class="simulator-section" id="simulator">
+    <div class="section-label">04 — Project Simulator</div>
+    <h2 class="section-heading center">Tap the Phone.<br>See What I Build.</h2>
+    <p class="section-sub center">Three simulated mobile apps. All interactive. All engineered by me.</p>
+
+    <div class="sim-layout">
+      <div class="sim-projects">
+        <button class="sim-proj-btn active" data-app="transit">
+          <div class="spb-icon">🗺️</div>
+          <div>
+            <strong>M-Botswana</strong>
+            <span>Transit & Navigation</span>
+          </div>
+        </button>
+        <button class="sim-proj-btn" data-app="health">
+          <div class="spb-icon">❤️</div>
+          <div>
+            <strong>MediLink</strong>
+            <span>IoT Health Monitoring</span>
+          </div>
+        </button>
+        <button class="sim-proj-btn" data-app="finance">
+          <div class="spb-icon">💳</div>
+          <div>
+            <strong>FinGuard</strong>
+            <span>Encrypted Wallet</span>
+          </div>
+        </button>
+
+        <div class="sim-tech-tags" id="sim-tech-tags"></div>
+        <p class="sim-note">🧠 All apps are simulations demonstrating real engineering concepts I've studied and applied.</p>
+      </div>
+
+      <!-- Phone -->
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-body">
+            <div class="phone-notch">
+              <div class="ph-cam"></div>
+              <div class="ph-speaker"></div>
+            </div>
+            <div class="phone-screen" id="phone-screen">
+              <!-- Loaded by JS -->
+            </div>
+            <div class="phone-bar"></div>
+          </div>
+        </div>
+        <div class="phone-glow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ CONTACT ═══════════════════════════ -->
+  <section class="contact" id="contact">
+    <div class="section-label">05 — Let's Connect</div>
+    <div class="contact-inner">
+      <div class="contact-left">
+        <h2 class="section-heading">Ready to build<br>something serious?</h2>
+        <p>Whether you're a startup looking for a technical co-founder, a company that needs a mobile app, or a recruiter with an opportunity — my inbox is open.</p>
+
+        <div class="contact-links">
+          <a href="https://wa.me/26775000000?text=Hi%20Aobakwe%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project." target="_blank" class="cl-item cl-wa">
+            <span class="cl-ico">💬</span>
+            <div>
+              <strong>WhatsApp</strong>
+              <span>+267 75 000 000</span>
+            </div>
+          </a>
+          <a href="mailto:mtec22-005@student.ac.bw" class="cl-item cl-mail">
+            <span class="cl-ico">✉️</span>
+            <div>
+              <strong>Email</strong>
+              <span>mtec22-005@student.ac.bw</span>
+            </div>
+          </a>
+          <a href="https://linkedin.com/in/aobakwe-ramogojwana" target="_blank" class="cl-item cl-li">
+            <span class="cl-ico">🔗</span>
+            <div>
+              <strong>LinkedIn</strong>
+              <span>aobakwe-ramogojwana</span>
+            </div>
+          </a>
+          <a href="https://github.com/mtec22-005" target="_blank" class="cl-item cl-gh">
+            <span class="cl-ico">💻</span>
+            <div>
+              <strong>GitHub</strong>
+              <span>mtec22-005</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-right">
+        <form class="contact-form" id="contact-form" onsubmit="submitForm(event)">
+          <h3>Send a direct message</h3>
+          <div class="cf-group">
+            <input type="text" placeholder="Your name" id="cf-name" required />
+          </div>
+          <div class="cf-group">
+            <input type="text" placeholder="Email or phone" id="cf-contact" required />
+          </div>
+          <div class="cf-group">
+            <textarea placeholder="Tell me about your project..." id="cf-msg" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn-main full">Send Message <span>→</span></button>
+        </form>
+        <div class="form-sent" id="form-sent">
+          <div class="sent-icon">✅</div>
+          <strong>Message Received!</strong>
+          <p>I'll be in touch shortly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+  <footer class="footer">
+    <p>© 2026 Aobakwe Ramogojwana · Built with intent · Gaborone, Botswana</p>
+    <div class="footer-socials">
+      <a href="https://wa.me/26775000000" target="_blank">WhatsApp</a>
+      <a href="https://github.com/mtec22-005" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/in/aobakwe-ramogojwana" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════ FLOATING DOCK ═══════════════════════════ -->
+  <div class="float-dock">
+    <a href="https://wa.me/26775000000?text=Hi%20Aobakwe!" target="_blank" title="WhatsApp" class="fd-item fd-wa">💬</a>
+    <a href="https://github.com/mtec22-005" target="_blank" title="GitHub" class="fd-item fd-gh">💻</a>
+    <a href="https://linkedin.com/in/aobakwe-ramogojwana" target="_blank" title="LinkedIn" class="fd-item fd-li">🔗</a>
+    <a href="mailto:mtec22-005@student.ac.bw" title="Email" class="fd-item fd-mail">✉️</a>
+  </div>
+
+  <!-- ═══════════════════════════ PRINT CV (hidden on screen) ═══════════════════════════ -->
+  <div class="print-cv">
+    <div class="pcv-header">
+      <div>
+        <h1>Aobakwe Ramogojwana</h1>
+        <h2>Mobile Systems Engineer · BSc (Hons) Mobile Technologies</h2>
+        <p>Gaborone, Botswana · +267 75 000 000 · mtec22-005@student.ac.bw</p>
+      </div>
+    </div>
+    <hr />
+    <section>
+      <h3>Professional Profile</h3>
+      <p>Final-year BSc (Hons) Mobile Technologies graduate with deep expertise across the full mobile engineering stack — native Android development, cross-platform application frameworks, network systems, database architecture, mobile security, and user experience design. A systems thinker who writes clean, secure, and scalable code for products that solve real problems.</p>
+    </section>
+    <section>
+      <h3>Core Competencies</h3>
+      <ul>
+        <li>Native Android (Kotlin/Java) · Flutter · React Native · Cross-Platform Engineering</li>
+        <li>Mobile & Web Security — Encryption, OAuth2, SQL injection prevention</li>
+        <li>Database Design — SQL, SQLite, Room, relational schema optimization</li>
+        <li>Network Engineering — TCP/IP, DNS, cellular handover, bandwidth optimization</li>
+        <li>UX Design · Product Development · Agile/Scrum · CI/CD Pipelines</li>
+        <li>Telecommunications — RF, 5G, signal propagation, satellite systems</li>
+      </ul>
+    </section>
+    <section>
+      <h3>Academic Achievement</h3>
+      <p><strong>BSc (Hons) Mobile Technologies</strong> — BOTHO University, Gaborone Campus (2022–2026)</p>
+      <p>Total Credits Earned: 420 Cr. · Board Recommendation: Proceed (all 4 years)</p>
+      <p><strong>Notable Modules:</strong> Mobile App Development Technologies (CET371), Research (CET351), Telecommunications (CET303), Android Mobile Development (CET343), Industry Attachment (BI303), Mobile & Web Security (MT304), Advanced Mobile App Development (MT204), Cross-Platform Development (MT203), Database Design & Development (CSE201).</p>
+    </section>
+    <section>
+      <h3>Industry Attachment (BI303)</h3>
+      <p>Completed 60-credit practical industry placement — working in a commercial development environment, contributing to real projects, collaborating in agile teams, and delivering under product deadlines.</p>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

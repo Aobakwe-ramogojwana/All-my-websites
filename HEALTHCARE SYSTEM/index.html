@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarinaApp - Hospital Management System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .login-container, .register-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 40px;
+            margin: 20px;
+        }
+
+        .login-form, .register-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form h2, .register-form h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background: #0056b3;
+        }
+
+        .dashboard-container {
+            display: none;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+        }
+
+        .dashboard-container nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-container nav a {
+            color: #007BFF;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .dashboard-container nav a:hover,
+        .dashboard-container nav a.active {
+            text-decoration: underline;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <form class="login-form" id="login-form">
+                <h2>Login to MarinaApp</h2>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Login</button>
+                </div>
+                <div class="form-group">
+                    <a href="#" id="register-link">Don't have an account? Register</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="register-container hidden">
+            <form class="register-form" id="register-form">
+                <h2>Register to MarinaApp</h2>
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" name="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" name="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-role">Role</label>
+                    <select id="register-role" name="register-role" required>
+                        <option value="patient">Patient</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Register</button>
+                </div>
+                <div class="form-group">
+                    <a href="#" id="back-to-login">Back to Login</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="dashboard-container">
+            <nav>
+                <a href="#" id="dashboard-link" class="active">Dashboard</a>
+                <a href="#" id="appointments-link">Appointments</a>
+                <a href="#" id="chat-link">Chat</a>
+                <a href="#" id="settings-link">Settings</a>
+                <a href="#" id="logout-link">Logout</a>
+            </nav>
+
+            <div id="dashboard-section" class="section active">
+                <h2>Dashboard</h2>
+                <p>Welcome to your dashboard. Here you can manage your appointments, chat with doctors, and more.</p>
+            </div>
+
+            <div id="appointments-section" class="section">
+                <h2>Appointments</h2>
+                <form id="book-appointment">
+                    <div class="form-group">
+                        <label for="doctor-name">Doctor's Name</label>
+                        <input type="text" id="doctor-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointment-time">Appointment Time</label>
+                        <input type="datetime-local" id="appointment-time" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Book Appointment</button>
+                    </div>
+                </form>
+                <h3>Your Appointments</h3>
+                <ul id="appointment-list"></ul>
+            </div>
+
+            <div id="chat-section" class="section">
+                <h2>Chat</h2>
+                <ul id="chat-list"></ul>
+                <div class="form-group">
+                    <input type="text" id="chat-input" placeholder="Type a message...">
+                    <button id="send-message">Send</button>
+                </div>
+            </div>
+
+            <div id="settings-section" class="section">
+                <h2>Settings</h2>
+                <p>Manage your account settings here.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = JSON.parse(localStorage.getItem(username));
+
+            if (user && user.password === password) {
+                alert('Login successful');
+                currentUser = user;
+                document.querySelector('.login-container').style.display = 'none';
+                document.querySelector('.dashboard-container').style.display = 'block';
+                showSection('dashboard-section');
+                displayAppointments();
+            } else {
+                alert('Invalid credentials');
+            }
+        });
+
+        document.getElementById('register-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.querySelector('.login-container').style.display = 'none';
+            document.querySelector('.register-container').style.display = 'block';
+        });
+
+        document.getElementById('back-to-login').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.querySelector('.login-container').style.display = 'block';
+            document.querySelector('.register-container').style.display = 'none';
+        });
+
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const role = document.getElementById('register-role').value;
+
+            if (!localStorage.getItem(username)) {
+                const user = { username, password, role };
+                localStorage.setItem(username, JSON.stringify(user));
+                alert('Registration successful');
+                document.querySelector('.login-container').style.display = 'block';
+                document.querySelector('.register-container').style.display = 'none';
+            } else {
+                alert('Username already exists');
+            }
+        });
+
+        document.getElementById('logout-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            currentUser = null;
+            document.querySelector('.login-container').style.display = 'block';
+            document.querySelector('.dashboard-container').style.display = 'none';
+        });
+
+        document.getElementById('dashboard-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('dashboard-section');
+        });
+
+        document.getElementById('appointments-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('appointments-section');
+        });
+
+        document.getElementById('chat-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('chat-section');
+        });
+
+        document.getElementById('settings-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('settings-section');
+        });
+
+        document.getElementById('book-appointment').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const doctor = document.getElementById('doctor-name').value;
+            const time = document.getElementById('appointment-time').value;
+            const appointment = { doctor, time, patient: currentUser.username };
+
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            appointments.push(appointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+
+            displayAppointments();
+        });
+
+        document.getElementById('send-message').addEventListener('click', function() {
+            const message = document.getElementById('chat-input').value;
+            if (message) {
+                const li = document.createElement('li');
+                li.textContent = message;
+                document.getElementById('chat-list').appendChild(li);
+                document.getElementById('chat-input').value = '';
+            }
+        });
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            const links = document.querySelectorAll('.dashboard-container nav a');
+            links.forEach(link => {
+                link.classList.remove('active');
+            });
+            document.getElementById(`${sectionId}-link`).classList.add('active');
+        }
+
+        function displayAppointments() {
+            const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            const appointmentList = document.getElementById('appointment-list');
+            appointmentList.innerHTML = '';
+            appointments.forEach(appointment => {
+                if (appointment.patient === currentUser.username) {
+                    const li = document.createElement('li');
+                    li.textContent = `Doctor: ${appointment.doctor}, Time: ${appointment.time}`;
+                    appointmentList.appendChild(li);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

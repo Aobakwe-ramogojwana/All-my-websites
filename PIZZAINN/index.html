@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizza Inn - Fresh & Delicious Pizza Delivery</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#FF6B6B",
+              secondary: "#4A90E2",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body { font-family: 'Poppins', sans-serif; }
+      .nav-link { position: relative; }
+      .nav-link::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 2px;
+          bottom: -4px;
+          left: 0;
+          background-color: #FF6B6B;
+          transition: width 0.3s;
+      }
+      .nav-link:hover::after { width: 100%; }
+      .menu-dropdown {
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(10px);
+          transition: all 0.3s;
+      }
+      .menu-trigger:hover .menu-dropdown {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body class="bg-white">
+    <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+      <nav
+        class="container mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <div class="font-['Pacifico'] text-3xl text-primary">logo</div>
+
+        <div class="hidden md:flex items-center space-x-8">
+          <div class="menu-trigger relative">
+            <a href="#" class="nav-link text-gray-700 hover:text-primary"
+              >Menu</a
+            >
+            <div
+              class="menu-dropdown absolute top-full left-0 bg-white shadow-lg rounded-lg p-4 min-w-[200px]"
+            >
+              <a href="#" class="block py-2 px-4 hover:bg-gray-50 rounded"
+                >Pizzas</a
+              >
+              <a href="#" class="block py-2 px-4 hover:bg-gray-50 rounded"
+                >Pastas</a
+              >
+              <a href="#" class="block py-2 px-4 hover:bg-gray-50 rounded"
+                >Salads</a
+              >
+              <a href="#" class="block py-2 px-4 hover:bg-gray-50 rounded"
+                >Desserts</a
+              >
+            </div>
+          </div>
+          <a href="#" class="nav-link text-gray-700 hover:text-primary"
+            >Locations</a
+          >
+          <a href="#" class="nav-link text-gray-700 hover:text-primary"
+            >Rewards</a
+          >
+          <a href="#" class="nav-link text-gray-700 hover:text-primary"
+            >Catering</a
+          >
+        </div>
+
+        <button
+          class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors"
+        >
+          Order Now
+        </button>
+      </nav>
+    </header>
+
+    <main class="pt-20">
+      <section
+        class="relative h-[600px] bg-cover bg-center flex items-center"
+        style="background-image: url('https://public.readdy.ai/ai/img_res/3cca43ead1a651562ff5259f59ef9e8f.jpg')"
+      >
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="container mx-auto px-6 relative z-10">
+          <div class="max-w-2xl">
+            <h1 class="text-5xl font-bold text-white mb-6">
+              Experience Pizza Perfection
+            </h1>
+            <p class="text-xl text-white mb-8">
+              Handcrafted with love, baked to perfection. Enjoy $5 off on your
+              first order!
+            </p>
+            <button
+              class="bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-colors text-lg"
+            >
+              Order Now & Save
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-bold text-center mb-12">
+            Our Popular Categories
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div
+              class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/b9abe7526826c273ef540fb827ca7267.jpg"
+                alt="Pizza"
+                class="w-full h-48 object-cover"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Classic Pizzas</h3>
+                <p class="text-gray-600 mb-4">
+                  Traditional recipes with premium ingredients
+                </p>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+                >
+                  View Menu
+                </button>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/a8331b463d9ae61e7d5ce76a0420e326.jpg"
+                alt="Pasta"
+                class="w-full h-48 object-cover"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Fresh Pastas</h3>
+                <p class="text-gray-600 mb-4">
+                  Handmade pasta with authentic sauces
+                </p>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+                >
+                  View Menu
+                </button>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/fd9a47bb55df539148cefef37f292b03.jpg"
+                alt="Salad"
+                class="w-full h-48 object-cover"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Fresh Salads</h3>
+                <p class="text-gray-600 mb-4">
+                  Crisp greens and fresh ingredients
+                </p>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+                >
+                  View Menu
+                </button>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/863d85a39279649b171ee90b3ee14c2e.jpg"
+                alt="Dessert"
+                class="w-full h-48 object-cover"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Sweet Desserts</h3>
+                <p class="text-gray-600 mb-4">
+                  Indulgent treats to complete your meal
+                </p>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+                >
+                  View Menu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-bold text-center mb-12">Special Offers</h2>
+          <div class="flex overflow-x-auto gap-6 pb-6">
+            <div class="flex-none w-80 bg-white rounded-lg shadow-lg">
+              <img
+                src="https://public.readdy.ai/ai/img_res/c353029763f5c75c7cdec00ea0806c35.jpg"
+                alt="Family Deal"
+                class="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Family Deal</h3>
+                <p class="text-gray-600 mb-4">
+                  1 Large Pizza + 2 Sides + 4 Drinks
+                </p>
+                <p class="text-2xl font-bold text-primary mb-4">$29.99</p>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+                >
+                  Order Now
+                </button>
+              </div>
+            </div>
+            <div class="flex-none w-80 bg-white rounded-lg shadow-lg">
+              <img
+                src="https://public.readdy.ai/ai/img_res/be50dbfe7c3ea588d979c33b6cea4d2c.jpg"
+                alt="Double Deal"
+                class="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Double Deal</h3>
+                <p class="text-gray-600 mb-4">2 Medium Pizzas of Your Choice</p>
+                <p class="text-2xl font-bold text-primary mb-4">$24.99</p>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+                >
+                  Order Now
+                </button>
+              </div>
+            </div>
+            <div class="flex-none w-80 bg-white rounded-lg shadow-lg">
+              <img
+                src="https://public.readdy.ai/ai/img_res/50493b70e0ed24479d489db2e522217b.jpg"
+                alt="Lunch Special"
+                class="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Lunch Special</h3>
+                <p class="text-gray-600 mb-4">Personal Pizza + Side + Drink</p>
+                <p class="text-2xl font-bold text-primary mb-4">$12.99</p>
+                <button
+                  class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+                >
+                  Order Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+          <h2 class="text-3xl font-bold text-center mb-12">
+            Find a Location Near You
+          </h2>
+          <div class="max-w-xl mx-auto mb-8">
+            <div class="flex items-center bg-white rounded-lg shadow-sm">
+              <input
+                type="text"
+                placeholder="Enter your zip code or city"
+                class="flex-1 px-6 py-3 rounded-l-lg focus:outline-none"
+              />
+              <button
+                class="bg-primary text-white px-6 py-3 !rounded-button hover:bg-opacity-90 transition-colors"
+              >
+                Search
+              </button>
+            </div>
+          </div>
+          <div
+            class="h-[400px] rounded-lg overflow-hidden shadow-lg"
+            style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-size: cover; background-position: center;"
+          ></div>
+        </div>
+      </section>
+
+      <section class="py-16">
+        <div class="container mx-auto px-6">
+          <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-12">Join Our Rewards Program</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div
+                  class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <i class="ri-coin-line text-primary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Earn Points</h3>
+                <p class="text-gray-600">Get 1 point for every dollar spent</p>
+              </div>
+              <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div
+                  class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <i class="ri-gift-line text-primary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Get Rewards</h3>
+                <p class="text-gray-600">Redeem points for free food</p>
+              </div>
+              <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div
+                  class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4"
+                >
+                  <i class="ri-vip-crown-line text-primary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Special Perks</h3>
+                <p class="text-gray-600">
+                  Exclusive deals and birthday rewards
+                </p>
+              </div>
+            </div>
+            <button
+              class="bg-primary text-white px-8 py-3 !rounded-button hover:bg-opacity-90 transition-colors text-lg"
+            >
+              Join Now
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="bg-gray-900 text-white py-16">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div>
+            <div class="font-['Pacifico'] text-3xl text-white mb-6">logo</div>
+            <p class="text-gray-400">Delivering happiness since 1995</p>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Menu</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Locations</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Rewards</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Catering</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors"
+              >
+                <i class="ri-facebook-fill"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors"
+              >
+                <i class="ri-twitter-fill"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors"
+              >
+                <i class="ri-instagram-fill"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Newsletter</h4>
+            <form class="space-y-4">
+              <input
+                type="email"
+                placeholder="Your email address"
+                class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-primary"
+              />
+              <button
+                class="bg-primary text-white px-6 py-2 !rounded-button hover:bg-opacity-90 transition-colors w-full"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400"
+        >
+          <p>&copy; 2025 Pizza Inn. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuTriggers = document.querySelectorAll(".menu-trigger");
+
+        menuTriggers.forEach((trigger) => {
+          trigger.addEventListener("mouseenter", () => {
+            const dropdown = trigger.querySelector(".menu-dropdown");
+            dropdown.style.opacity = "1";
+            dropdown.style.visibility = "visible";
+            dropdown.style.transform = "translateY(0)";
+          });
+
+          trigger.addEventListener("mouseleave", () => {
+            const dropdown = trigger.querySelector(".menu-dropdown");
+            dropdown.style.opacity = "0";
+            dropdown.style.visibility = "hidden";
+            dropdown.style.transform = "translateY(10px)";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

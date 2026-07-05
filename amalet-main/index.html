@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amalet - Enhanced Botswana Marketplace</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#57B5E7", secondary: "#8DD3C7" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      .hero-bg {
+          background-image: url('https://readdy.ai/api/search-image?query=Modern%20digital%20marketplace%20scene%20with%20soft%20lighting%2C%20clean%20white%20background%20on%20the%20left%20side%20for%20text%20overlay%2C%20right%20side%20showing%20diverse%20African%20vendors%20and%20customers%20shopping%20online%2C%20warm%20and%20welcoming%20atmosphere%2C%20professional%20photography%20style%2C%20high%20quality%2C%20bright%20and%20optimistic%20mood%2C%20Botswana%20cultural%20elements%20subtly%20integrated%2C%20modern%20technology%20meets%20traditional%20commerce%2C%20beautiful%20composition%20with%20natural%20lighting&width=1920&height=800&seq=hero001&orientation=landscape');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+      }
+      .slider::-webkit-slider-thumb {
+        appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #57B5E7;
+        cursor: pointer;
+        box-shadow: 0 0 2px 0 #555;
+      }
+      .animate-pulse-fast {
+        animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .filter-chip { background: rgba(87,181,231,0.1); border: 1px solid rgba(87,181,231,0.2); transition: all .3s ease; }
+      .filter-chip:hover { background: rgba(87,181,231,0.2); transform: translateY(-2px); }
+      .filter-chip.active { background: #57B5E7; color: #fff; border-color: #57B5E7; }
+      .search-suggestions {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      /* Floating Chatbot */
+      .chatbot-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+      .chatbot-button { width: 60px; height: 60px; border-radius: 9999px; background: linear-gradient(135deg, #57B5E7, #8DD3C7); box-shadow: 0 4px 20px rgba(0,0,0,.15); }
+      .chatbot-window { width: 340px; height: 480px; background: #fff; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.12); position: absolute; bottom: 80px; right: 0; transform: scale(0); transform-origin: bottom right; transition: transform .25s ease; }
+      .chatbot-window.open { transform: scale(1); }
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .slide-in { animation: slideIn 0.3s ease-out; }
+      /* Skeleton shimmer */
+      .skeleton { position: relative; overflow: hidden; background-color: #f3f4f6; }
+      .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.6) 50%, rgba(255,255,255,0) 100%);
+        animation: shimmer 1.5s infinite; }
+      @keyframes shimmer { 100% { transform: translateX(100%); } }
+      /* Subtle card reveal */
+      .reveal { opacity: 0; transform: translateY(12px); transition: opacity .4s ease, transform .4s ease; }
+      .reveal.show { opacity: 1; transform: translateY(0); }
+    </style>
+  </head>
+  <body class="bg-white min-h-screen flex flex-col">
+    <!-- Mobile Bottom Navigation -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-50">
+      <div class="flex">
+        <button class="flex-1 py-3 text-center">
+          <i class="ri-home-line text-xl text-primary"></i>
+          <div class="text-xs">Home</div>
+        </button>
+        <button class="flex-1 py-3 text-center" onclick="focusSearch()">
+          <i class="ri-search-line text-xl text-gray-600"></i>
+          <div class="text-xs">Search</div>
+        </button>
+        <button id="openCartDrawerMobile" class="flex-1 py-3 text-center relative">
+          <i class="ri-shopping-bag-line text-xl text-gray-600"></i>
+          <div class="text-xs">Cart</div>
+          <span id="cartCountMobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+        </button>
+        <button class="flex-1 py-3 text-center" onclick="showAuthModal('login')">
+          <i class="ri-user-line text-xl text-gray-600"></i>
+          <div class="text-xs">Account</div>
+        </button>
+      </div>
+    </div>
+
+    <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+      <div class="px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-8">
+            <div class="relative">
+              <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-primary/15 to-secondary/15 blur-sm"></div>
+              <h1 class="relative text-2xl lg:text-3xl font-['Pacifico'] bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent select-none drop-shadow">Amalet</h1>
+                    </div>
+            <div class="hidden xl:block pl-4 ml-2 border-l border-gray-200 text-sm font-medium text-gray-600">Trust. Support. Thrive.</div>
+            <!-- Shop by Department removed -->
+            <!-- Quick Links -->
+            <div class="hidden lg:flex items-center space-x-6">
+              <button id="helpCenterLink" class="text-gray-700 hover:text-primary text-sm font-medium transition-colors">Help Centre</button>
+              <a href="#" class="text-gray-700 hover:text-primary text-sm font-medium transition-colors">Track Order</a>
+              <button id="openCartDrawerDesktop" class="relative text-gray-700 hover:text-primary text-sm font-medium transition-colors flex items-center">
+                <i class="ri-shopping-bag-line text-lg mr-1"></i>
+                Cart
+                <span id="cartCountDesktop" class="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Enhanced Search with Suggestions -->
+          <div class="flex-1 max-w-2xl mx-8 relative">
+            <div class="flex">
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Search for products, sellers, or categories..."
+                class="flex-1 px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                oninput="showSearchSuggestions(this.value)"
+                onkeydown="handleSearchKeydown(event)"
+              />
+              <button class="bg-primary text-white px-6 py-3 rounded-r hover:bg-blue-600 transition-colors !rounded-button whitespace-nowrap">
+                <div class="w-5 h-5 flex items-center justify-center">
+                  <i class="ri-search-line"></i>
+                </div>
+              </button>
+            </div>
+            
+            <!-- Search Suggestions Dropdown -->
+            <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white shadow-xl rounded-b-lg hidden z-50 slide-in">
+              <div class="p-4 search-suggestions">
+                <div class="mb-4">
+                  <div class="text-sm font-medium text-gray-700 mb-2">Popular Searches:</div>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="bg-gray-100 hover:bg-primary hover:text-white px-3 py-1 rounded-full text-sm cursor-pointer transition-colors">Wedding Cakes</span>
+                    <span class="bg-gray-100 hover:bg-primary hover:text-white px-3 py-1 rounded-full text-sm cursor-pointer transition-colors">Used Cars</span>
+                    <span class="bg-gray-100 hover:bg-primary hover:text-white px-3 py-1 rounded-full text-sm cursor-pointer transition-colors">iPhone</span>
+                    <span class="bg-gray-100 hover:bg-primary hover:text-white px-3 py-1 rounded-full text-sm cursor-pointer transition-colors">Furniture</span>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <div class="text-sm font-medium text-gray-700 mb-2">Categories:</div>
+                  <div class="space-y-2">
+                    <div class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 rounded p-2">
+                      <i class="ri-smartphone-line text-primary"></i>
+                      <span class="text-sm">Electronics</span>
+                    </div>
+                    <div class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 rounded p-2">
+                      <i class="ri-cake-line text-primary"></i>
+                      <span class="text-sm">Cakes & Bakery</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-700 mb-2">Recent Searches:</div>
+                  <div class="space-y-1">
+                    <div class="text-sm text-gray-600 cursor-pointer hover:text-primary">toyota corolla</div>
+                    <div class="text-sm text-gray-600 cursor-pointer hover:text-primary">african print dress</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-4" id="navbarUserSection">
+            <button id="loginRegisterBtn" class="flex items-center space-x-2 text-gray-600 hover:text-primary transition-colors">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-user-add-line"></i>
+              </div>
+              <span class="text-sm hidden lg:inline">Login/Register</span>
+            </button>
+          </div>
+          <span id="welcomeUser" class="ml-4 text-primary font-semibold hidden"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-20 pb-20 lg:pb-0 flex-1">
+      <!-- Enhanced Hero Section with Live Statistics -->
+      <section class="home-section hero-bg min-h-[700px] flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent"></div>
+        <div class="w-full px-6 relative z-10">
+          <div class="max-w-7xl mx-auto">
+            <div class="lg:w-1/2">
+              <div class="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-xl">
+                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                  Botswana's Trusted<br />
+                  <span class="text-primary">Digital Marketplace</span>
+                </h2>
+                <p class="text-lg lg:text-xl text-gray-600 mb-8 leading-relaxed">
+                  Connect with verified local vendors. Shop safely from cakes to
+                  cars, all in one reliable platform designed for Botswana's
+                  growing online community.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                  <button class="bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors !rounded-button whitespace-nowrap">
+                    Start Shopping
+                  </button>
+                  <button id="openSellModal" class="border-2 border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-white transition-colors !rounded-button whitespace-nowrap">
+                    Become a Seller
+                  </button>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mt-8 text-sm text-gray-600">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-5 h-5 flex items-center justify-center text-green-600">
+                      <i class="ri-shield-check-fill"></i>
+                    </div>
+                    <span>Verified Sellers</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <div class="w-5 h-5 flex items-center justify-center text-green-600">
+                      <i class="ri-whatsapp-fill"></i>
+                    </div>
+                    <span>Direct Contact</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <div class="w-5 h-5 flex items-center justify-center text-green-600">
+                      <i class="ri-map-pin-fill"></i>
+                    </div>
+                    <span>Local Delivery</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Live Statistics Bar -->
+        <div class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm py-4 border-t">
+          <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+              <div>
+                <span class="text-2xl lg:text-3xl font-bold text-primary animate-pulse-fast" id="productCount">5,247</span>
+                <div class="text-sm text-gray-600">Products</div>
+              </div>
+              <div>
+                <span class="text-2xl lg:text-3xl font-bold text-secondary animate-pulse-fast" id="sellerCount">523</span>
+                <div class="text-sm text-gray-600">Verified Sellers</div>
+              </div>
+              <div>
+                <span class="text-2xl lg:text-3xl font-bold text-primary animate-pulse-fast">24hrs</span>
+                <div class="text-sm text-gray-600">Avg Delivery</div>
+              </div>
+              <div>
+                <span class="text-2xl lg:text-3xl font-bold text-green-600 animate-pulse-fast">99.2%</span>
+                <div class="text-sm text-gray-600">Satisfaction</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Local Botswana Advantages Section -->
+      <section class="home-section py-12 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <div class="max-w-7xl mx-auto px-6">
+          <h3 class="text-2xl lg:text-3xl font-bold text-center mb-8">Built for Botswana 🇧🇼</h3>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="ri-map-pin-line text-2xl text-primary"></i>
+              </div>
+              <h4 class="font-semibold mb-2">Local Delivery</h4>
+              <p class="text-sm text-gray-600">Same-day in Gaborone, Francistown & Maun</p>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="ri-whatsapp-line text-2xl text-secondary"></i>
+              </div>
+              <h4 class="font-semibold mb-2">WhatsApp Commerce</h4>
+              <p class="text-sm text-gray-600">Chat in Setswana or English</p>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="ri-money-dollar-circle-line text-2xl text-primary"></i>
+              </div>
+              <h4 class="font-semibold mb-2">Pula Payments</h4>
+              <p class="text-sm text-gray-600">EFT, FNB eWallet, Orange Money</p>
+            </div>
+            <div class="text-center">
+              <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="ri-community-line text-2xl text-secondary"></i>
+              </div>
+              <h4 class="font-semibold mb-2">Support Local</h4>
+              <p class="text-sm text-gray-600">Every purchase supports locals</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Enhanced Category Section -->
+      <section id="categoryMainSection" class="home-section py-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-semibold text-gray-900">Shop by Category</h3>
+            <button class="text-primary hover:text-blue-600 text-sm font-medium transition-colors">View All Categories</button>
+          </div>
+          <div class="grid grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="category-card bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow cursor-pointer group" data-category="cakes">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden group-hover:scale-105 transition-transform">
+                <img src="https://readdy.ai/api/search-image?query=Beautiful%20decorated%20cake%20with%20colorful%20frosting%20and%20elegant%20design%2C%20professional%20bakery%20photography%2C%20clean%20white%20background%2C%20high%20quality%20food%20photography%2C%20appetizing%20and%20delicious%20looking&width=100&height=100&seq=cake001&orientation=squarish" alt="Cakes" class="w-full h-full object-cover" />
+              </div>
+              <span class="text-sm font-medium text-gray-900">Cakes & Bakery</span>
+              <div class="text-xs text-gray-500 mt-1">120+ items</div>
+            </div>
+            <div class="category-card bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow cursor-pointer group" data-category="fashion">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden group-hover:scale-105 transition-transform">
+                <img src="https://readdy.ai/api/search-image?query=Stylish%20African%20fashion%20clothing%20hanging%20on%20modern%20display%2C%20colorful%20traditional%20and%20contemporary%20designs%2C%20clean%20white%20background%2C%20professional%20fashion%20photography%2C%20vibrant%20and%20attractive&width=100&height=100&seq=clothes001&orientation=squarish" alt="Clothing" class="w-full h-full object-cover" />
+              </div>
+              <span class="text-sm font-medium text-gray-900">Fashion</span>
+              <div class="text-xs text-gray-500 mt-1">790+ items</div>
+            </div>
+            <div class="category-card bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow cursor-pointer group" data-category="vehicles">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden group-hover:scale-105 transition-transform">
+                <img src="https://readdy.ai/api/search-image?query=Modern%20car%20in%20showroom%20with%20clean%20white%20background%2C%20professional%20automotive%20photography%2C%20sleek%20and%20attractive%20vehicle%2C%20bright%20lighting%2C%20high%20quality%20commercial%20photo&width=100&height=100&seq=car001&orientation=squarish" alt="Cars" class="w-full h-full object-cover" />
+              </div>
+              <span class="text-sm font-medium text-gray-900">Vehicles</span>
+              <div class="text-xs text-gray-500 mt-1">85+ items</div>
+            </div>
+            <div class="category-card bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow cursor-pointer group" data-category="electronics">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden group-hover:scale-105 transition-transform">
+                <img src="https://readdy.ai/api/search-image?query=Modern%20electronics%20devices%20smartphone%20laptop%20tablet%20arranged%20professionally%2C%20clean%20white%20background%2C%20high%20tech%20gadgets%2C%20professional%20product%20photography%2C%20sleek%20and%20modern&width=100&height=100&seq=electronics001&orientation=squarish" alt="Electronics" class="w-full h-full object-cover" />
+              </div>
+              <span class="text-sm font-medium text-gray-900">Electronics</span>
+              <div class="text-xs text-gray-500 mt-1">680+ items</div>
+            </div>
+            <div class="category-card bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow cursor-pointer group" data-category="home">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden group-hover:scale-105 transition-transform">
+                <img src="https://readdy.ai/api/search-image?query=Beautiful%20home%20decor%20items%20and%20garden%20plants%20arranged%20elegantly%2C%20clean%20white%20background%2C%20professional%20lifestyle%20photography%2C%20cozy%20and%20inviting%20home%20accessories&width=100&height=100&seq=home001&orientation=squarish" alt="Home & Garden" class="w-full h-full object-cover" />
+              </div>
+              <span class="text-sm font-medium text-gray-900">Home & Garden</span>
+              <div class="text-xs text-gray-500 mt-1">340+ items</div>
+            </div>
+            <div class="category-card bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow cursor-pointer group" data-category="services">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-lg overflow-hidden group-hover:scale-105 transition-transform">
+                <img src="https://readdy.ai/api/search-image?query=Professional%20business%20services%20concept%20with%20office%20supplies%20and%20documents%2C%20clean%20white%20background%2C%20modern%20business%20photography%2C%20organized%20and%20professional%20setup&width=100&height=100&seq=services001&orientation=squarish" alt="Services" class="w-full h-full object-cover" />
+              </div>
+              <span class="text-sm font-medium text-gray-900">Services</span>
+              <div class="text-xs text-gray-500 mt-1">95+ items</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Category Full View (hidden by default) -->
+      <section id="categoryFullSection" class="py-8 bg-white hidden scroll-mt-24">
+        <div class="max-w-7xl mx-auto px-6">
+          <button id="backToCategories" class="mb-6 text-primary hover:text-blue-600 text-sm font-medium transition-colors flex items-center"><i class="ri-arrow-left-s-line mr-1"></i>Back to Categories</button>
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+            <div class="relative flex-1">
+              <input id="categorySearch" type="text" placeholder="Search within this category..." class="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-primary" />
+              <i class="ri-search-line absolute right-3 top-3.5 text-gray-400"></i>
+            </div>
+            <div id="categoryChips" class="flex flex-wrap gap-2"></div>
+          </div>
+          <div id="categoryFilterChips" class="flex flex-wrap gap-3 mb-4"></div>
+          <div id="categoryFullContent"><!-- Dynamic content --></div>
+        </div>
+      </section>
+
+      <script>
+      // Category data for full view
+      const categoryFullData = {
+        appliances: {
+          title: 'Appliances',
+          banner: 'https://readdy.ai/api/search-image?query=modern%20home%20appliances%20set%20clean%20background&width=800&height=200',
+          subcategories: ['Small Kitchen', 'Refrigeration', 'Laundry', 'Cooking'],
+          products: [
+            {name: 'Air Fryer Pro', img: 'https://readdy.ai/api/search-image?query=air%20fryer&width=200&height=200', price: 'P 1,199'},
+            {name: 'Front Load Washer', img: 'https://readdy.ai/api/search-image?query=front%20load%20washer&width=200&height=200', price: 'P 5,999'},
+            {name: 'Microwave 30L', img: 'https://readdy.ai/api/search-image?query=microwave%2030l&width=200&height=200', price: 'P 999'}
+          ]
+        },
+        automotive: {
+          title: 'Automotive & DIY',
+          banner: 'https://readdy.ai/api/search-image?query=automotive%20tools%20and%20car%20accessories%20clean%20background&width=800&height=200',
+          subcategories: ['Car Care', 'Accessories', 'Tools'],
+          products: [
+            {name: 'Car Vacuum', img: 'https://readdy.ai/api/search-image?query=car%20vacuum&width=200&height=200', price: 'P 250'},
+            {name: 'Jump Starter', img: 'https://readdy.ai/api/search-image?query=jump%20starter&width=200&height=200', price: 'P 699'},
+            {name: 'Socket Set', img: 'https://readdy.ai/api/search-image?query=socket%20wrench%20set&width=200&height=200', price: 'P 399'}
+          ]
+        },
+        baby: {
+          title: 'Baby & Toddler',
+          banner: 'https://readdy.ai/api/search-image?query=baby%20products%20clean%20background&width=800&height=200',
+          subcategories: ['Diapering', 'Feeding', 'Clothing'],
+          products: [
+            {name: 'Baby Stroller', img: 'https://readdy.ai/api/search-image?query=baby%20stroller&width=200&height=200', price: 'P 2,000'},
+            {name: 'Feeding Set', img: 'https://readdy.ai/api/search-image?query=baby%20feeding%20set&width=200&height=200', price: 'P 150'},
+            {name: 'Onesie Pack', img: 'https://readdy.ai/api/search-image?query=baby%20onesie&width=200&height=200', price: 'P 120'}
+          ]
+        },
+        beauty: {
+          title: 'Beauty',
+          banner: 'https://readdy.ai/api/search-image?query=beauty%20cosmetics%20clean%20background&width=800&height=200',
+          subcategories: ['Makeup', 'Skincare', 'Hair'],
+          products: [
+            {name: 'Matte Lipstick', img: 'https://readdy.ai/api/search-image?query=lipstick&width=200&height=200', price: 'P 80'},
+            {name: 'Face Serum', img: 'https://readdy.ai/api/search-image?query=face%20serum&width=200&height=200', price: 'P 200'},
+            {name: 'Hair Dryer', img: 'https://readdy.ai/api/search-image?query=hair%20dryer&width=200&height=200', price: 'P 350'}
+          ]
+        },
+        cakes: {
+          title: 'Cakes & Bakery',
+          banner: 'https://img.freepik.com/premium-photo/simple-chocolate-cakes-white-background_974729-77266.jpg',
+          subcategories: ['Birthday Cakes', 'Wedding Cakes', 'Cupcakes', 'Pastries', 'Bread', 'Custom Orders'],
+          products: [
+            {name: 'Chocolate Birthday Cake', img: 'https://readdy.ai/api/search-image?query=chocolate%20birthday%20cake&width=200&height=200', price: 'P 250'},
+            {name: 'Classic Cupcakes (6)', img: 'https://readdy.ai/api/search-image?query=cupcakes&width=200&height=200', price: 'P 80'},
+            {name: 'Wedding Cake Deluxe', img: 'https://readdy.ai/api/search-image?query=wedding%20cake&width=200&height=200', price: 'P 1200'}
+          ]
+        },
+        fashion: {
+          title: 'Fashion',
+          banner: 'https://marketplace.canva.com/EAFGKRRskMs/1/0/1600w/canva-brown-and-beige-minimalist-fashion-banner-lYcbGpUSVGo.jpg',
+          subcategories: ["Men's Clothing", "Women's Clothing", 'Watches', 'Shoes', 'Accessories'],
+          products: [
+            {name: 'African Print Dress', img: 'https://readdy.ai/api/search-image?query=african%20print%20dress&width=200&height=200', price: 'P 350'},
+            {name: 'Men\'s Shirt', img: 'https://readdy.ai/api/search-image?query=mens%20shirt&width=200&height=200', price: 'P 180'},
+            {name: 'Ladies Watch', img: 'https://readdy.ai/api/search-image?query=ladies%20watch&width=200&height=200', price: 'P 400'}
+          ]
+        },
+        vehicles: {
+          title: 'Vehicles',
+          banner: 'https://tse4.mm.bing.net/th/id/OIP.cQ9t1lg-w9k6SAR6XfPf0wHaDL?r=0&rs=1&pid=ImgDetMain&o=7&rm=3',
+          subcategories: ['Cars', 'Motorcycles', 'Car Accessories', 'Car Services'],
+          products: [
+            {name: 'Toyota Corolla', img: 'https://readdy.ai/api/search-image?query=toyota%20corolla&width=200&height=200', price: 'P 85,000'},
+            {name: 'Car Service Package', img: 'https://readdy.ai/api/search-image?query=car%20service&width=200&height=200', price: 'P 1,200'},
+            {name: 'Motorcycle Helmet', img: 'https://readdy.ai/api/search-image?query=motorcycle%20helmet&width=200&height=200', price: 'P 600'}
+          ]
+        },
+        electronics: {
+          title: 'Electronics',
+          banner: 'https://thumbs.dreamstime.com/b/electronics-sale-banner-devices-online-shopping-delivery-basket-273419752.jpg',
+          subcategories: ['Phones', 'Laptops', 'Cameras', 'Headphones', 'Wearables'],
+          products: [
+            {name: 'iPhone 13', img: 'https://readdy.ai/api/search-image?query=iphone%2013&width=200&height=200', price: 'P 12,000'},
+            {name: 'HP Laptop', img: 'https://readdy.ai/api/search-image?query=hp%20laptop&width=200&height=200', price: 'P 7,500'},
+            {name: 'Bluetooth Headphones', img: 'https://readdy.ai/api/search-image?query=bluetooth%20headphones&width=200&height=200', price: 'P 350'}
+          ]
+        },
+        home: {
+          title: 'Home & Garden',
+          banner: 'https://jooinn.com/images/beautiful-flower-bouquet-1.jpg',
+          subcategories: ['Furniture', 'Decor', 'Cookware', 'Garden Tools', 'Bedding'],
+          products: [
+            {name: 'Modern Sofa', img: 'https://readdy.ai/api/search-image?query=modern%20sofa&width=200&height=200', price: 'P 2,800'},
+            {name: 'Cookware Set', img: 'https://readdy.ai/api/search-image?query=cookware%20set&width=200&height=200', price: 'P 650'},
+            {name: 'Garden Tools Kit', img: 'https://readdy.ai/api/search-image?query=garden%20tools&width=200&height=200', price: 'P 400'}
+          ]
+        },
+        services: {
+          title: 'Services',
+          banner: 'https://static.vecteezy.com/system/resources/previews/011/079/277/non_2x/service-text-button-speech-bubble-best-service-colorful-web-banner-illustration-vector.jpg',
+          subcategories: ['Plumbing', 'Electrical', 'Cleaning', 'Tutoring', 'Event Planning'],
+          products: [
+            {name: 'Plumbing Service', img: 'https://readdy.ai/api/search-image?query=plumbing%20service&width=200&height=200', price: 'P 350'},
+            {name: 'Home Cleaning', img: 'https://readdy.ai/api/search-image?query=home%20cleaning&width=200&height=200', price: 'P 200'},
+            {name: 'Private Tutor', img: 'https://readdy.ai/api/search-image?query=private%20tutor&width=200&height=200', price: 'P 150/hr'}
+          ]
+        }
+      };
+
+      function openCategory(cat) {
+        const data = categoryFullData[cat];
+        if (!data) return;
+        // Hide all home sections to simulate a standalone page
+        document.querySelectorAll('.home-section').forEach(s => s.classList.add('hidden'));
+        document.getElementById('categoryFullSection').classList.remove('hidden');
+        // Ensure the top of the category page is visible below the fixed header
+        document.getElementById('categoryFullSection').scrollIntoView({ behavior: 'instant', block: 'start' });
+        const chipsHtml = data.subcategories.map(sub => `<button data-chip="${sub}" class='filter-chip px-3 py-1 rounded-full text-sm'>${sub}</button>`).join('');
+        document.getElementById('categoryChips').innerHTML = chipsHtml;
+        document.getElementById('categoryFilterChips').innerHTML = `
+          <button data-sort="all" class="filter-chip px-3 py-1 rounded-full text-sm active">All Items</button>
+          <button data-sort="budget" class="filter-chip px-3 py-1 rounded-full text-sm">Budget Friendly</button>
+          <button data-sort="top" class="filter-chip px-3 py-1 rounded-full text-sm">Top Rated</button>
+          <button data-sort="new" class="filter-chip px-3 py-1 rounded-full text-sm">Newest</button>
+        `;
+        const renderProducts = (filter = '') => {
+          const filtered = data.products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+          return filtered.map(prod => `
+            <div class='bg-white rounded-lg shadow p-4 flex flex-col items-center listing-card'>
+              <img src='${prod.img}' alt='${prod.name}' class='w-24 h-24 object-cover rounded mb-3'/>
+              <div class='font-medium text-gray-900 mb-1 text-center'>${prod.name}</div>
+              <div class='text-primary font-bold mb-2'>${prod.price}</div>
+              <button class='add-to-cart mt-auto bg-primary text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors text-sm' data-name='${prod.name}' data-price='${prod.price}' data-img='${prod.img}'>Add to Cart</button>
+            </div>
+          `).join('');
+        };
+        document.getElementById('categoryFullContent').innerHTML = `
+          <div class='mb-6'>
+            <img src='${data.banner}' alt='${data.title} Banner' class='w-full h-40 object-cover rounded-lg mb-4'/>
+            <h2 class='text-2xl font-bold text-primary mb-2'>${data.title}</h2>
+            <div class='flex flex-wrap gap-2 mb-4'></div>
+          </div>
+          <div id='categoryProducts' class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>${renderProducts()}</div>`;
+        const search = document.getElementById('categorySearch');
+        if (search) {
+          search.value = '';
+          search.oninput = () => {
+            document.getElementById('categoryProducts').innerHTML = renderProducts(search.value);
+            attachAddToCartHandlers();
+          };
+        }
+        document.querySelectorAll('#categoryChips [data-chip]').forEach(chip => {
+          chip.addEventListener('click', () => {
+            const term = chip.getAttribute('data-chip');
+            document.getElementById('categorySearch').value = term;
+            document.getElementById('categoryProducts').innerHTML = renderProducts(term);
+            attachAddToCartHandlers();
+          });
+        });
+        // simple filter chips active state
+        document.querySelectorAll('#categoryFilterChips [data-sort]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('#categoryFilterChips [data-sort]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // Placeholder sorts; currently just preserves list but demonstrates UI
+            document.getElementById('categoryProducts').innerHTML = renderProducts(document.getElementById('categorySearch').value || '');
+            attachAddToCartHandlers();
+          });
+        });
+        attachAddToCartHandlers();
+      }
+
+      // Attach to home category tiles
+      document.querySelectorAll('.category-card').forEach(card => card.addEventListener('click', (e) => { e.preventDefault(); openCategory(card.getAttribute('data-category')); }));
+      // Mega menu removed, no triggers
+      // Back to categories
+      document.getElementById('backToCategories').addEventListener('click', function() {
+        document.getElementById('categoryFullSection').classList.add('hidden');
+        // Show all home sections back
+        document.querySelectorAll('.home-section').forEach(s => s.classList.remove('hidden'));
+        // Scroll to the top of the page (header) so content starts at top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      </script>
+
+      <!-- Main Products Section with Enhanced Filtering -->
+      <section class="home-section py-12">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Enhanced Sidebar Filters -->
+            <aside class="w-full lg:w-64">
+              <div class="bg-white rounded-lg p-6 shadow-sm sticky top-24">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="font-semibold text-gray-900">Filters</h4>
+                  <button class="text-sm text-primary hover:underline">Clear All</button>
+                </div>
+
+                <!-- Price Range with Visual Slider -->
+                <div class="mb-6">
+                  <label class="block text-sm font-medium text-gray-700 mb-3">Price Range (BWP)</label>
+                  <div class="px-3">
+                    <input type="range" id="priceRange" min="0" max="100000" value="50000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" />
+                    <div class="flex justify-between text-xs text-gray-500 mt-2">
+                      <span>P 0</span>
+                      <span id="currentPrice" class="font-medium text-primary">P 50,000</span>
+                      <span>P 100,000+</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Location Filter -->
+                <div class="mb-6">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <select class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option>All Locations</option>
+                    <option>Gaborone</option>
+                    <option>Francistown</option>
+                    <option>Maun</option>
+                    <option>Kasane</option>
+                    <option>Palapye</option>
+                  </select>
+                </div>
+
+                <!-- Brand Filter -->
+                <!-- All brand, customer rating, and seller type filter sections removed as requested -->
+
+                
+
+                <!-- Seller Type -->
+                <div class="mb-6">
+                  <label class="block text-sm font-medium text-gray-700 mb-3">Seller Type</label>
+                  <div class="space-y-2">
+                    <label class="flex items-center cursor-pointer">
+                      <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary" checked />
+                      <span class="ml-2 text-sm text-gray-700">Verified Sellers Only</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer">
+                      <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <span class="ml-2 text-sm text-gray-700">Top Rated</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer">
+                      <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary" />
+                      <span class="ml-2 text-sm text-gray-700">Fast Delivery</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <!-- Main Products Grid -->
+            <div class="flex-1">
+              <div class="flex items-center justify-between mb-6">
+                  <h3 class="text-2xl font-bold text-gray-900">Featured Products</h3>
+                  <span id="featuredCount" class="text-sm text-gray-500">Loading…</span>
+              </div>
+
+              <!-- Enhanced Product Grid -->
+              <div id="featuredGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- skeletons -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden skeleton h-64"></div>
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden skeleton h-64"></div>
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden skeleton h-64"></div>
+                <!-- Enhanced Product Card 1 -->
+                <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                  <div class="relative">
+                    <img src="https://readdy.ai/api/search-image?query=Elegant%20custom%20wedding%20cake%20with%20intricate%20decorations%20and%20beautiful%20frosting%20design%2C%20professional%20bakery%20photography%2C%20clean%20white%20background%2C%20high%20quality%20food%20photography%2C%20luxurious%20and%20appetizing%20presentation&width=300&height=200&seq=product001&orientation=landscape" alt="Custom Wedding Cake" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    
+                    <!-- Multiple Badges -->
+                    <div class="absolute top-3 left-3 flex flex-col gap-1">
+                      <span class="bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">HOT DEAL</span>
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center">
+                        <i class="ri-shield-check-fill mr-1"></i>Verified
+                      </span>
+                    </div>
+                    
+                    <!-- Wishlist Button -->
+                    <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all group-hover:scale-110">
+                      <i class="ri-heart-line text-gray-600 hover:text-red-500 transition-colors"></i>
+                    </button>
+                    
+                    <!-- Quick View Overlay -->
+                    <div class="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <button class="bg-white px-4 py-2 rounded-full text-sm font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+                    </div>
+                  </div>
+                  
+                  <div class="p-4">
+                    <h4 class="font-semibold text-gray-900 mb-1 line-clamp-2">Custom Wedding Cake</h4>
+                    <p class="text-sm text-gray-600 mb-2">Sweet Dreams Bakery • Gaborone</p>
+                    
+                    <!-- Rating with Reviews -->
+                    <div class="flex items-center mb-3">
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                      </div>
+                      <span class="text-sm text-gray-600 ml-1">(24 reviews)</span>
+                    </div>
+                    
+                    <!-- Price with Comparison -->
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-lg font-bold text-gray-900">P 1,200</span>
+                      <span class="text-sm text-gray-500 line-through">P 1,500</span>
+                      <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">20% OFF</span>
+                    </div>
+                    
+                    <!-- Delivery Info -->
+                    <div class="flex items-center text-sm text-green-600 mb-3">
+                      <i class="ri-truck-line mr-1"></i>
+                      <span>Free delivery by tomorrow</span>
+                    </div>
+                    
+                    <!-- Enhanced Action Buttons -->
+                    <div class="flex gap-2">
+                      <button class="add-to-cart flex-1 bg-primary text-white py-2 px-3 rounded font-medium hover:bg-blue-600 transition-colors text-sm" data-name="Custom Wedding Cake" data-price="P 1,200" data-img="https://readdy.ai/api/search-image?query=Elegant%20custom%20wedding%20cake%20with%20intricate%20decorations%20and%20beautiful%20frosting%20design%2C%20professional%20bakery%20photography%2C%20clean%20white%20background%2C%20high%20quality%20food%20photography%2C%20luxurious%20and%20appetizing%20presentation&width=300&height=200&seq=product001&orientation=landscape">
+                        Add to Cart
+                      </button>
+                      
+                       
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Enhanced Product Card 2 -->
+                <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                  <div class="relative">
+                    <img src="https://readdy.ai/api/search-image?query=Beautiful%20African%20traditional%20dress%20with%20vibrant%20colors%20and%20modern%20styling%2C%20professional%20fashion%20photography%2C%20clean%20white%20background%2C%20elegant%20and%20stylish%20clothing%20design%2C%20high%20quality%20commercial%20photo&width=300&height=200&seq=product002&orientation=landscape" alt="African Print Dress" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    
+                    <div class="absolute top-3 left-3 flex flex-col gap-1">
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center">
+                        <i class="ri-shield-check-fill mr-1"></i>Verified
+                      </span>
+                      <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">TRENDING</span>
+                    </div>
+                    
+                    <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all group-hover:scale-110">
+                      <i class="ri-heart-line text-gray-600 hover:text-red-500 transition-colors"></i>
+                    </button>
+                    
+                    <div class="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <button class="bg-white px-4 py-2 rounded-full text-sm font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+                    </div>
+                  </div>
+                  
+                  <div class="p-4">
+                    <h4 class="font-semibold text-gray-900 mb-1">African Print Dress</h4>
+                    <p class="text-sm text-gray-600 mb-2">Kgalagadi Fashion • Francistown</p>
+                    
+                    <div class="flex items-center mb-3">
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-line"></i>
+                      </div>
+                      <span class="text-sm text-gray-600 ml-1">(18 reviews)</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-lg font-bold text-gray-900">P 450</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-green-600 mb-3">
+                      <i class="ri-truck-line mr-1"></i>
+                      <span>Free delivery in 2-3 days</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                      <button class="add-to-cart flex-1 bg-primary text-white py-2 px-3 rounded font-medium hover:bg-blue-600 transition-colors text-sm" data-name="African Print Dress" data-price="P 450" data-img="https://readdy.ai/api/search-image?query=Beautiful%20African%20traditional%20dress%20with%20vibrant%20colors%20and%20modern%20styling%2C%20professional%20fashion%20photography%2C%20clean%20white%20background%2C%20elegant%20and%20stylish%20clothing%20design%2C%20high%20quality%20commercial%20photo&width=300&height=200&seq=product002&orientation=landscape">
+                        Add to Cart
+                      </button>
+                       
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Enhanced Product Card 3 -->
+                <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                  <div class="relative">
+                    <img src="https://readdy.ai/api/search-image?query=Used%20Toyota%20sedan%20car%20in%20excellent%20condition%2C%20clean%20and%20well-maintained%20vehicle%2C%20professional%20automotive%20photography%2C%20clean%20white%20background%2C%20attractive%20and%20reliable%20car%20for%20sale&width=300&height=200&seq=product003&orientation=landscape" alt="Toyota Corolla 2018" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    
+                    <div class="absolute top-3 left-3 flex flex-col gap-1">
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center">
+                        <i class="ri-shield-check-fill mr-1"></i>Verified
+                      </span>
+                      <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">PREMIUM</span>
+                    </div>
+                    
+                    <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all group-hover:scale-110">
+                      <i class="ri-heart-line text-gray-600 hover:text-red-500 transition-colors"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="p-4">
+                    <h4 class="font-semibold text-gray-900 mb-1">Toyota Corolla 2018</h4>
+                    <p class="text-sm text-gray-600 mb-2">Motswana Motors • Gaborone</p>
+                    
+                    <div class="flex items-center mb-3">
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                      </div>
+                      <span class="text-sm text-gray-600 ml-1">(31 reviews)</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-lg font-bold text-gray-900">P 85,000</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-blue-600 mb-3">
+                      <i class="ri-shield-check-line mr-1"></i>
+                      <span>Verified vehicle history</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                      <button class="flex-1 bg-primary text-white py-2 px-3 rounded font-medium hover:bg-blue-600 transition-colors text-sm">
+                        Contact Seller
+                      </button>
+                       
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Additional Product Cards -->
+                <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                  <div class="relative">
+                    <img src="https://readdy.ai/api/search-image?query=Latest%20smartphone%20with%20sleek%20design%20and%20modern%20features%2C%20professional%20product%20photography%2C%20clean%20white%20background%2C%20high-tech%20mobile%20device%2C%20attractive%20and%20premium%20appearance&width=300&height=200&seq=product004&orientation=landscape" alt="iPhone 14 Pro" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    
+                    <div class="absolute top-3 left-3 flex flex-col gap-1">
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center">
+                        <i class="ri-shield-check-fill mr-1"></i>Verified
+                      </span>
+                    </div>
+                    
+                    <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all group-hover:scale-110">
+                      <i class="ri-heart-line text-gray-600 hover:text-red-500 transition-colors"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="p-4">
+                    <h4 class="font-semibold text-gray-900 mb-1">iPhone 14 Pro</h4>
+                    <p class="text-sm text-gray-600 mb-2">TechHub Botswana • Gaborone</p>
+                    
+                    <div class="flex items-center mb-3">
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                      </div>
+                      <span class="text-sm text-gray-600 ml-1">(42 reviews)</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-lg font-bold text-gray-900">P 12,500</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-green-600 mb-3">
+                      <i class="ri-truck-line mr-1"></i>
+                      <span>Free same-day delivery</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                      <button class="add-to-cart flex-1 bg-primary text-white py-2 px-3 rounded font-medium hover:bg-blue-600 transition-colors text-sm" data-name="iPhone 14 Pro" data-price="P 12,500" data-img="https://readdy.ai/api/search-image?query=Latest%20smartphone%20with%20sleek%20design%20and%20modern%20features%2C%20professional%20product%20photography%2C%20clean%20white%20background%2C%20high-tech%20mobile%20device%2C%20attractive%20and%20premium%20appearance&width=300&height=200&seq=product004&orientation=landscape">
+                        Add to Cart
+                      </button>
+                      <button class="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors">
+                        <i class="ri-whatsapp-fill"></i>
+                      </button>
+                      <button class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors">
+                        <i class="ri-phone-fill"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                  <div class="relative">
+                    <img src="https://readdy.ai/api/search-image?query=Beautiful%20home%20furniture%20set%20with%20modern%20design%20and%20elegant%20styling%2C%20professional%20interior%20photography%2C%20clean%20white%20background%2C%20comfortable%20and%20stylish%20living%20room%20furniture&width=300&height=200&seq=product005&orientation=landscape" alt="Living Room Set" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    
+                    <div class="absolute top-3 left-3 flex flex-col gap-1">
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center">
+                        <i class="ri-shield-check-fill mr-1"></i>Verified
+                      </span>
+                    </div>
+                    
+                    <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all group-hover:scale-110">
+                      <i class="ri-heart-line text-gray-600 hover:text-red-500 transition-colors"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="p-4">
+                    <h4 class="font-semibold text-gray-900 mb-1">Living Room Set</h4>
+                    <p class="text-sm text-gray-600 mb-2">Comfort Furniture • Maun</p>
+                    
+                    <div class="flex items-center mb-3">
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-line"></i>
+                      </div>
+                      <span class="text-sm text-gray-600 ml-1">(15 reviews)</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-lg font-bold text-gray-900">P 3,200</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-orange-600 mb-3">
+                      <i class="ri-truck-line mr-1"></i>
+                      <span>Free delivery & assembly</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                      <button class="add-to-cart flex-1 bg-primary text-white py-2 px-3 rounded font-medium hover:bg-blue-600 transition-colors text-sm" data-name="Living Room Set" data-price="P 3,200" data-img="https://readdy.ai/api/search-image?query=Beautiful%20home%20furniture%20set%20with%20modern%20design%20and%20elegant%20styling%2C%20professional%20interior%20photography%2C%20clean%20white%20background%2C%20comfortable%20and%20stylish%20living%20room%20furniture&width=300&height=200&seq=product005&orientation=landscape">
+                        Add to Cart
+                      </button>
+                      <button class="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors">
+                        <i class="ri-whatsapp-fill"></i>
+                      </button>
+                      <button class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors">
+                        <i class="ri-phone-fill"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                  <div class="relative">
+                    <img src="https://readdy.ai/api/search-image?query=Professional%20business%20consulting%20service%20concept%20with%20modern%20office%20setup%20and%20documents%2C%20clean%20white%20background%2C%20professional%20business%20photography%2C%20organized%20and%20trustworthy%20service%20presentation&width=300&height=200&seq=product006&orientation=landscape" alt="Business Consulting" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    
+                    <div class="absolute top-3 left-3 flex flex-col gap-1">
+                      <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs flex items-center">
+                        <i class="ri-shield-check-fill mr-1"></i>Verified
+                      </span>
+                      <span class="bg-gold-100 text-gold-800 px-2 py-1 rounded text-xs">EXPERT</span>
+                    </div>
+                    
+                    <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all group-hover:scale-110">
+                      <i class="ri-heart-line text-gray-600 hover:text-red-500 transition-colors"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="p-4">
+                    <h4 class="font-semibold text-gray-900 mb-1">Business Consulting</h4>
+                    <p class="text-sm text-gray-600 mb-2">BW Business Solutions • Gaborone</p>
+                    
+                    <div class="flex items-center mb-3">
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                      </div>
+                      <span class="text-sm text-gray-600 ml-1">(28 reviews)</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-lg font-bold text-gray-900">P 800/hr</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-purple-600 mb-3">
+                      <i class="ri-calendar-line mr-1"></i>
+                      <span>Book consultation online</span>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                      <button class="flex-1 bg-primary text-white py-2 px-3 rounded font-medium hover:bg-blue-600 transition-colors text-sm">
+                        Book Now
+                      </button>
+                      <button class="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors">
+                        <i class="ri-whatsapp-fill"></i>
+                      </button>
+                      <button class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors">
+                        <i class="ri-phone-fill"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-center mt-8">
+                <button class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors !rounded-button whitespace-nowrap">
+                  Load More Products
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social Proof & Live Activity Section -->
+      <section class="home-section py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Customer Testimonials -->
+            <div>
+              <h3 class="text-3xl lg:text-4xl font-extrabold tracking-tight mb-6">What our <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">customers say</span></h3>
+              <div class="relative">
+                <div id="testimonialsCarousel" class="space-y-4 overflow-hidden">
+                  <div class="flex items-start gap-4 p-5 bg-white rounded-2xl border shadow-sm hover:shadow-md transition">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-semibold ring-4 ring-primary/10">
+                    T
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-semibold">Thabo M.</span>
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                      </div>
+                      <span class="text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full">Verified</span>
+                    </div>
+                    <p class="text-gray-700 text-sm">"Found the perfect wedding cake for our traditional ceremony. Sweet Dreams Bakery delivered on time to Francistown. Highly recommend!"</p>
+                    <div class="text-xs text-gray-500 mt-2">Verified Purchase • 2 days ago</div>
+                  </div>
+                </div>
+                
+                <div class="flex items-start gap-4 p-5 bg-white rounded-2xl border shadow-sm hover:shadow-md transition">
+                  <div class="w-12 h-12 rounded-full bg-secondary text-white flex items-center justify-center font-semibold ring-4 ring-secondary/10">
+                    K
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-semibold">Kgomotso S.</span>
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                      </div>
+                      <span class="text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full">Verified</span>
+                    </div>
+                    <p class="text-gray-700 text-sm">"Bought my iPhone through WhatsApp. The seller was very professional and the phone came with warranty. Love the local touch!"</p>
+                    <div class="text-xs text-gray-500 mt-2">Verified Purchase • 1 week ago</div>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 bg-white rounded-2xl border shadow-sm hover:shadow-md transition">
+                  <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center font-semibold ring-4 ring-green-100">
+                    M
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="font-semibold">Mpho L.</span>
+                      <div class="flex text-yellow-400 text-sm">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-line"></i>
+                      </div>
+                      <span class="text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full">Verified</span>
+                    </div>
+                    <p class="text-gray-700 text-sm">"Great platform for finding local services. Used it to hire a business consultant and the process was smooth. Supporting local businesses feels good!"</p>
+                    <div class="text-xs text-gray-500 mt-2">Verified Purchase • 3 days ago</div>
+                  </div>
+                </div>
+                </div>
+                <div class="flex items-center justify-center gap-3 mt-4">
+                  <button id="testimonialsPrev" class="w-8 h-8 rounded-full border text-gray-600 hover:bg-gray-100"><i class="ri-arrow-left-s-line"></i></button>
+                  <button id="testimonialsNext" class="w-8 h-8 rounded-full border text-gray-600 hover:bg-gray-100"><i class="ri-arrow-right-s-line"></i></button>
+                </div>
+              </div>
+              </div>
+            </div>
+            
+            <!-- Live Activity Feed -->
+            <div>
+              <h3 class="text-3xl lg:text-4xl font-extrabold tracking-tight mb-6">Live <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">activity</span></h3>
+              <div class="rounded-2xl border bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 p-5 h-80 overflow-y-auto">
+                <div class="space-y-3" id="activityFeed">
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>Neo</strong> from Maun just bought <strong>iPhone 14 Pro</strong></span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">2m ago</span>
+                  </div>
+                  
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>Kgomotso</strong> rated Sweet Dreams Bakery ⭐⭐⭐⭐⭐</span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">5m ago</span>
+                  </div>
+                  
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-purple-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>Thabo</strong> from Gaborone added <strong>Living Room Set</strong> to wishlist</span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">8m ago</span>
+                  </div>
+                  
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-orange-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>Sarah</strong> from Francistown just became a verified seller</span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">12m ago</span>
+                  </div>
+                  
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>Motswana Motors</strong> posted a new car listing</span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">15m ago</span>
+                  </div>
+                  
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>Lerato</strong> from Kasane bought <strong>African Print Dress</strong></span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">18m ago</span>
+                  </div>
+
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>TechHub Botswana</strong> updated stock levels</span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">22m ago</span>
+                  </div>
+
+                  <div class="flex items-center gap-3 text-sm slide-in">
+                    <div class="w-2.5 h-2.5 bg-purple-500 rounded-full animate-pulse"></div>
+                    <span class="text-gray-700"><strong>Kagiso</strong> from Palapye left a 5-star review</span>
+                    <span class="ml-auto text-xs text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">25m ago</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Quick Stats -->
+              <div class="grid grid-cols-2 gap-4 mt-6">
+                <div class="bg-primary/10 rounded-lg p-4 text-center">
+                  <div class="text-2xl font-bold text-primary">127</div>
+                  <div class="text-sm text-gray-600">Orders Today</div>
+                </div>
+                <div class="bg-green-100 rounded-lg p-4 text-center">
+                  <div class="text-2xl font-bold text-green-600">23</div>
+                  <div class="text-sm text-gray-600">New Sellers</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Order Tracking Section -->
+      <section class="home-section py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Track Your Order</h3>
+            <p class="text-gray-600">Enter your order number to see real-time tracking</p>
+          </div>
+          
+          <div class="max-w-md mx-auto mb-8">
+            <div class="flex">
+              <input type="text" placeholder="Enter order number..." class="flex-1 px-4 py-3 border rounded-l focus:outline-none focus:ring-2 focus:ring-primary" />
+              <button class="bg-primary text-white px-6 py-3 rounded-r hover:bg-blue-600 transition-colors">Track</button>
+            </div>
+          </div>
+          
+          <!-- Sample Order Tracking -->
+          <div class="max-w-2xl mx-auto bg-white rounded-lg p-6 shadow-sm">
+            <h4 class="font-semibold mb-4">Order #AM-2025-001234</h4>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm">✓</div>
+                <div class="ml-4 flex-1">
+                  <div class="font-medium">Order Placed</div>
+                  <div class="text-sm text-gray-500">Your order has been confirmed</div>
+                </div>
+                <span class="text-xs text-gray-500">Today, 2:30 PM</span>
+              </div>
+              
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm">✓</div>
+                <div class="ml-4 flex-1">
+                  <div class="font-medium">Seller Confirmed</div>
+                  <div class="text-sm text-gray-500">Sweet Dreams Bakery accepted your order</div>
+                </div>
+                <span class="text-xs text-gray-500">Today, 3:15 PM</span>
+              </div>
+              
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm animate-pulse">
+                  <i class="ri-truck-line"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                  <div class="font-medium">In Preparation</div>
+                  <div class="text-sm text-gray-500">Your custom cake is being prepared</div>
+                </div>
+                <span class="text-xs text-gray-500">Est. Tomorrow, 10:00 AM</span>
+              </div>
+              
+              <div class="flex items-center opacity-50">
+                <div class="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-300 text-sm">
+                  <i class="ri-map-pin-line"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                  <div class="font-medium">Out for Delivery</div>
+                  <div class="text-sm text-gray-500">Your order is on the way</div>
+                </div>
+                <span class="text-xs text-gray-500">Tomorrow, 2:00 PM</span>
+              </div>
+              
+              <div class="flex items-center opacity-50">
+                <div class="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-300 text-sm">✓</div>
+                <div class="ml-4 flex-1">
+                  <div class="font-medium">Delivered</div>
+                  <div class="text-sm text-gray-500">Order delivered successfully</div>
+                </div>
+                <span class="text-xs text-gray-500">Tomorrow, 4:00 PM</span>
+              </div>
+            </div>
+            
+            <div class="mt-6 pt-4 border-t">
+              <div class="flex items-center justify-between text-sm">
+                <span>Need help with your order?</span>
+                <button class="text-primary hover:underline">Contact Seller</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why Choose Amalet Section (upgraded) -->
+      <section class="home-section py-20 bg-gradient-to-b from-white via-primary/5 to-white">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <!-- Copy column -->
+            <div>
+              <h3 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">Why choose <span class="text-primary">Amalet</span>?</h3>
+              <p class="text-gray-600 text-lg mb-6">A marketplace crafted for Botswana — safe, fast, and built around how we buy and sell locally.</p>
+              <ul class="space-y-3">
+                <li class="flex items-start"><i class="ri-check-line text-green-600 mt-1 mr-3"></i><span class="text-gray-700">Verified vendors and listings to reduce scams</span></li>
+                <li class="flex items-start"><i class="ri-check-line text-green-600 mt-1 mr-3"></i><span class="text-gray-700">Direct contact via WhatsApp or phone in Setswana/English</span></li>
+                <li class="flex items-start"><i class="ri-check-line text-green-600 mt-1 mr-3"></i><span class="text-gray-700">Local payment options: EFT, eWallet, Orange Money</span></li>
+                <li class="flex items-start"><i class="ri-check-line text-green-600 mt-1 mr-3"></i><span class="text-gray-700">Fast delivery options across major towns</span></li>
+                <li class="flex items-start"><i class="ri-check-line text-green-600 mt-1 mr-3"></i><span class="text-gray-700">Buyer support when you need it — 24/7</span></li>
+              </ul>
+
+              <div class="mt-8 flex flex-wrap gap-3">
+                <a href="#categoryMainSection" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors">Start shopping</a>
+                <button id="openSellModalCTA" class="border-2 border-primary text-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors">Become a seller</button>
+              </div>
+            </div>
+
+            <!-- Feature cards column -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white rounded-2xl p-6 shadow-sm border hover:shadow-lg transition">
+                <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                  <i class="ri-shield-check-line text-xl"></i>
+                </div>
+                <div class="font-semibold mb-1">Protected purchases</div>
+                <div class="text-sm text-gray-600">Verification and moderation keep listings clean and safe.</div>
+              </div>
+              <div class="bg-white rounded-2xl p-6 shadow-sm border hover:shadow-lg transition">
+                <div class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center mb-4">
+                  <i class="ri-whatsapp-line text-xl"></i>
+                </div>
+                <div class="font-semibold mb-1">Talk to vendors</div>
+                <div class="text-sm text-gray-600">Ask questions and negotiate directly via WhatsApp or phone.</div>
+              </div>
+              <div class="bg-white rounded-2xl p-6 shadow-sm border hover:shadow-lg transition">
+                <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-4">
+                  <i class="ri-truck-line text-xl"></i>
+                </div>
+                <div class="font-semibold mb-1">Fast local delivery</div>
+                <div class="text-sm text-gray-600">Same-day in Gabs/Franco/Maun with reliable updates.</div>
+              </div>
+              <div class="bg-white rounded-2xl p-6 shadow-sm border hover:shadow-lg transition">
+                <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-4">
+                  <i class="ri-customer-service-line text-xl"></i>
+                </div>
+                <div class="font-semibold mb-1">Human support</div>
+                <div class="text-sm text-gray-600">Friendly help in Setswana or English whenever you need.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trust badges -->
+          <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="flex items-center gap-3 bg-white border rounded-lg p-3"><i class="ri-lock-2-line text-primary"></i><span class="text-sm font-medium">Secure Payments</span></div>
+            <div class="flex items-center gap-3 bg-white border rounded-lg p-3"><i class="ri-user-star-line text-primary"></i><span class="text-sm font-medium">Verified Vendors</span></div>
+            <div class="flex items-center gap-3 bg-white border rounded-lg p-3"><i class="ri-shield-keyhole-line text-primary"></i><span class="text-sm font-medium">Buyer Protection</span></div>
+            <div class="flex items-center gap-3 bg-white border rounded-lg p-3"><i class="ri-headphone-line text-primary"></i><span class="text-sm font-medium">24/7 Support</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div>
+            <h2 class="text-2xl font-['Pacifico'] text-primary mb-1">Amalet</h2>
+            <div class="text-sm text-gray-400 mb-4">Trust. Support. Thrive.</div>
+            <p class="text-gray-400 mb-4">
+              Botswana's trusted digital marketplace connecting local vendors with buyers across the country.
+            </p>
+            <div class="flex space-x-4">
+              <a href="https://www.facebook.com/aobi.wayne/" title="Facebook" aria-label="Facebook" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                <i class="ri-facebook-fill"></i>
+              </a>
+              <a href="https://www.linkedin.com/in/aobakwe-ramogojwana-a75260256/" title="LinkedIn" aria-label="LinkedIn" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                <i class="ri-linkedin-fill"></i>
+              </a>
+              <a href="https://wa.me/26777342923" target="_blank" rel="noopener" title="WhatsApp" aria-label="WhatsApp" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                <i class="ri-whatsapp-fill"></i>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">For Buyers</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="#" class="hover:text-white transition-colors">Browse Products</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">How to Buy</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Payment Methods</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Buyer Protection</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Track Orders</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">For Sellers</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="#" class="hover:text-white transition-colors">Start Selling</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Seller Verification</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Seller Tools</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Success Stories</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Seller Support</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-4">Support</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li><a id="helpCenterLinkFooter" href="#" class="hover:text-white transition-colors">Help Center</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Trust & Safety</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col lg:flex-row items-center justify-between">
+          <p class="text-gray-400 mb-4 lg:mb-0">© 2025 Amalet. All rights reserved.</p>
+          <div class="flex items-center space-x-4 text-gray-400">
+            <span>We accept:</span>
+            <div class="flex space-x-2">
+              <div class="w-8 h-5 bg-blue-600 rounded flex items-center justify-center text-xs text-white">VISA</div>
+              <div class="w-8 h-5 bg-red-600 rounded flex items-center justify-center text-xs text-white">MC</div>
+              <div class="w-8 h-5 bg-blue-500 rounded flex items-center justify-center text-xs text-white">PP</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modals and JavaScript functionality -->
+    <!-- Cart Drawer -->
+    <aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-[60] translate-x-full transition-transform duration-300 flex flex-col">
+      <div class="p-4 border-b flex items-center justify-between">
+        <h3 class="text-lg font-semibold">Your Cart</h3>
+        <button id="closeCartDrawer" class="text-2xl leading-none text-gray-500 hover:text-primary">&times;</button>
+      </div>
+      <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+      <div class="p-4 border-t">
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-medium">Subtotal</span>
+          <span id="cartSubtotal" class="font-bold text-primary">P 0</span>
+        </div>
+        <button id="checkoutBtn" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600">Checkout</button>
+      </div>
+    </aside>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black/50 z-[70] hidden items-center justify-center">
+      <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div class="p-4 border-b flex items-center justify-between">
+          <h3 class="text-lg font-semibold">Checkout</h3>
+          <button id="closeCheckoutModal" class="text-2xl leading-none text-gray-500 hover:text-primary">&times;</button>
+        </div>
+        <form id="checkoutForm" class="p-4 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Full Name</label>
+              <input id="custName" name="name" type="text" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Email</label>
+              <input id="custEmail" name="email" type="email" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Mobile Number</label>
+              <input id="custPhone" name="phone" type="tel" required class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" />
+            </div>
+            <div class="md:col-span-2">
+              <label class="flex items-center justify-between p-3 border rounded-lg cursor-pointer select-none">
+                <div>
+                  <div class="font-medium">Deliver to doorstep</div>
+                  <div class="text-sm text-gray-500">Flat fee P 50</div>
+                </div>
+                <div class="relative">
+                  <input id="checkoutDeliveryToggle" type="checkbox" class="peer sr-only" />
+                  <div class="w-12 h-6 bg-gray-200 rounded-full transition peer-checked:bg-primary"></div>
+                  <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-6"></div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-2">Order Summary</h4>
+            <div id="checkoutItemsSummary" class="space-y-2 text-sm border rounded p-3 max-h-40 overflow-y-auto"></div>
+            <div class="mt-3 space-y-1 text-sm">
+              <div class="flex items-center justify-between"><span>Subtotal</span><span id="checkoutSubtotal">P 0</span></div>
+              <div class="flex items-center justify-between"><span>Delivery</span><span id="checkoutDelivery">P 0</span></div>
+              <div class="flex items-center justify-between font-semibold text-gray-900"><span>Total</span><span id="checkoutTotal">P 0</span></div>
+            </div>
+          </div>
+
+          <button class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600">Place Order via WhatsApp</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Help Center Modal -->
+    <div id="helpCenterModal" class="fixed inset-0 bg-black/50 z-[70] hidden items-center justify-center">
+      <div class="bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 relative">
+        <button id="closeHelpCenter" class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl">&times;</button>
+                <h2 class="text-2xl font-bold text-primary mb-1">Help Center</h2>
+                <p class="text-sm text-gray-600 mb-3">Trust. Support. Thrive.</p>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="font-semibold mb-2">FAQs</h3>
+            <div class="space-y-2 text-sm">
+              <details class="p-3 border rounded">
+                <summary class="cursor-pointer font-medium">How do I track my order?</summary>
+                <p class="mt-2 text-gray-600">Use the Track Order link in the header and enter your order number.</p>
+              </details>
+              <details class="p-3 border rounded">
+                <summary class="cursor-pointer font-medium">Can I return items?</summary>
+                <p class="mt-2 text-gray-600">Yes, within 7 days for eligible categories. Contact support below.</p>
+              </details>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-2">Contact Support</h3>
+            <form id="helpForm" class="space-y-3">
+              <input name="name" class="w-full border rounded px-3 py-2" placeholder="Your name" required />
+              <input name="email" type="email" class="w-full border rounded px-3 py-2" placeholder="you@example.com" required />
+              <textarea name="message" rows="4" class="w-full border rounded px-3 py-2" placeholder="How can we help?" required></textarea>
+              <label class="block text-sm">Attach image (optional)
+                <input name="file" type="file" accept="image/*" class="mt-1 block w-full text-sm" />
+              </label>
+              <button class="w-full bg-primary text-white py-2 rounded">Send</button>
+              <div id="helpFormSuccess" class="hidden text-green-600 text-center font-medium">Thanks! We will email you shortly.</div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chatbot Floating Widget (always on screen, not in footer) -->
+    <div class="chatbot-widget">
+      <button id="chatbotToggle" class="chatbot-button flex items-center justify-center text-white">
+        <i class="ri-message-3-fill text-2xl"></i>
+      </button>
+      <div id="chatbotWindow" class="chatbot-window rounded-2xl overflow-hidden">
+        <div class="h-full flex flex-col">
+          <div class="bg-gradient-to-r from-primary to-secondary p-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="relative">
+                  <div class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-white">
+                    <i class="ri-robot-2-line text-lg"></i>
+                  </div>
+                  <span class="absolute -bottom-0 -right-0 h-3 w-3 bg-green-500 border-2 border-white rounded-full"></span>
+                </div>
+                <div>
+                  <div class="text-white font-semibold leading-tight">Amalet Assistant</div>
+                  <div class="text-white/80 text-xs">Online now</div>
+                </div>
+              </div>
+              <button id="closeChatbot" class="text-white/80 hover:text-white"><i class="ri-close-line text-xl"></i></button>
+            </div>
+          </div>
+          <div id="chatLog" class="flex-1 p-3 space-y-2 overflow-y-auto text-sm bg-gray-50">
+            <div class="p-2 bg-white rounded shadow-sm max-w-[85%]">
+              <p>👋 Hi! I'm your Amalet assistant. How can I help you find what you're looking for today?</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <button type="button" class="quick-reply text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded" data-value="Track order">Track order</button>
+                <button type="button" class="quick-reply text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded" data-value="Returns">Returns</button>
+                <button type="button" class="quick-reply text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded" data-value="Contact support">Contact support</button>
+                <button type="button" class="quick-reply text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded" data-value="Browse categories">Browse categories</button>
+              </div>
+            </div>
+          </div>
+          <form id="chatForm" class="p-3 border-t flex gap-2">
+            <input id="chatInput" class="flex-1 border rounded px-3 py-2" placeholder="Type a message..." />
+            <button class="bg-primary text-white px-4 rounded">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Sell Modal -->
+    <div id="sellModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-8 relative max-h-[90vh] overflow-y-auto">
+        <button id="closeSellModal" class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl transition-colors">&times;</button>
+                <h2 class="text-2xl font-bold mb-1 text-primary">Become a Seller on Amalet</h2>
+                <p class="text-sm text-gray-600 mb-4">Trust. Support. Thrive.</p>
+        <form id="sellForm" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">First Name *</label>
+              <input name="firstName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Last Name *</label>
+              <input name="lastName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Email *</label>
+              <input name="email" type="email" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Mobile Phone *</label>
+              <input name="mobile" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Business Name</label>
+            <input name="businessName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Product Categories *</label>
+            <select name="category" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required>
+              <option value="">Select Category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Fashion">Fashion & Clothing</option>
+              <option value="Cakes">Cakes & Bakery</option>
+              <option value="Automotive">Automotive & Vehicles</option>
+              <option value="Beauty">Beauty & Personal Care</option>
+              <option value="Home">Home & Garden</option>
+              <option value="Services">Professional Services</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Location *</label>
+            <select name="location" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required>
+              <option value="">Select Location</option>
+              <option value="Gaborone">Gaborone</option>
+              <option value="Francistown">Francistown</option>
+              <option value="Maun">Maun</option>
+              <option value="Kasane">Kasane</option>
+              <option value="Palapye">Palapye</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Brief description of your business</label>
+            <textarea name="description" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" rows="3"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Attach images/docs (optional)</label>
+            <input id="sellAttachments" name="attachments" type="file" accept="image/*,.pdf,.doc,.docx" multiple class="w-full border rounded px-3 py-2" />
+            <p class="text-xs text-gray-500 mt-1">You can attach product photos or documents. Email clients may not include attachments automatically — you can send them via WhatsApp below.</p>
+          </div>
+          <div class="border rounded p-3 bg-green-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div class="text-sm text-green-800">Prefer WhatsApp? Send your seller request and attach media directly.</div>
+            <button type="button" id="sellFormWhatsApp" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Send via WhatsApp</button>
+          </div>
+          <div class="flex items-center">
+            <input name="terms" type="checkbox" class="mr-2 text-primary focus:ring-primary" required />
+            <label class="text-sm">I agree to the <a href="#" class="text-primary underline">terms & conditions</a></label>
+          </div>
+          <button type="submit" class="w-full bg-primary text-white py-3 rounded font-semibold hover:bg-blue-600 transition-colors">Send via Email</button>
+          <div id="sellFormSuccess" class="hidden text-green-600 text-center mt-4 font-semibold">Thank you! Your application has been submitted.</div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-8 relative">
+        <button id="closeAuthModal" class="absolute top-4 right-4 text-gray-400 hover:text-primary text-2xl transition-colors">&times;</button>
+        <div id="authTabs" class="flex mb-6">
+          <button id="loginTab" class="flex-1 py-2 font-semibold border-b-2 border-primary text-primary transition-colors">Login</button>
+          <button id="registerTab" class="flex-1 py-2 font-semibold border-b-2 border-transparent text-gray-500 hover:text-primary transition-colors">Register</button>
+        </div>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Email</label>
+            <input name="loginEmail" type="email" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Password</label>
+            <input name="loginPassword" type="password" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+          </div>
+          <button type="submit" class="w-full bg-primary text-white py-3 rounded font-semibold hover:bg-blue-600 transition-colors">Login</button>
+          <div id="loginError" class="text-red-600 text-sm mt-2 hidden"></div>
+        </form>
+        <form id="registerForm" class="space-y-4 hidden">
+          <div>
+            <label class="block text-sm font-medium mb-1">Name</label>
+            <input name="registerName" type="text" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Email</label>
+            <input name="registerEmail" type="email" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Password</label>
+            <input name="registerPassword" type="password" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" required />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Phone (optional)</label>
+            <input name="registerPhone" type="tel" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary" />
+          </div>
+          <button type="submit" class="w-full bg-primary text-white py-3 rounded font-semibold hover:bg-blue-600 transition-colors">Register</button>
+          <div id="registerError" class="text-red-600 text-sm mt-2 hidden"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Enhanced Search Functionality
+      function showSearchSuggestions(value) {
+        const suggestions = document.getElementById('searchSuggestions');
+        if (value.length > 2) {
+          suggestions.classList.remove('hidden');
+        } else {
+          suggestions.classList.add('hidden');
+        }
+      }
+
+      function handleSearchKeydown(event) {
+        if (event.key === 'Escape') {
+          document.getElementById('searchSuggestions').classList.add('hidden');
+        }
+      }
+
+      function focusSearch() {
+        document.getElementById('searchInput').focus();
+      }
+
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', function(e) {
+        const searchInput = document.getElementById('searchInput');
+        const suggestions = document.getElementById('searchSuggestions');
+        if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
+          suggestions.classList.add('hidden');
+        }
+      });
+
+      // Price Range Slider
+      const priceRange = document.getElementById('priceRange');
+      const currentPrice = document.getElementById('currentPrice');
+      
+      if (priceRange && currentPrice) {
+        priceRange.addEventListener('input', function() {
+          const value = parseInt(this.value);
+          currentPrice.textContent = `P ${value.toLocaleString()}`;
+          
+          // Update slider appearance
+          const percentage = (value / this.max) * 100;
+          this.style.background = `linear-gradient(to right, #57B5E7 0%, #57B5E7 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
+        });
+        
+        // Initialize slider appearance
+        const percentage = (priceRange.value / priceRange.max) * 100;
+        priceRange.style.background = `linear-gradient(to right, #57B5E7 0%, #57B5E7 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
+      }
+
+      // Live Statistics Animation
+      function animateCounter(element, target, duration = 2000) {
+        const start = parseInt(element.textContent.replace(/,/g, ''));
+        const increment = (target - start) / (duration / 16);
+        let current = start;
+        
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          element.textContent = Math.floor(current).toLocaleString();
+        }, 16);
+      }
+
+      // Live Activity Feed Updates
+      function updateActivityFeed() {
+        const activities = [
+          "Neo from Maun just bought iPhone 14 Pro",
+          "Kgomotso rated Sweet Dreams Bakery ⭐⭐⭐⭐⭐",
+          "Thabo from Gaborone added Living Room Set to wishlist",
+          "Sarah from Francistown just became a verified seller",
+          "Motswana Motors posted a new car listing",
+          "Lerato from Kasane bought African Print Dress",
+          "TechHub Botswana updated stock levels",
+          "Kagiso from Palapye left a 5-star review"
+        ];
+        
+        const feedElement = document.getElementById('activityFeed');
+        if (feedElement) {
+          setInterval(() => {
+            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+            const newActivity = document.createElement('div');
+            newActivity.className = 'flex items-center text-sm slide-in';
+            newActivity.innerHTML = `
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse"></div>
+              <span>${randomActivity}</span>
+              <span class="text-gray-500 ml-auto">Just now</span>
+            `;
+            
+            feedElement.insertBefore(newActivity, feedElement.firstChild);
+            
+            // Remove last item if more than 8 activities
+            if (feedElement.children.length > 8) {
+              feedElement.removeChild(feedElement.lastChild);
+            }
+          }, 15000); // Update every 15 seconds
+        }
+      }
+
+      // Modal Functions
+      function showAuthModal(tab = 'login') {
+        const authModal = document.getElementById('authModal');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        
+        authModal.classList.remove('hidden');
+        
+        if (tab === 'register') {
+          loginForm.classList.add('hidden');
+          registerForm.classList.remove('hidden');
+          loginTab.classList.remove('text-primary', 'border-primary');
+          loginTab.classList.add('text-gray-500', 'border-transparent');
+          registerTab.classList.add('text-primary', 'border-primary');
+          registerTab.classList.remove('text-gray-500', 'border-transparent');
+        } else {
+          loginForm.classList.remove('hidden');
+          registerForm.classList.add('hidden');
+          loginTab.classList.add('text-primary', 'border-primary');
+          loginTab.classList.remove('text-gray-500', 'border-transparent');
+          registerTab.classList.remove('text-primary', 'border-primary');
+          registerTab.classList.add('text-gray-500', 'border-transparent');
+        }
+      }
+
+      // Event Listeners
+      document.addEventListener('DOMContentLoaded', function() {
+        // Update live statistics on page load
+        updateActivityFeed();
+        
+        // Animate statistics
+        setTimeout(() => {
+          const productCount = document.getElementById('productCount');
+          const sellerCount = document.getElementById('sellerCount');
+          if (productCount) animateCounter(productCount, 5247);
+          if (sellerCount) animateCounter(sellerCount, 523);
+        }, 500);
+
+        // Modal event listeners
+        const openSellModal = document.getElementById('openSellModal');
+        const closeSellModal = document.getElementById('closeSellModal');
+        const sellModal = document.getElementById('sellModal');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const authModal = document.getElementById('authModal');
+        const loginRegisterBtn = document.getElementById('loginRegisterBtn');
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+
+        if (openSellModal) openSellModal.addEventListener('click', () => sellModal.classList.remove('hidden'));
+        const openSellModalCTA = document.getElementById('openSellModalCTA');
+        if (openSellModalCTA) openSellModalCTA.addEventListener('click', () => sellModal.classList.remove('hidden'));
+        if (closeSellModal) {
+          closeSellModal.addEventListener('click', () => sellModal.classList.add('hidden'));
+        }
+        if (closeAuthModal) {
+          closeAuthModal.addEventListener('click', () => authModal.classList.add('hidden'));
+        }
+        if (loginRegisterBtn) {
+          loginRegisterBtn.addEventListener('click', () => showAuthModal('login'));
+        }
+        if (loginTab) {
+          loginTab.addEventListener('click', () => showAuthModal('login'));
+        }
+        if (registerTab) {
+          registerTab.addEventListener('click', () => showAuthModal('register'));
+        }
+
+        // Close modals on escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            sellModal?.classList.add('hidden');
+            authModal?.classList.add('hidden');
+          }
+        });
+
+        // Mega menu removed
+
+        // Heart button functionality
+        const heartButtons = document.querySelectorAll('button i[class*="ri-heart"]');
+        heartButtons.forEach((heart) => {
+          heart.parentElement.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (heart.classList.contains('ri-heart-line')) {
+              heart.classList.remove('ri-heart-line');
+              heart.classList.add('ri-heart-fill');
+              heart.style.color = '#ef4444';
+            } else {
+              heart.classList.remove('ri-heart-fill');
+              heart.classList.add('ri-heart-line');
+              heart.style.color = '';
+            }
+          });
+        });
+
+        // CART: state, render, handlers
+        const CART_KEY = 'amalet_cart_v1';
+        const cartCountDesktop = document.getElementById('cartCountDesktop');
+        const cartCountMobile = document.getElementById('cartCountMobile');
+        const cartDrawer = document.getElementById('cartDrawer');
+        const openCartDesktop = document.getElementById('openCartDrawerDesktop');
+        const openCartMobile = document.getElementById('openCartDrawerMobile');
+        const closeCartDrawer = document.getElementById('closeCartDrawer');
+        const cartItemsEl = document.getElementById('cartItems');
+        const cartSubtotalEl = document.getElementById('cartSubtotal');
+
+        function readCart() { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } }
+        function writeCart(items) { localStorage.setItem(CART_KEY, JSON.stringify(items)); updateCartCount(items); }
+        function updateCartCount(items = readCart()) {
+          const count = items.reduce((sum, it) => sum + it.qty, 0);
+          if (cartCountDesktop) cartCountDesktop.textContent = count;
+          if (cartCountMobile) cartCountMobile.textContent = count;
+        }
+        function currency(val) { return `P ${val.toLocaleString()}`; }
+        function parsePrice(p) { return Number(String(p).replace(/[^0-9.]/g, '')) || 0; }
+        function renderCart() {
+          const items = readCart();
+          if (!cartItemsEl) return;
+          cartItemsEl.innerHTML = items.length ? '' : '<div class="text-sm text-gray-500">Your cart is empty.</div>';
+          let subtotal = 0;
+          items.forEach((it, idx) => {
+            const line = parsePrice(it.price) * it.qty;
+            subtotal += line;
+            const row = document.createElement('div');
+            row.className = 'border rounded p-3 flex gap-3';
+            row.innerHTML = `
+              <img src="${it.img}" alt="${it.name}" class="w-16 h-16 object-cover rounded"/>
+              <div class="flex-1">
+                <div class="font-medium">${it.name}</div>
+                <div class="text-sm text-gray-500">${it.price}</div>
+                <div class="flex items-center gap-2 mt-2">
+                  <button data-act="dec" data-idx="${idx}" class="px-2 border rounded">-</button>
+                  <span class="min-w-6 text-center">${it.qty}</span>
+                  <button data-act="inc" data-idx="${idx}" class="px-2 border rounded">+</button>
+                  <button data-act="rm" data-idx="${idx}" class="ml-auto text-red-600 text-sm">Remove</button>
+                </div>
+              </div>`;
+            cartItemsEl.appendChild(row);
+          });
+          if (cartSubtotalEl) cartSubtotalEl.textContent = currency(subtotal);
+        }
+        function openCart() { cartDrawer?.classList.remove('translate-x-full'); renderCart(); }
+        function closeCart() { cartDrawer?.classList.add('translate-x-full'); }
+        openCartDesktop?.addEventListener('click', openCart);
+        openCartMobile?.addEventListener('click', openCart);
+        closeCartDrawer?.addEventListener('click', closeCart);
+        cartDrawer?.addEventListener('click', (e) => { if (e.target === cartDrawer) closeCart(); });
+        cartItemsEl?.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-act]');
+          if (!btn) return;
+          const items = readCart();
+          const idx = Number(btn.getAttribute('data-idx'));
+          const act = btn.getAttribute('data-act');
+          if (!items[idx]) return;
+          if (act === 'inc') items[idx].qty += 1;
+          if (act === 'dec') items[idx].qty = Math.max(1, items[idx].qty - 1);
+          if (act === 'rm') items.splice(idx, 1);
+          writeCart(items);
+          renderCart();
+        });
+        function addToCart(name, price, img) {
+          const items = readCart();
+          const existing = items.find(i => i.name === name);
+          if (existing) existing.qty += 1; else items.push({ name, price, img, qty: 1 });
+          writeCart(items);
+          openCart();
+        }
+        function attachAddToCartHandlers() {
+          document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', () => {
+              addToCart(btn.getAttribute('data-name'), btn.getAttribute('data-price'), btn.getAttribute('data-img'));
+            });
+          });
+        }
+        attachAddToCartHandlers();
+
+        // Checkout Modal wiring
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const checkoutModal = document.getElementById('checkoutModal');
+        const closeCheckoutModal = document.getElementById('closeCheckoutModal');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const deliveryToggle = document.getElementById('checkoutDeliveryToggle');
+        const checkoutItemsSummary = document.getElementById('checkoutItemsSummary');
+        const checkoutSubtotalEl = document.getElementById('checkoutSubtotal');
+        const checkoutDeliveryEl = document.getElementById('checkoutDelivery');
+        const checkoutTotalEl = document.getElementById('checkoutTotal');
+
+        function computeSubtotal(items) { return items.reduce((sum, i)=> sum + parsePrice(i.price) * (i.qty||1), 0); }
+        function openCheckout() {
+          const items = readCart();
+          if (!items.length) { alert('Your cart is empty.'); return; }
+          // Fill summary
+          checkoutItemsSummary.innerHTML = items.map(i=>`<div class='flex items-center justify-between'><span>${i.name} × ${i.qty||1}</span><span>${i.price}</span></div>`).join('');
+          const sub = computeSubtotal(items);
+          const del = deliveryToggle?.checked ? 50 : 0;
+          checkoutSubtotalEl.textContent = currency(sub);
+          checkoutDeliveryEl.textContent = currency(del);
+          checkoutTotalEl.textContent = currency(sub + del);
+          checkoutModal.classList.remove('hidden');
+          checkoutModal.classList.add('flex');
+        }
+        function closeCheckout() { checkoutModal.classList.add('hidden'); checkoutModal.classList.remove('flex'); }
+        function refreshCheckoutTotals() {
+          const items = readCart();
+          const sub = computeSubtotal(items);
+          const del = deliveryToggle?.checked ? 50 : 0;
+          checkoutSubtotalEl.textContent = currency(sub);
+          checkoutDeliveryEl.textContent = currency(del);
+          checkoutTotalEl.textContent = currency(sub + del);
+        }
+        deliveryToggle?.addEventListener('change', refreshCheckoutTotals);
+        checkoutBtn?.addEventListener('click', (e)=>{ e.preventDefault(); closeCart(); openCheckout(); });
+        closeCheckoutModal?.addEventListener('click', closeCheckout);
+        checkoutModal?.addEventListener('click', (e)=> { if (e.target === checkoutModal) closeCheckout(); });
+
+        checkoutForm?.addEventListener('submit', (e)=>{
+          e.preventDefault();
+          const items = readCart();
+          const name = document.getElementById('custName').value.trim();
+          const email = document.getElementById('custEmail').value.trim();
+          const phone = document.getElementById('custPhone').value.trim();
+          const sub = computeSubtotal(items);
+          const del = deliveryToggle?.checked ? 50 : 0;
+          const total = sub + del;
+          const summary = items.map(i => `• ${i.name} × ${i.qty||1} — ${i.price}`).join('%0A');
+          const message = `New Amalet Order:%0A%0AName: ${encodeURIComponent(name)}%0AEmail: ${encodeURIComponent(email)}%0APhone: ${encodeURIComponent(phone)}%0ADelivery: ${deliveryToggle.checked ? 'Yes (P 50)' : 'No'}%0A%0AItems:%0A${summary}%0A%0ASubtotal: ${encodeURIComponent(currency(sub))}%0ADelivery: ${encodeURIComponent(currency(del))}%0ATotal: ${encodeURIComponent(currency(total))}`;
+          const phoneNumber = '26777342923';
+          const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+          window.open(waUrl, '_blank');
+          closeCheckout();
+        });
+
+        // Featured products dynamic render
+        const featuredGrid = document.getElementById('featuredGrid');
+        const featuredSearch = document.getElementById('featuredSearch');
+        const featuredSort = document.getElementById('featuredSort');
+        const featuredCount = document.getElementById('featuredCount');
+        const featuredFilterButtons = Array.from(document.querySelectorAll('[data-ft]'));
+
+        const featuredProducts = [
+          { id: 'p1', name: 'Custom Wedding Cake', seller: 'Sweet Dreams Bakery • Gaborone', price: 1200, prevPrice: 1500, rating: 5, reviews: 24, badge: ['HOT DEAL','Verified'], img: 'https://readdy.ai/api/search-image?query=Elegant%20custom%20wedding%20cake%20with%20intricate%20decorations%20and%20beautiful%20frosting%20design%2C%20professional%20bakery%20photography%2C%20clean%20white%20background%2C%20high%20quality%20food%20photography%2C%20luxurious%20and%20appetizing%20presentation&width=300&height=200&seq=product001&orientation=landscape', category: 'cakes', delivery: 'Free delivery by tomorrow', deliveryType: 'fast' },
+          { id: 'p2', name: 'African Print Dress', seller: 'Kgalagadi Fashion • Francistown', price: 450, rating: 4, reviews: 18, badge: ['TRENDING','Verified'], img: 'https://readdy.ai/api/search-image?query=Beautiful%20African%20traditional%20dress%20with%20vibrant%20colors%20and%20modern%20styling%2C%20professional%20fashion%20photography%2C%20clean%20white%20background%2C%20elegant%20and%20stylish%20clothing%20design%2C%20high%20quality%20commercial%20photo&width=300&height=200&seq=product002&orientation=landscape', category: 'fashion', delivery: 'Free delivery in 2-3 days', deliveryType: 'standard' },
+          { id: 'p3', name: 'Toyota Corolla 2018', seller: 'Motswana Motors • Gaborone', price: 85000, rating: 5, reviews: 31, badge: ['PREMIUM','Verified'], img: 'https://readdy.ai/api/search-image?query=Used%20Toyota%20sedan%20car%20in%20excellent%20condition%2C%20clean%20and%20well-maintained%20vehicle%2C%20professional%20automotive%20photography%2C%20clean%20white%20background%2C%20attractive%20and%20reliable%20car%20for%20sale&width=300&height=200&seq=product003&orientation=landscape', category: 'vehicles', delivery: 'Verified vehicle history', deliveryType: 'info' },
+          { id: 'p4', name: 'iPhone 14 Pro', seller: 'TechHub Botswana • Gaborone', price: 12500, rating: 5, reviews: 42, badge: ['Verified'], img: 'https://readdy.ai/api/search-image?query=Latest%20smartphone%20with%20sleek%20design%20and%20modern%20features%2C%20professional%20product%20photography%2C%20clean%20white%20background%2C%20high-tech%20mobile%20device%2C%20attractive%20and%20premium%20appearance&width=300&height=200&seq=product004&orientation=landscape', category: 'electronics', delivery: 'Free same-day delivery', deliveryType: 'fast' },
+          { id: 'p5', name: 'Living Room Set', seller: 'Comfort Furniture • Maun', price: 3200, rating: 4, reviews: 15, badge: ['Verified'], img: 'https://readdy.ai/api/search-image?query=Beautiful%20home%20furniture%20set%20with%20modern%20design%20and%20elegant%20styling%2C%20professional%20interior%20photography%2C%20clean%20white%20background%2C%20comfortable%20and%20stylish%20living%20room%20furniture&width=300&height=200&seq=product005&orientation=landscape', category: 'home', delivery: 'Free delivery & assembly', deliveryType: 'standard' },
+          { id: 'p6', name: 'Business Consulting', seller: 'BW Business Solutions • Gaborone', price: 800, rating: 5, reviews: 28, badge: ['EXPERT','Verified'], img: 'https://readdy.ai/api/search-image?query=Professional%20business%20consulting%20service%20concept%20with%20modern%20office%20setup%20and%20documents%2C%20clean%20white%20background%2C%20professional%20business%20photography%2C%20organized%20and%20trustworthy%20service%20presentation&width=300&height=200&seq=product006&orientation=landscape', category: 'services', delivery: 'Book consultation online', deliveryType: 'info', unit: '/hr' }
+        ];
+
+        function renderStars(rating) {
+          const full = '<i class="ri-star-fill"></i>'.repeat(Math.floor(rating));
+          const empty = '<i class="ri-star-line"></i>'.repeat(5 - Math.floor(rating));
+          return `<div class="flex text-yellow-400 text-sm">${full}${empty}</div>`;
+        }
+
+        function productCard(p) {
+          const priceHtml = p.prevPrice
+            ? `<span class="text-lg font-bold text-gray-900">P ${p.price.toLocaleString()}</span>
+               <span class="text-sm text-gray-500 line-through">P ${p.prevPrice.toLocaleString()}</span>
+               <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">${Math.round(100 - (p.price/p.prevPrice)*100)}% OFF</span>`
+            : `<span class="text-lg font-bold text-gray-900">P ${p.price.toLocaleString()}${p.unit?` ${p.unit}`:''}</span>`;
+          const deliveryClass = p.deliveryType === 'fast' ? 'text-green-600' : (p.deliveryType === 'info' ? 'text-blue-600' : 'text-orange-600');
+          const badgeHtml = (p.badge||[]).map(b => {
+            const styles = b==='HOT DEAL' ? 'bg-red-500 text-white font-bold' : (b==='PREMIUM' ? 'bg-purple-100 text-purple-800' : (b==='TRENDING' ? 'bg-blue-100 text-blue-800' : (b==='EXPERT' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800')));
+            const icon = b==='Verified' ? '<i class="ri-shield-check-fill mr-1"></i>' : '';
+            return `<span class="${styles} px-2 py-1 rounded text-xs flex items-center">${icon}${b}</span>`;
+          }).join('');
+
+          return `
+          <div class="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group reveal" data-cat="${p.category}" data-price="${p.price}" data-rating="${p.rating}" data-delivery="${p.deliveryType}">
+            <div class="relative">
+              <img src="${p.img}" alt="${p.name}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+              <div class="absolute top-3 left-3 flex flex-col gap-1">${badgeHtml}</div>
+              <button class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-all group-hover:scale-110">
+                <i class="ri-heart-line text-gray-600 hover:text-red-500 transition-colors"></i>
+              </button>
+            </div>
+            <div class="p-4">
+              <h4 class="font-semibold text-gray-900 mb-1 line-clamp-2">${p.name}</h4>
+              <p class="text-sm text-gray-600 mb-2">${p.seller}</p>
+              <div class="flex items-center mb-3">
+                ${renderStars(p.rating)}
+                <span class="text-sm text-gray-600 ml-1">(${p.reviews} reviews)</span>
+              </div>
+              <div class="flex items-center gap-2 mb-3">${priceHtml}</div>
+              <div class="flex items-center text-sm ${deliveryClass} mb-3">
+                <i class="ri-truck-line mr-1"></i>
+                <span>${p.delivery}</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="add-to-cart flex-1 bg-primary text-white py-2 px-3 rounded font-medium hover:bg-blue-600 transition-colors text-sm" data-name="${p.name}" data-price="P ${p.price.toLocaleString()}" data-img="${p.img}">Add to Cart</button>
+                <button class="bg-green-500 text-white p-2 rounded hover:bg-green-600 transition-colors"><i class="ri-whatsapp-fill"></i></button>
+                <button class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-colors"><i class="ri-phone-fill"></i></button>
+              </div>
+            </div>
+          </div>`;
+        }
+
+        function applyFeaturedRender() {
+          if (!featuredGrid) return;
+          // Filter
+          const activeBtn = featuredFilterButtons.find(b => b.classList.contains('active'));
+          const activeCategory = activeBtn ? activeBtn.getAttribute('data-ft') : 'all';
+          const term = (featuredSearch?.value || '').toLowerCase();
+          let items = featuredProducts.filter(p => (activeCategory==='all' || p.category===activeCategory) && p.name.toLowerCase().includes(term));
+          // Sort
+          const sortVal = featuredSort?.value || 'popular';
+          if (sortVal==='price-asc') items.sort((a,b)=>a.price-b.price);
+          if (sortVal==='price-desc') items.sort((a,b)=>b.price-a.price);
+          if (sortVal==='rating') items.sort((a,b)=>b.rating-a.rating);
+          if (sortVal==='newest') items = items.reverse();
+          if (sortVal==='fast') items.sort((a,b)=> (a.deliveryType==='fast'? -1:1));
+
+          // Render
+          featuredGrid.innerHTML = items.map(productCard).join('');
+          featuredCount && (featuredCount.textContent = `${items.length} items`);
+          // Reveal animation
+          requestAnimationFrame(()=>{
+            featuredGrid.querySelectorAll('.reveal').forEach((el, idx)=> setTimeout(()=> el.classList.add('show'), 60*idx));
+          });
+          attachAddToCartHandlers();
+        }
+
+        // Init filters
+        featuredFilterButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            featuredFilterButtons.forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            applyFeaturedRender();
+          });
+        });
+        featuredSearch?.addEventListener('input', () => applyFeaturedRender());
+        featuredSort?.addEventListener('change', () => applyFeaturedRender());
+        // Default active All
+        const allBtn = featuredFilterButtons.find(b=>b.getAttribute('data-ft')==='all');
+        allBtn && allBtn.classList.add('active');
+        applyFeaturedRender();
+        updateCartCount();
+
+        // Testimonials carousel (auto + buttons)
+        (function(){
+          const container = document.getElementById('testimonialsCarousel');
+          if (!container) return;
+          const items = Array.from(container.children);
+          let index = 0;
+          function show(i){
+            items.forEach((el, idx)=>{ el.style.display = idx===i ? 'flex' : 'none'; });
+          }
+          show(index);
+          const prev = document.getElementById('testimonialsPrev');
+          const next = document.getElementById('testimonialsNext');
+          prev?.addEventListener('click', ()=>{ index = (index - 1 + items.length) % items.length; show(index); });
+          next?.addEventListener('click', ()=>{ index = (index + 1) % items.length; show(index); });
+          setInterval(()=>{ index = (index + 1) % items.length; show(index); }, 7000);
+        })();
+
+        // Help Center
+        const helpCenterLink = document.getElementById('helpCenterLink');
+        const helpCenterLinkFooter = document.getElementById('helpCenterLinkFooter');
+        const helpCenterModal = document.getElementById('helpCenterModal');
+        const closeHelpCenter = document.getElementById('closeHelpCenter');
+        helpCenterLink?.addEventListener('click', () => helpCenterModal.classList.remove('hidden'));
+        helpCenterLinkFooter?.addEventListener('click', () => helpCenterModal.classList.remove('hidden'));
+        closeHelpCenter?.addEventListener('click', () => helpCenterModal.classList.add('hidden'));
+        document.getElementById('helpForm')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const fd = new FormData(form);
+          try { /* window.emailjs?.sendForm('SERVICE_ID','TEMPLATE_ID', form, 'PUBLIC_KEY'); */ } catch {}
+          const subject = encodeURIComponent('Amalet Help Request');
+          const body = encodeURIComponent(`From: ${fd.get('name')} <${fd.get('email')}>
+Message: ${fd.get('message')}`);
+          window.open(`mailto:aybeeramogojwana21@gmail.com?subject=${subject}&body=${body}`);
+          document.getElementById('helpFormSuccess').classList.remove('hidden');
+          form.reset();
+          setTimeout(() => helpCenterModal.classList.add('hidden'), 1500);
+        });
+
+        // Chatbot
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const closeChatbot = document.getElementById('closeChatbot');
+        const chatLog = document.getElementById('chatLog');
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        function botSay(text) { const b=document.createElement('div'); b.className='p-2 bg-white rounded shadow-sm self-start max-w-[85%]'; b.textContent=text; chatLog.appendChild(b); chatLog.scrollTop=chatLog.scrollHeight; }
+        function userSay(text) { const b=document.createElement('div'); b.className='p-2 bg-primary text-white rounded self-end max-w-[85%] ml-auto'; b.textContent=text; chatLog.appendChild(b); chatLog.scrollTop=chatLog.scrollHeight; }
+        // Quick replies
+        document.querySelectorAll('.quick-reply').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const val = btn.getAttribute('data-value') || btn.textContent || '';
+            chatInput.value = val;
+            chatForm.dispatchEvent(new Event('submit'));
+          });
+        });
+        // Restore last chat state quickly
+        const CHAT_STATE_KEY = 'amalet_chat_open_v1';
+        if (localStorage.getItem(CHAT_STATE_KEY) === '1') chatbotWindow?.classList.add('open');
+        chatbotToggle?.addEventListener('click', () => { chatbotWindow.classList.add('open'); localStorage.setItem(CHAT_STATE_KEY, '1'); });
+        closeChatbot?.addEventListener('click', () => { chatbotWindow.classList.remove('open'); localStorage.setItem(CHAT_STATE_KEY, '0'); });
+        chatForm?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const text = chatInput.value.trim();
+          if (!text) return;
+          userSay(text); chatInput.value='';
+          const lower = text.toLowerCase();
+          if (lower.includes('order') || lower.includes('track')) {
+            botSay('You can track orders via the Track Order link in the header.');
+          } else if (lower.includes('return') || lower.includes('refund') || lower.includes('exchange')) {
+            botSay('Returns are accepted within 7 days for eligible items.');
+          } else if (lower.includes('contact') || lower.includes('support') || lower.includes('help')) {
+            botSay('Use the Help Center form or email aybeeramogojwana21@gmail.com');
+          } else if (lower.includes('browse') || lower.includes('category') || lower.includes('categories') || lower.includes('department') || lower.includes('shop')) {
+            botSay('Use the “Shop by Department” button in the header to browse categories.');
+          }
+          else botSay('Thanks! A human will follow up via email if needed.');
+        });
+
+        // Form submissions
+        const sellForm = document.getElementById('sellForm');
+        const sellFormWhatsApp = document.getElementById('sellFormWhatsApp');
+        if (sellForm) {
+          sellForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fd = new FormData(sellForm);
+            const firstName = fd.get('firstName');
+            const lastName = fd.get('lastName');
+            const email = fd.get('email');
+            const mobile = fd.get('mobile');
+            const businessName = fd.get('businessName');
+            const category = fd.get('category');
+            const location = fd.get('location');
+            const description = fd.get('description');
+
+            const subject = encodeURIComponent('New Seller Application - Amalet');
+            const body = encodeURIComponent(
+              `First Name: ${firstName}\nLast Name: ${lastName}\nEmail: ${email}\nMobile: ${mobile}\nBusiness: ${businessName}\nCategory: ${category}\nLocation: ${location}\n\nDescription:\n${description}\n\n(If attachments are not included automatically, user will send via WhatsApp.)`
+            );
+            window.open(`mailto:aybeeramogojwana21@gmail.com?subject=${subject}&body=${body}`);
+            const success = document.getElementById('sellFormSuccess');
+            success.classList.remove('hidden');
+            setTimeout(() => {
+              success.classList.add('hidden');
+              sellModal.classList.add('hidden');
+              sellForm.reset();
+            }, 1500);
+          });
+        }
+
+        sellFormWhatsApp?.addEventListener('click', () => {
+          const fd = new FormData(sellForm);
+          const firstName = fd.get('firstName');
+          const lastName = fd.get('lastName');
+          const email = fd.get('email');
+          const mobile = fd.get('mobile');
+          const businessName = fd.get('businessName');
+          const category = fd.get('category');
+          const location = fd.get('location');
+          const description = fd.get('description');
+          const msg = `New Seller Request:%0A%0AName: ${encodeURIComponent(firstName)} ${encodeURIComponent(lastName)}%0AEmail: ${encodeURIComponent(email)}%0AMobile: ${encodeURIComponent(mobile)}%0ABusiness: ${encodeURIComponent(businessName)}%0ACategory: ${encodeURIComponent(category)}%0ALocation: ${encodeURIComponent(location)}%0A%0ADescription:%0A${encodeURIComponent(description)}%0A%0A(You can attach product photos and docs here in WhatsApp.)`;
+          const phoneNumber = '26777342923';
+          window.open(`https://wa.me/${phoneNumber}?text=${msg}`, '_blank');
+        });
+
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+          loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate login success
+            authModal.classList.add('hidden');
+            loginForm.reset();
+            // In real implementation, handle actual authentication
+          });
+        }
+
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+          registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate registration success
+            authModal.classList.add('hidden');
+            registerForm.reset();
+            // In real implementation, handle actual registration
+          });
+        }
+      });
+
+      // Smooth scrolling for internal links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+    </script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDUX5nUfKpCQBcS9_TONbQvIn-Uq5HD6hA",
+        authDomain: "the-vault-91a3e.firebaseapp.com",
+        databaseURL: "https://the-vault-91a3e-default-rtdb.firebaseio.com",
+        projectId: "the-vault-91a3e",
+        storageBucket: "the-vault-91a3e.firebasestorage.app",
+        messagingSenderId: "1056105114902",
+        appId: "1:1056105114902:web:61357c2521a249af407437",
+        measurementId: "G-86DCDBK1SW"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      isSupported()
+        .then((supported) => {
+          if (supported) {
+            getAnalytics(app);
+          }
+        })
+        .catch(() => {});
+    </script>
+  </body>
+</html>

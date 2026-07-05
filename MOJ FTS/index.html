@@ -1,0 +1,3942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Tracking System - Ministry of Justice</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: "#2563eb", secondary: "#475569" },
+          borderRadius: {
+            none: "0px",
+            sm: "4px",
+            DEFAULT: "8px",
+            md: "12px",
+            lg: "16px",
+            xl: "20px",
+            "2xl": "24px",
+            "3xl": "32px",
+            full: "9999px",
+            button: "8px",
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+  />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :where([class^="ri-"])::before { content: "\f3c2"; }
+    body {
+        font-family: 'Inter', sans-serif;
+        transition: background 0.3s, color 0.3s;
+    }
+    body.dark {
+        background: #18181b !important;
+        color: #f3f4f6 !important;
+    }
+    body.dark .bg-white { background-color: #23232a !important; }
+    body.dark .bg-gray-50 { background-color: #18181b !important; }
+    body.dark .text-gray-800, body.dark .text-gray-700 { color: #f3f4f6 !important; }
+    body.dark .text-gray-500 { color: #a1a1aa !important; }
+    body.dark .border-gray-200 { border-color: #27272a !important; }
+    body.dark .bg-gray-100 { background-color: #27272a !important; }
+    body.dark .bg-blue-100 { background-color: #1e293b !important; }
+    body.dark .bg-green-100 { background-color: #14532d !important; }
+    body.dark .bg-red-100 { background-color: #7f1d1d !important; }
+    body.dark .bg-yellow-100 { background-color: #78350f !important; }
+    body.dark .bg-primary { background-color: #2563eb !important; }
+    body.dark .rounded.shadow, body.dark .rounded.shadow-sm, body.dark .rounded.shadow-lg { box-shadow: 0 2px 8px 0 #0004 !important; }
+    body.dark input, body.dark textarea, body.dark select {
+      background: #23232a !important;
+      color: #f3f4f6 !important;
+      border-color: #27272a !important;
+    }
+    body.dark .bg-gray-500 { background-color: #27272a !important; }
+    body.dark .hover\:bg-gray-100:hover { background-color: #23232a !important; }
+    body.dark .text-primary { color: #60a5fa !important; }
+    body.dark .bg-primary { background-color: #2563eb !important; }
+    body.dark .border-gray-300 { border-color: #27272a !important; }
+    body.dark .bg-gray-200 { background-color: #23232a !important; }
+    body.dark .bg-white\/80 { background-color: #23232a !important; }
+    body.dark .bg-white\/90 { background-color: #23232a !important; }
+    body.dark .bg-white\/70 { background-color: #23232a !important; }
+    body.dark .bg-white\/60 { background-color: #23232a !important; }
+    body.dark .bg-white\/50 { background-color: #23232a !important; }
+    body.dark .bg-white\/40 { background-color: #23232a !important; }
+    body.dark .bg-white\/30 { background-color: #23232a !important; }
+    body.dark .bg-white\/20 { background-color: #23232a !important; }
+    body.dark .bg-white\/10 { background-color: #23232a !important; }
+    body.dark .bg-white\/5 { background-color: #23232a !important; }
+    body.dark .bg-white\/0 { background-color: #23232a !important; }
+    /* Add more as needed for readability */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .custom-checkbox {
+        position: relative;
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #cbd5e1;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .custom-checkbox.checked {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+    .custom-checkbox.checked::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 2px;
+        width: 6px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+    .custom-switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+    }
+    .custom-switch-input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .custom-switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e2e8f0;
+        transition: .4s;
+        border-radius: 24px;
+    }
+    .custom-switch-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    .custom-switch-input:checked + .custom-switch-slider {
+        background-color: #2563eb;
+    }
+    .custom-switch-input:checked + .custom-switch-slider:before {
+        transform: translateX(20px);
+    }
+    .custom-range {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 5px;
+        background: #e2e8f0;
+        outline: none;
+    }
+    .custom-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #2563eb;
+        cursor: pointer;
+    }
+    .custom-range::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #2563eb;
+        cursor: pointer;
+        border: none;
+    }
+    .sidebar-link.active {
+        background-color: rgba(37, 99, 235, 0.1);
+        color: #2563eb;
+        border-left: 3px solid #2563eb;
+    }
+    .status-available {
+        background-color: #22c55e;
+    }
+    .status-in-use {
+        background-color: #eab308;
+    }
+    .status-transit {
+        background-color: #3b82f6;
+    }
+    .status-archived {
+        background-color: #64748b;
+    }
+    .qr-scanner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 2px solid rgba(37, 99, 235, 0.5);
+        box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+        clip-path: inset(25% 25% 25% 25% round 8px);
+    }
+    .qr-scanner-overlay::before,
+    .qr-scanner-overlay::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-color: #2563eb;
+        border-style: solid;
+    }
+    .qr-scanner-overlay::before {
+        top: 25%;
+        left: 25%;
+        border-width: 3px 0 0 3px;
+    }
+    .qr-scanner-overlay::after {
+        bottom: 25%;
+        right: 25%;
+        border-width: 0 3px 3px 0;
+    }
+    .modal-content {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="flex items-center justify-between px-6 py-3">
+      <div class="flex items-center space-x-3">
+        <div
+          class="flex items-center justify-center w-10 h-10 bg-primary rounded-full"
+        >
+          <span class="text-white font-bold">MoJ</span>
+        </div>
+        <div>
+          <h1 class="text-xl font-semibold text-gray-800">
+            File Tracking System
+          </h1>
+          <p class="text-xs text-gray-500">Ministry of Justice, Botswana</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-6">
+        <!-- Notifications -->
+        <div class="relative">
+          <button
+            class="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full relative"
+            id="notificationButton"
+          >
+            <i class="ri-notification-3-line ri-lg"></i>
+            <span
+              class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-white text-xs flex items-center justify-center"
+              id="notificationBadge">3</span
+            >
+          </button>
+          <!-- Notification Dropdown Menu -->
+          <div
+            class="absolute right-0 mt-2 w-64 bg-white rounded shadow-lg py-1 hidden"
+            id="notificationMenu"
+          >
+            <!-- Notifications will be dynamically added here -->
+          </div>
+        </div>
+
+        <!-- Help -->
+        <button
+          class="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full"
+          id="helpButton"
+        >
+          <i class="ri-question-line ri-lg"></i>
+        </button>
+
+        <!-- User Profile -->
+        <div class="relative">
+          <button
+            class="flex items-center space-x-2 focus:outline-none"
+            id="userMenuButton"
+          >
+            <div
+              class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center"
+            >
+              <i class="ri-user-line ri-lg text-gray-600"></i>
+            </div>
+            <div class="hidden md:block text-left">
+              <p class="text-sm font-medium text-gray-700">User</p>
+              <p class="text-xs text-gray-500">User Role</p>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-500"></i>
+          </button>
+
+          <!-- User Dropdown Menu -->
+          <div
+            class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg py-1 hidden"
+            id="userMenu"
+          >
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              id="myProfileLink"
+            >
+              <i class="ri-user-settings-line mr-2"></i> My Profile
+            </a>
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              id="settingsLink"
+            >
+              <i class="ri-settings-3-line mr-2"></i> Settings
+            </a>
+            <div class="border-t border-gray-100"></div>
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              id="signOutLink"
+            >
+              <i class="ri-logout-box-line mr-2"></i> Sign out
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-t border-gray-200">
+      <div class="flex items-center justify-center px-6 space-x-1">
+        <a
+          href="#"
+          class="px-4 py-3 text-primary border-b-2 border-primary font-medium text-sm"
+          id="dashboardLink"
+        >
+          <i class="ri-dashboard-line mr-1"></i> Dashboard
+        </a>
+        <a
+          href="#"
+          class="px-4 py-3 text-gray-600 hover:text-gray-900 font-medium text-sm"
+          id="filesLink"
+        >
+          <i class="ri-file-list-3-line mr-1"></i> Files
+        </a>
+        <a
+          href="#"
+          class="px-4 py-3 text-gray-600 hover:text-gray-900 font-medium text-sm"
+          id="transfersLink"
+        >
+          <i class="ri-file-transfer-line mr-1"></i> Transfers
+        </a>
+        <a
+          href="#"
+          class="px-4 py-3 text-gray-600 hover:text-gray-900 font-medium text-sm"
+          id="reportsLink"
+        >
+          <i class="ri-bar-chart-2-line mr-1"></i> Reports
+        </a>
+        <a
+          href="#"
+          class="px-4 py-3 text-gray-600 hover:text-gray-900 font-medium text-sm"
+          id="settingsLink"
+        >
+          <i class="ri-settings-line mr-1"></i> Settings
+        </a>
+      </div>
+    </nav>
+  </header>
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-6">
+    <!-- Dashboard Content -->
+    <div id="dashboardContent">
+      <!-- Quick Actions -->
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+          <p class="text-gray-500">
+            Welcome back, User. Here's what's happening today.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button
+            class="flex items-center bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap"
+            id="requestFileButton"
+          >
+            <i class="ri-mail-send-line mr-2"></i> Request File
+          </button>
+          <button
+            class="flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-button whitespace-nowrap"
+            id="newFileButton"
+          >
+            <i class="ri-add-line mr-2"></i> New File
+          </button>
+          <button
+            class="flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-button whitespace-nowrap"
+            id="printQRCode"
+          >
+            <i class="ri-printer-line mr-2"></i> Print QR Codes
+          </button>
+          <div class="relative">
+            <button
+              class="flex items-center bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-button text-sm whitespace-nowrap"
+            >
+              <i class="ri-more-2-fill"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-gray-500 text-sm font-medium">Total Files</h3>
+            <div
+              class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
+            >
+              <i class="ri-file-list-3-line text-primary ri-lg"></i>
+            </div>
+          </div>
+          <div class="flex items-end">
+            <span class="text-3xl font-bold text-gray-800" id="totalFiles">0</span>
+            <span class="ml-2 text-sm text-green-500 flex items-center">
+              <i class="ri-arrow-up-line mr-1"></i> 0%
+            </span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Compared to last month</p>
+        </div>
+
+        <div class="bg-white rounded shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-gray-500 text-sm font-medium">Files In Transit</h3>
+            <div
+              class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
+            >
+              <i class="ri-truck-line text-primary ri-lg"></i>
+            </div>
+          </div>
+          <div class="flex items-end">
+            <span class="text-3xl font-bold text-gray-800" id="filesInTransit">0</span>
+            <span class="ml-2 text-sm text-red-500 flex items-center">
+              <i class="ri-arrow-up-line mr-1"></i> 0%
+            </span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Compared to last month</p>
+        </div>
+
+        <div class="bg-white rounded shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-gray-500 text-sm font-medium">Available Files</h3>
+            <div
+              class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
+            >
+              <i class="ri-checkbox-circle-line text-primary ri-lg"></i>
+            </div>
+          </div>
+          <div class="flex items-end">
+            <span class="text-3xl font-bold text-gray-800" id="availableFiles">0</span>
+            <span class="ml-2 text-sm text-green-500 flex items-center">
+              <i class="ri-arrow-up-line mr-1"></i> 0%
+            </span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Compared to last month</p>
+        </div>
+
+        <div class="bg-white rounded shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-gray-500 text-sm font-medium">Recently Accessed</h3>
+            <div
+              class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
+            >
+              <i class="ri-time-line text-primary ri-lg"></i>
+            </div>
+          </div>
+          <div class="flex items-end">
+            <span class="text-3xl font-bold text-gray-800" id="recentlyAccessed">0</span>
+            <span class="ml-2 text-sm text-red-500 flex items-center">
+              <i class="ri-arrow-down-line mr-1"></i> 0%
+            </span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">In the last 7 days</p>
+        </div>
+      </div>
+
+      <!-- Charts & Recent Activity -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- File Status Chart -->
+        <div class="bg-white rounded shadow p-6 lg:col-span-2">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-semibold text-gray-800">File Status Overview</h3>
+            <div class="flex items-center space-x-2">
+              <button
+                class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full"
+              >
+                Week
+              </button>
+              <button
+                class="text-xs bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full"
+              >
+                Month
+              </button>
+              <button
+                class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full"
+              >
+                Year
+              </button>
+            </div>
+          </div>
+          <div id="fileStatusChart" class="w-full h-64"></div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded shadow p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-semibold text-gray-800">Recent Activity</h3>
+            <button class="text-primary text-sm">View All</button>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Recent activity items go here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- File Management Section -->
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">File Management</h3>
+
+            <div class="flex items-center space-x-3">
+              <div class="relative">
+                <input
+                  type="text"
+                  placeholder="Search files..."
+                  class="pl-10 pr-4 py-2 border border-gray-300 rounded-button w-64 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                  id="fileSearch"
+                />
+                <div
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                >
+                  <i class="ri-search-line"></i>
+                </div>
+              </div>
+
+              <div class="relative">
+                <button
+                  class="flex items-center bg-gray-100 text-gray-700 px-3 py-2 rounded-button text-sm whitespace-nowrap"
+                  id="filterButton"
+                >
+                  <i class="ri-filter-3-line mr-1"></i> Filters
+                </button>
+                <div
+                  class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg py-1 hidden"
+                  id="filterMenu"
+                >
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <i class="ri-checkbox-circle-line mr-2"></i> Available
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <i class="ri-time-line mr-2"></i> In Use
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <i class="ri-truck-line mr-2"></i> In Transit
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <i class="ri-archive-line mr-2"></i> Archived
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead
+              class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider"
+            >
+              <tr>
+                <th class="px-6 py-3 text-left">
+                  <div class="flex items-center">
+                    <div class="custom-checkbox" id="selectAllCheckbox"></div>
+                  </div>
+                </th>
+                <th class="px-6 py-3 text-left">QR Code</th>
+                <th class="px-6 py-3 text-left">File ID</th>
+                <th class="px-6 py-3 text-left">Title</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Department</th>
+                <th class="px-6 py-3 text-left">Last Updated</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm text-gray-700" id="fileTableBody">
+              <!-- Table rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div
+          class="px-6 py-4 border-t border-gray-200 flex items-center justify-between"
+        >
+          <div class="text-sm text-gray-500">
+            Showing <span class="font-medium">0</span> to
+            <span class="font-medium">0</span> of
+            <span class="font-medium">0</span> files
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500 disabled:opacity-50"
+              disabled
+            >
+              <i class="ri-arrow-left-s-line"></i>
+            </button>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white"
+            >
+              1
+            </button>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700"
+            >
+              2
+            </button>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700"
+            >
+              3
+            </button>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700"
+            >
+              4
+            </button>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-700"
+            >
+              5
+            </button>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500"
+            >
+              <i class="ri-arrow-right-s-line"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Developer Branding Card -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded shadow p-6 flex flex-col items-center justify-center min-h-[200px]">
+          <div class="w-20 h-20 rounded-full bg-primary flex items-center justify-center mb-4">
+            <span class="text-white text-3xl font-bold">AR</span>
+          </div>
+          <h3 class="font-semibold text-gray-800 mb-2">Developer</h3>
+          <p class="text-gray-500 text-center">Built and maintained by MT. Ministry of Justice File Tracking System.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Files Content -->
+    <div id="filesContent" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800">Files</h2>
+      <p class="text-gray-500">Manage your files here.</p>
+      <!-- Filter Bar -->
+      <div class="bg-white rounded shadow p-4 mb-4 flex flex-wrap gap-4 items-end">
+        <div>
+          <label for="filterDepartment" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+          <select id="filterDepartment" class="w-40 px-3 py-2 border border-gray-300 rounded-button">
+            <option value="">All</option>
+          </select>
+        </div>
+        <div>
+          <label for="filterFileId" class="block text-sm font-medium text-gray-700 mb-1">File ID</label>
+          <select id="filterFileId" class="w-40 px-3 py-2 border border-gray-300 rounded-button">
+            <option value="">All</option>
+          </select>
+        </div>
+        <div>
+          <label for="filterStatus" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select id="filterStatus" class="w-40 px-3 py-2 border border-gray-300 rounded-button">
+            <option value="">All</option>
+            <option value="Available">Available</option>
+            <option value="In Use">In Use</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Archived">Archived</option>
+          </select>
+        </div>
+        <button id="applyFileFilters" class="bg-primary text-white px-4 py-2 rounded-button">Apply Filters</button>
+      </div>
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">File List</h3>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">File ID</th>
+                <th class="px-6 py-3 text-left">Title</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Department</th>
+                <th class="px-6 py-3 text-left">Last Updated</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm text-gray-700" id="filesTableBody">
+              <!-- Table rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Management Content -->
+    <div id="qrManagementContent" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800">QR Management</h2>
+      <p class="text-gray-500">Manage QR codes here.</p>
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">QR Code List</h3>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">QR Code</th>
+                <th class="px-6 py-3 text-left">File ID</th>
+                <th class="px-6 py-3 text-left">Title</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm text-gray-700" id="qrTableBody">
+              <!-- Table rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfers Content -->
+    <div id="transfersContent" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800">Transfers</h2>
+      <p class="text-gray-500">Manage file transfers here.</p>
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">Transfer Files</h3>
+          </div>
+        </div>
+        <div class="p-6">
+          <form id="transferFileForm">
+            <div class="mb-4">
+              <label for="transferFileId" class="block text-sm font-medium text-gray-700 mb-1">File ID</label>
+              <input type="text" id="transferFileId" placeholder="Enter File ID" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+            </div>
+            <div class="mb-4">
+              <label for="transferDepartment" class="block text-sm font-medium text-gray-700 mb-1">Destination Department</label>
+              <input type="text" id="transferDepartment" placeholder="Enter Destination Department" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+            </div>
+
+
+            <div class="mb-4">
+              <label for="transferLocation" class="block text-sm font-medium text-gray-700 mb-1">Destination Location</label>
+              <input type="text" id="transferLocation" placeholder="Enter Destination Location" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+            </div>
+
+            
+
+
+            <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap">
+              <i class="ri-file-transfer-line mr-2"></i> Transfer File
+            </button>
+
+
+          </form>
+        </div>
+      </div>
+      <!-- Enhanced File Movement Table -->
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-800">File Movement Tracker</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full" id="movementTrackerTable">
+            <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">File ID</th>
+                <th class="px-6 py-3 text-left">Title</th>
+                <th class="px-6 py-3 text-left">Current Holder</th>
+                <th class="px-6 py-3 text-left">Last Moved</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm text-gray-700" id="movementTrackerBody">
+              <!-- Rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Movement History Modal -->
+      <div id="movementHistoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4">
+          <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 class="font-semibold text-gray-800">Movement History</h3>
+            <button class="text-gray-500 hover:text-gray-700" id="closeMovementHistoryModal">
+              <i class="ri-close-line ri-lg"></i>
+            </button>
+          </div>
+          <div class="p-6">
+            <table class="w-full">
+              <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                <tr>
+                  <th class="px-4 py-2 text-left">From</th>
+                  <th class="px-4 py-2 text-left">To</th>
+                  <th class="px-4 py-2 text-left">Timestamp</th>
+                  <th class="px-4 py-2 text-left">Notes</th>
+                </tr>
+              </thead>
+              <tbody id="movementHistoryBody" class="divide-y divide-gray-200 text-sm text-gray-700">
+                <!-- Movement rows go here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Content -->
+    <div id="reportsContent" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800">Reports</h2>
+      <p class="text-gray-500">View reports here.</p>
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">Reports Overview</h3>
+          </div>
+        </div>
+        <div class="p-6">
+          <button id="generateReport" class="bg-primary text-white px-4 py-2 rounded-button">Generate Report</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">Report ID</th>
+                <th class="px-6 py-3 text-left">Title</th>
+                <th class="px-6 py-3 text-left">Generated On</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm text-gray-700" id="reportsTableBody">
+              <!-- Table rows will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Content -->
+    <div id="settingsContent" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800">Settings</h2>
+      <p class="text-gray-500">Configure settings here.</p>
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">Application Settings</h3>
+          </div>
+        </div>
+        <div class="p-6">
+          <form id="settingsForm">
+            <div class="mb-4">
+              <label for="theme" class="block text-sm font-medium text-gray-700 mb-1">Theme</label>
+              <select id="theme" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label for="notifications" class="block text-sm font-medium text-gray-700 mb-1">Enable Notifications</label>
+              <div class="custom-switch">
+                <input type="checkbox" id="notifications" class="custom-switch-input">
+                <label for="notifications" class="custom-switch-slider"></label>
+              </div>
+            </div>
+            <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap">
+              <i class="ri-settings-line mr-2"></i> Save Settings
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Profile Content -->
+    <div id="myProfileContent" class="hidden">
+      <h2 class="text-2xl font-bold text-gray-800">My Profile</h2>
+      <p class="text-gray-500">View and edit your profile information.</p>
+      <div class="bg-white rounded shadow mb-8">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h3 class="text-lg font-semibold text-gray-800">Profile Information</h3>
+          </div>
+        </div>
+        <div class="p-6">
+          <form id="myProfileForm">
+            <div class="mb-4">
+              <label for="profileName" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input type="text" id="profileName" placeholder="Enter your name" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+            </div>
+            <div class="mb-4">
+              <label for="profileEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input type="email" id="profileEmail" placeholder="Enter your email" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+            </div>
+            <div class="mb-4">
+              <label for="profileRole" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+              <input type="text" id="profileRole" placeholder="Enter your role" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+            </div>
+            <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap">
+              <i class="ri-save-line mr-2"></i> Save Profile
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Code Scanner Modal (Hidden by default) -->
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+      id="scannerModal"
+    >
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div
+          class="p-4 border-b border-gray-200 flex items-center justify-between"
+        >
+          <h3 class="font-semibold text-gray-800">Scan QR Code</h3>
+          <button
+            class="text-gray-500 hover:text-gray-700"
+            id="closeScannerModal"
+          >
+            <i class="ri-close-line ri-lg"></i>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <div
+            class="relative w-full h-64 bg-gray-100 rounded-lg mb-4 overflow-hidden"
+          >
+            <div class="absolute inset-0 flex items-center justify-center">
+              <i class="ri-camera-line ri-3x text-gray-400"></i>
+            </div>
+            <div class="qr-scanner-overlay"></div>
+            <div id="reader" style="width: 100%;"></div>
+          </div>
+
+          <div class="text-center mb-4">
+            <p class="text-gray-500 text-sm">
+              Position the QR code within the frame to scan
+            </p>
+          </div>
+
+          <div class="flex space-x-3">
+            <button
+              class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-button whitespace-nowrap"
+            >
+              <i class="ri-image-line mr-2"></i> Upload Image
+            </button>
+            <button
+              class="flex-1 bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap"
+              id="startScanningModal"
+            >
+              <i class="ri-camera-line mr-2"></i> Start Scanning
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File Details Modal (Hidden by default) -->
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+      id="fileDetailsModal"
+    >
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4">
+        <div
+          class="p-4 border-b border-gray-200 flex items-center justify-between"
+        >
+          <h3 class="font-semibold text-gray-800">File Details</h3>
+          <button
+            class="text-gray-500 hover:text-gray-700"
+            id="closeFileDetailsModal"
+          >
+            <i class="ri-close-line ri-lg"></i>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- QR Code and Status -->
+            <div class="md:col-span-1">
+              <div
+                class="bg-gray-100 p-6 rounded-lg flex flex-col items-center"
+              >
+                <div
+                  class="w-32 h-32 bg-white p-2 rounded shadow-sm mb-4 flex items-center justify-center"
+                >
+                  <img id="qrCodeImage" src="" alt="QR Code">
+                </div>
+
+                <h4 class="font-bold text-gray-800 text-lg mb-1">
+                  KIA-2025-0042
+                </h4>
+                <p class="text-gray-500 text-sm mb-4">Created on May 2, 2025</p>
+
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 mb-4"
+                >
+                  <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                  Available
+                </span>
+
+                <div class="grid grid-cols-2 gap-2 w-full">
+                  <button
+                    class="bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-button text-sm whitespace-nowrap"
+                  >
+                    <i class="ri-printer-line mr-1"></i> Print
+                  </button>
+                  <button
+                    class="bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-button text-sm whitespace-nowrap"
+                  >
+                    <i class="ri-download-line mr-1"></i> Export
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- File Information -->
+            <div class="md:col-span-2">
+              <h4 class="font-semibold text-gray-800 mb-4">File Information</h4>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Title</p>
+                  <p class="font-medium text-gray-800">
+                    Kia Motors Wiper Recall Investigation
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Department</p>
+                  <p class="font-medium text-gray-800">Transport</p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Current Location</p>
+                  <p class="font-medium text-gray-800">
+                    Main Office, Floor 3, Room 302
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Assigned To</p>
+                  <p class="font-medium text-gray-800">Katlego Ndlovu</p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Classification</p>
+                  <p class="font-medium text-gray-800">Regulatory Compliance</p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Priority</p>
+                  <p class="font-medium text-gray-800">High</p>
+                </div>
+              </div>
+
+              <h4 class="font-semibold text-gray-800 mb-4">Description</h4>
+              <p class="text-gray-700 mb-6">
+                Investigation into the Kia Motors wiper system recall affecting
+                vehicles manufactured between 2022-2024. This file contains
+                technical reports, consumer complaints, and regulatory
+                correspondence related to the safety recall.
+              </p>
+
+              <h4 class="font-semibold text-gray-800 mb-4">Documents (3)</h4>
+              <div class="space-y-2 mb-6">
+                <div
+                  class="flex items-center p-2 border border-gray-200 rounded"
+                >
+                  <div
+                    class="w-8 h-8 rounded bg-blue-100 flex items-center justify-center mr-3"
+                  >
+                    <i class="ri-file-text-line text-blue-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-800">
+                      Technical Assessment Report.pdf
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      2.4 MB • Added May 2, 2025
+                    </p>
+                  </div>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full"
+                  >
+                    <i class="ri-download-line"></i>
+                  </button>
+                </div>
+
+                <div
+                  class="flex items-center p-2 border border-gray-200 rounded"
+                >
+                  <div
+                    class="w-8 h-8 rounded bg-green-100 flex items-center justify-center mr-3"
+                  >
+                    <i class="ri-file-excel-line text-green-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-800">
+                      Affected Vehicles Database.xlsx
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      1.8 MB • Added May 3, 2025
+                    </p>
+                  </div>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full"
+                  >
+                    <i class="ri-download-line"></i>
+                  </button>
+                </div>
+
+                <div
+                  class="flex items-center p-2 border border-gray-200 rounded"
+                >
+                  <div
+                    class="w-8 h-8 rounded bg-red-100 flex items-center justify-center mr-3"
+                  >
+                    <i class="ri-file-pdf-line text-red-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-800">
+                      Regulatory Compliance Notice.pdf
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      3.1 MB • Added May 5, 2025
+                    </p>
+                  </div>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full"
+                  >
+                    <i class="ri-download-line"></i>
+                  </button>
+                </div>
+              </div>
+
+              <h4 class="font-semibold text-gray-800 mb-4">Movement History</h4>
+              <ul class="space-y-2 text-sm text-gray-800" id="movementHistory">
+                <!-- Movement history items will be dynamically added here -->
+              </ul>
+
+              <div class="flex space-x-3">
+                <button
+                  class="flex-1 bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap"
+                >
+                  <i class="ri-edit-line mr-2"></i> Edit File
+                </button>
+                <button
+                  class="flex-1 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-button whitespace-nowrap"
+                >
+                  <i class="ri-file-transfer-line mr-2"></i> Transfer File
+                </button>
+                <button
+                  class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-button whitespace-nowrap archive-file"
+                >
+                  <i class="ri-archive-line mr-2"></i> Archive File
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File ID Search Modal (Hidden by default) -->
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+      id="fileIdSearchModal"
+    >
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div
+          class="p-4 border-b border-gray-200 flex items-center justify-between"
+        >
+          <h3 class="font-semibold text-gray-800">Search by File ID</h3>
+          <button
+            class="text-gray-500 hover:text-gray-700"
+            id="closeFileIdSearchModal"
+          >
+            <i class="ri-close-line ri-lg"></i>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <div class="mb-4">
+            <label for="fileIdInput" class="block text-sm font-medium text-gray-700 mb-1">File ID</label>
+            <input
+              type="text"
+              id="fileIdInput"
+              placeholder="Enter File ID (e.g. MJCS-IT-2025-0001)"
+              class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+            />
+          </div>
+
+          <button
+            class="w-full bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap"
+            id="lookupFile"
+          >
+            <i class="ri-search-line mr-2"></i> Find File
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- New File Modal (Hidden by default) -->
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+      id="newFileModal"
+    >
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div
+          class="p-4 border-b border-gray-200 flex items-center justify-between"
+        >
+          <h3 class="font-semibold text-gray-800">Add New File</h3>
+          <button
+            class="text-gray-500 hover:text-gray-700"
+            id="closeNewFileModal"
+          >
+            <i class="ri-close-line ri-lg"></i>
+          </button>
+        </div>
+        <div class="p-6 modal-content">
+          <form id="newFileForm">
+            <div class="mb-4">
+              <label for="fileId" class="block text-sm font-medium text-gray-700 mb-1">File ID</label>
+              <input
+                type="text"
+                id="fileId"
+                placeholder="Enter File ID"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="fileTitle" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+              <input
+                type="text"
+                id="fileTitle"
+                placeholder="Enter Title"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="fileType" class="block text-sm font-medium text-gray-700 mb-1">File Type</label>
+              <select id="fileType" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+                <option value="">Select Type</option>
+                <option value="Legal">Legal</option>
+                <option value="Administrative">Administrative</option>
+                <option value="Financial">Financial</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="fileTags" class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+              <input type="text" id="fileTags" placeholder="Enter tags (e.g., contract, urgent)" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+            </div>
+
+            <div class="mb-4">
+              <label for="fileStatus" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <select
+                id="fileStatus"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              >
+                <option value="">Select Status</option>
+                <option value="Draft">Draft</option>
+                <option value="Pending Review">Pending Review</option>
+                <option value="Approved">Approved</option>
+                <option value="Available">Available</option>
+                <option value="In Use">In Use</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="fileDepartment" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+              <input
+                type="text"
+                id="fileDepartment"
+                placeholder="Enter Department"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="fileLocation" class="block text-sm font-medium text-gray-700 mb-1">Current Location</label>
+              <input
+                type="text"
+                id="fileLocation"
+                placeholder="Enter Current Location"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="fileAssignedTo" class="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+              <input
+                type="text"
+                id="fileAssignedTo"
+                placeholder="Enter Assigned To"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="fileClassification" class="block text-sm font-medium text-gray-700 mb-1">Classification</label>
+              <input
+                type="text"
+                id="fileClassification"
+                placeholder="Enter Classification"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="filePriority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+              <input
+                type="text"
+                id="filePriority"
+                placeholder="Enter Priority"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="fileDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
+                id="fileDescription"
+                placeholder="Enter Description"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap"
+            >
+              <i class="ri-add-line mr-2"></i> Add File
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit File Modal (Hidden by default) -->
+    <div
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+      id="editFileModal"
+    >
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div
+          class="p-4 border-b border-gray-200 flex items-center justify-between"
+        >
+          <h3 class="font-semibold text-gray-800">Edit File</h3>
+          <button
+            class="text-gray-500 hover:text-gray-700"
+            id="closeEditFileModal"
+          >
+            <i class="ri-close-line ri-lg"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <form id="editFileForm">
+            <div class="mb-4">
+              <label for="editFileId" class="block text-sm font-medium text-gray-700 mb-1">File ID</label>
+              <input
+                type="text"
+                id="editFileId"
+                placeholder="Enter File ID"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileTitle" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+              <input
+                type="text"
+                id="editFileTitle"
+                placeholder="Enter Title"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileType" class="block text-sm font-medium text-gray-700 mb-1">File Type</label>
+              <select id="editFileType" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary" required>
+                <option value="">Select Type</option>
+                <option value="Legal">Legal</option>
+                <option value="Administrative">Administrative</option>
+                <option value="Financial">Financial</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileTags" class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+              <input type="text" id="editFileTags" placeholder="Enter tags (e.g., contract, urgent)" class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary">
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileStatus" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <select
+                id="editFileStatus"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              >
+                <option value="">Select Status</option>
+                <option value="Draft">Draft</option>
+                <option value="Pending Review">Pending Review</option>
+                <option value="Approved">Approved</option>
+                <option value="Available">Available</option>
+                <option value="In Use">In Use</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileDepartment" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+              <input
+                type="text"
+                id="editFileDepartment"
+                placeholder="Enter Department"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileLocation" class="block text-sm font-medium text-gray-700 mb-1">Current Location</label>
+              <input
+                type="text"
+                id="editFileLocation"
+                placeholder="Enter Current Location"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileAssignedTo" class="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+              <input
+                type="text"
+                id="editFileAssignedTo"
+                placeholder="Enter Assigned To"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileClassification" class="block text-sm font-medium text-gray-700 mb-1">Classification</label>
+              <input
+                type="text"
+                id="editFileClassification"
+                placeholder="Enter Classification"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="editFilePriority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+              <input
+                type="text"
+                id="editFilePriority"
+                placeholder="Enter Priority"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="editFileDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
+                id="editFileDescription"
+                placeholder="Enter Description"
+                class="w-full px-3 py-2 border border-gray-300 rounded-button focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 focus:border-primary"
+                required
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap"
+            >
+              <i class="ri-save-line mr-2"></i> Save Changes
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="qrPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl p-6 flex flex-col items-center">
+      <img id="qrPreviewImg" src="" alt="QR Code" class="w-64 h-64 mb-4" />
+      <button id="closeQrPreview" class="bg-primary text-white px-4 py-2 rounded-button">Close</button>
+    </div>
+  </div>
+
+  <!-- Request File Modal (Hidden by default) -->
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    id="requestFileModal"
+  >
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4">
+      <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="font-semibold text-gray-800">Request File (Send Mail)</h3>
+        <button class="text-gray-500 hover:text-gray-700" id="closeRequestFileModal">
+          <i class="ri-close-line ri-lg"></i>
+        </button>
+      </div>
+      <form class="p-6 space-y-4" id="requestFileForm">
+        <div>
+          <label for="requestFrom" class="block text-sm font-medium text-gray-700 mb-1">From</label>
+          <input type="email" id="requestFrom" class="w-full px-3 py-2 border border-gray-300 rounded-button bg-gray-100" readonly>
+        </div>
+        <div>
+          <label for="requestTo" class="block text-sm font-medium text-gray-700 mb-1">To</label>
+          <input type="email" id="requestTo" class="w-full px-3 py-2 border border-gray-300 rounded-button bg-gray-100" value="mtecd22-005@thuto.bac.ac.bw" readonly required>
+        </div>
+        <div>
+          <label for="requestSubject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+          <input type="text" id="requestSubject" class="w-full px-3 py-2 border border-gray-300 rounded-button" placeholder="Subject" required>
+        </div>
+        <div>
+          <label for="requestBody" class="block text-sm font-medium text-gray-700 mb-1">Body</label>
+          <textarea id="requestBody" class="w-full px-3 py-2 border border-gray-300 rounded-button min-h-[100px]" placeholder="Write your message..." required></textarea>
+        </div>
+        <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap">
+          <i class="ri-send-plane-line mr-2"></i> Send Request
+        </button>
+        <div id="requestFileResult" class="mt-2"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Help Info Modal (Hidden by default) -->
+  <div id="helpInfoModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+      <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="font-semibold text-gray-800">Help & Information</h3>
+        <button class="text-gray-500 hover:text-gray-700" id="closeHelpInfoModal">
+          <i class="ri-close-line ri-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <p class="text-gray-700">Welcome to the Ministry of Justice File Tracking System. This platform helps you manage, track, and transfer files securely and efficiently within the ministry.</p>
+        <ul class="list-disc pl-5 text-gray-700 text-sm space-y-1">
+          <li>Use the <b>Dashboard</b> to see stats and recent activity.</li>
+          <li>Go to <b>Files</b> to view, search, and manage all files.</li>
+          <li>Use <b>Transfers</b> to move files between departments and locations.</li>
+          <li>Click your profile icon for settings and to sign out.</li>
+          <li>Need to request a file? Use the <b>Request File</b> button on the dashboard.</li>
+          <li>For further assistance, contact the system administrator.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBl4iQtqEIYAkUltLpvTkVbT9jkfQKsuxo",
+      authDomain: "mojcs-bc3bd.firebaseapp.com",
+      projectId: "mojcs-bc3bd",
+      storageBucket: "mojcs-bc3bd.firebasestorage.app",
+      messagingSenderId: "214760361583",
+      appId: "1:214760361583:web:c0ff2855875109a7c0479a",
+      measurementId: "G-W7ZQDT0G0V"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // User menu toggle
+      const userMenuButton = document.getElementById("userMenuButton");
+      const userMenu = document.getElementById("userMenu");
+
+      if (userMenuButton && userMenu) {
+        userMenuButton.addEventListener("click", function () {
+          userMenu.classList.toggle("hidden");
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", function (event) {
+          if (
+            !userMenuButton.contains(event.target) &&
+            !userMenu.contains(event.target)
+          ) {
+            userMenu.classList.add("hidden");
+          }
+        });
+      }
+
+      // Notification menu toggle
+      const notificationButton = document.getElementById("notificationButton");
+      const notificationMenu = document.getElementById("notificationMenu");
+
+      if (notificationButton && notificationMenu) {
+        notificationButton.addEventListener("click", function () {
+          notificationMenu.classList.toggle("hidden");
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", function (event) {
+          if (
+            !notificationButton.contains(event.target) &&
+            !notificationMenu.contains(event.target)
+          ) {
+            notificationMenu.classList.add("hidden");
+          }
+        });
+      }
+
+      // Help button functionality
+      const helpButton = document.getElementById("helpButton");
+      if (helpButton) {
+        helpButton.addEventListener("click", function () {
+          if (helpInfoModal) helpInfoModal.classList.remove("hidden");
+        });
+      }
+
+      // Custom checkbox functionality
+      const selectAllCheckbox = document.getElementById("selectAllCheckbox");
+      const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+
+      if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener("click", function () {
+          this.classList.toggle("checked");
+          const isChecked = this.classList.contains("checked");
+
+          rowCheckboxes.forEach((checkbox) => {
+            if (isChecked) {
+              checkbox.classList.add("checked");
+            } else {
+              checkbox.classList.remove("checked");
+            }
+          });
+        });
+      }
+
+      if (rowCheckboxes.length > 0) {
+        rowCheckboxes.forEach((checkbox) => {
+          checkbox.addEventListener("click", function (e) {
+            e.stopPropagation();
+            this.classList.toggle("checked");
+
+            // Check if all row checkboxes are checked
+            const allChecked = Array.from(rowCheckboxes).every((cb) =>
+              cb.classList.contains("checked"),
+            );
+
+            if (allChecked) {
+              selectAllCheckbox.classList.add("checked");
+            } else {
+              selectAllCheckbox.classList.remove("checked");
+            }
+          });
+        });
+      }
+
+      // Navigation links
+      const dashboardLink = document.getElementById("dashboardLink");
+      const filesLink = document.getElementById("filesLink");
+      const transfersLink = document.getElementById("transfersLink");
+      const reportsLink = document.getElementById("reportsLink");
+      // Fix: get all elements with id 'settingsLink' (main nav and user menu)
+      const settingsLinks = document.querySelectorAll("#settingsLink");
+      const myProfileLink = document.getElementById("myProfileLink");
+
+      const dashboardContent = document.getElementById("dashboardContent");
+      const filesContent = document.getElementById("filesContent");
+      const transfersContent = document.getElementById("transfersContent");
+      const reportsContent = document.getElementById("reportsContent");
+      const settingsContent = document.getElementById("settingsContent");
+      const myProfileContent = document.getElementById("myProfileContent");
+
+      // Function to show the selected content and hide others
+      function showContent(contentToShow) {
+        // Hide all content sections
+        dashboardContent.classList.add("hidden");
+        filesContent.classList.add("hidden");
+        transfersContent.classList.add("hidden");
+        reportsContent.classList.add("hidden");
+        settingsContent.classList.add("hidden");
+        myProfileContent.classList.add("hidden");
+
+        // Remove active class from all navigation links
+        dashboardLink.classList.remove("text-primary", "border-b-2", "border-primary");
+        filesLink.classList.remove("text-primary", "border-b-2", "border-primary");
+        transfersLink.classList.remove("text-primary", "border-b-2", "border-primary");
+        reportsLink.classList.remove("text-primary", "border-b-2", "border-primary");
+        settingsLinks.forEach(link => link.classList.remove("text-primary", "border-b-2", "border-primary"));
+        myProfileLink.classList.remove("text-primary", "border-b-2", "border-primary");
+
+        // Show the selected content section
+        contentToShow.classList.remove("hidden");
+
+        // Add active class to the clicked navigation link
+        if (contentToShow === dashboardContent) {
+          dashboardLink.classList.add("text-primary", "border-b-2", "border-primary");
+        } else if (contentToShow === filesContent) {
+          filesLink.classList.add("text-primary", "border-b-2", "border-primary");
+        } else if (contentToShow === transfersContent) {
+          transfersLink.classList.add("text-primary", "border-b-2", "border-primary");
+        } else if (contentToShow === reportsContent) {
+          reportsLink.classList.add("text-primary", "border-b-2", "border-primary");
+        } else if (contentToShow === settingsContent) {
+          settingsLinks.forEach(link => link.classList.add("text-primary", "border-b-2", "border-primary"));
+        } else if (contentToShow === myProfileContent) {
+          myProfileLink.classList.add("text-primary", "border-b-2", "border-primary");
+        }
+      }
+
+      // Event listeners for navigation links
+      if (dashboardLink) {
+        dashboardLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          showContent(dashboardContent);
+        });
+      }
+
+      if (filesLink) {
+        filesLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          showContent(filesContent);
+          fetchFiles();
+        });
+      }
+
+      if (transfersLink) {
+        transfersLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          showContent(transfersContent);
+        });
+      }
+
+      if (reportsLink) {
+        reportsLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          showContent(reportsContent);
+          fetchReports();
+        });
+      }
+      // Fix: add event listener to all settings links
+      settingsLinks.forEach(link => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          showContent(settingsContent);
+          fetchSettings && fetchSettings();
+        });
+      });
+      if (myProfileLink) {
+        myProfileLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          showContent(myProfileContent);
+          fetchProfile();
+        });
+      }
+
+      // QR Code Scanner Modal
+      const scannerModal = document.getElementById("scannerModal");
+      const fileDetailsModal = document.getElementById("fileDetailsModal");
+      const fileIdSearchModal = document.getElementById("fileIdSearchModal");
+      const newFileModal = document.getElementById("newFileModal");
+      const editFileModal = document.getElementById("editFileModal");
+      const closeScannerModal = document.getElementById("closeScannerModal");
+      const closeFileDetailsModal = document.getElementById("closeFileDetailsModal");
+      const closeFileIdSearchModal = document.getElementById("closeFileIdSearchModal");
+      const closeNewFileModal = document.getElementById("closeNewFileModal");
+      const closeEditFileModal = document.getElementById("closeEditFileModal");
+      const scanQRCodeButton = document.getElementById("scanQRCode");
+      const newFileButton = document.getElementById("newFileButton");
+      const printQRCodeButton = document.getElementById("printQRCode");
+      const startScanningButton = document.getElementById("startScanning");
+      const startScanningModalButton = document.getElementById("startScanningModal");
+      const lookupFileButton = document.getElementById("lookupFile");
+      const filterButton = document.getElementById("filterButton");
+      const filterMenu = document.getElementById("filterMenu");
+
+      // Show scanner modal when scan button is clicked
+      if (scanQRCodeButton) {
+        scanQRCodeButton.addEventListener("click", function () {
+          if (scannerModal) scannerModal.classList.remove("hidden");
+        });
+      }
+
+      // Show new file modal when new file button is clicked
+      if (newFileButton) {
+        newFileButton.addEventListener("click", function () {
+          console.log("New File button clicked"); // Debug statement
+          if (newFileModal) newFileModal.classList.remove("hidden");
+        });
+      }
+
+      // Show file details modal when view button is clicked
+      document.querySelectorAll(".ri-eye-line").forEach((icon) => {
+        const button = icon.closest("button");
+        if (button) {
+          button.addEventListener("click", function () {
+            if (fileDetailsModal) fileDetailsModal.classList.remove("hidden");
+          });
+        }
+      });
+
+      // Show file ID search modal when lookup button is clicked
+      if (lookupFileButton) {
+        lookupFileButton.addEventListener("click", function () {
+          if (fileIdSearchModal) fileIdSearchModal.classList.remove("hidden");
+        });
+      }
+
+      // Show filter menu when filter button is clicked
+      if (filterButton) {
+        filterButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          filterMenu.classList.toggle("hidden");
+        });
+      }
+
+      // Close modals
+      if (closeScannerModal) {
+        closeScannerModal.addEventListener("click", function () {
+          scannerModal.classList.add("hidden");
+        });
+      }
+
+      if (closeFileDetailsModal) {
+        closeFileDetailsModal.addEventListener("click", function () {
+          fileDetailsModal.classList.add("hidden");
+        });
+      }
+
+      if (closeFileIdSearchModal) {
+        closeFileIdSearchModal.addEventListener("click", function () {
+          fileIdSearchModal.classList.add("hidden");
+        });
+      }
+
+      if (closeNewFileModal) {
+        closeNewFileModal.addEventListener("click", function () {
+          newFileModal.classList.add("hidden");
+        });
+      }
+
+      if (closeEditFileModal) {
+        closeEditFileModal.addEventListener("click", function () {
+          editFileModal.classList.add("hidden");
+        });
+      }
+
+      // Close modals when clicking outside
+      window.addEventListener("click", function (event) {
+        if (scannerModal && event.target === scannerModal) {
+          scannerModal.classList.add("hidden");
+        }
+
+        if (fileDetailsModal && event.target === fileDetailsModal) {
+          fileDetailsModal.classList.add("hidden");
+        }
+
+        if (fileIdSearchModal && event.target === fileIdSearchModal) {
+          fileIdSearchModal.classList.add("hidden");
+        }
+
+        if (newFileModal && event.target === newFileModal) {
+          newFileModal.classList.add("hidden");
+        }
+
+        if (editFileModal && event.target === editFileModal) {
+          editFileModal.classList.add("hidden");
+        }
+
+        if (filterMenu && !filterButton.contains(event.target) && !filterMenu.contains(event.target)) {
+          filterMenu.classList.add("hidden");
+        }
+      });
+
+      // Initialize QR Code Scanner
+      if (startScanningButton) {
+        startScanningButton.addEventListener("click", function () {
+          if (scannerModal) scannerModal.classList.remove("hidden");
+          startQRScanner();
+        });
+      }
+
+      if (startScanningModalButton) {
+        startScanningModalButton.addEventListener("click", function () {
+          startQRScanner();
+        });
+      }
+
+      function startQRScanner() {
+        const html5QrcodeScanner = new Html5QrcodeScanner("reader", { qrbox: 250, fps: 5 });
+        html5QrcodeScanner.render(onScanSuccess, onScanError);
+
+        function onScanSuccess(qrCodeMessage) {
+          // Handle the scanned QR code message
+          console.log(`QR Code detected: ${qrCodeMessage}`);
+          alert(`QR Code detected: ${qrCodeMessage}`);
+          html5QrcodeScanner.clear();
+          if (scannerModal) scannerModal.classList.add("hidden");
+
+          // Fetch file data based on QR code message
+          fetchFileByQRCode(qrCodeMessage);
+        }
+
+        function onScanError(error) {
+          // Handle scan errors
+          console.warn(`QR error: ${error}`);
+        }
+      }
+
+      // File ID Search Functionality
+      if (lookupFileButton) {
+        lookupFileButton.addEventListener("click", function () {
+          const fileId = document.getElementById("fileIdInput").value.trim();
+          // Firestore query:
+          console.log(`Looking up file: ${fileId}`);
+          // firestore.collection("files").where("fileId", "==", fileId).get().then(...);
+          if (fileIdSearchModal) fileIdSearchModal.classList.add("hidden");
+        });
+      }
+
+      // Get current user for movement logs
+      let currentUserName = "Unknown";
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // Try to get user profile from Firestore
+          getDoc(doc(db, "users", user.uid)).then(userDoc => {
+            if (userDoc.exists()) {
+              currentUserName = userDoc.data().username || user.email;
+            } else {
+              currentUserName = user.email;
+            }
+          });
+        }
+      });
+
+      // New File Form Submission
+      const newFileForm = document.getElementById("newFileForm");
+      if (newFileForm) {
+        newFileForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const fileId = document.getElementById("fileId").value;
+          const fileTitle = document.getElementById("fileTitle").value;
+          const fileStatus = document.getElementById("fileStatus").value;
+          const fileDepartment = document.getElementById("fileDepartment").value;
+          const fileLocation = document.getElementById("fileLocation").value;
+          const fileAssignedTo = document.getElementById("fileAssignedTo").value;
+          const fileClassification = document.getElementById("fileClassification").value;
+          const filePriority = document.getElementById("filePriority").value;
+          const fileDescription = document.getElementById("fileDescription").value;
+          const fileType = document.getElementById("fileType").value;
+          const fileTags = document.getElementById("fileTags").value.split(",").map(tag => tag.trim());
+
+          // Generate QR code
+          const tempDiv = document.createElement("div");
+          new QRCode(tempDiv, {
+            text: fileId,
+            width: 100,
+            height: 100
+          });
+          const img = tempDiv.querySelector("img");
+          let qrDataUrl = "";
+          if (img) {
+            qrDataUrl = img.src;
+          }
+
+          // Save file data to Firestore
+          try {
+            const docRef = await addDoc(collection(db, "files"), {
+              fileId, fileTitle, fileStatus, fileDepartment, fileLocation,
+              fileAssignedTo, fileClassification, filePriority, fileDescription,
+              fileType, fileTags,
+              qrCode: qrDataUrl,
+              lastUpdated: new Date().toISOString(),
+              createdAt: new Date().toISOString()
+            });
+            // Create initial movement log: from null to Records
+            await addDoc(collection(db, "files", docRef.id, "movements"), {
+              from: null,
+              to: "Records",
+              timestamp: new Date().toISOString(),
+              updatedBy: currentUserName,
+              notes: "File registered in Records"
+            });
+            alert("File added successfully!");
+            newFileModal.classList.add("hidden");
+            newFileForm.reset();
+            fetchFiles(); // Refresh the file list
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+        });
+      }
+
+      // Edit File Form Submission
+      const editFileForm = document.getElementById("editFileForm");
+      let currentEditFileId = null;
+
+      if (editFileForm) {
+        editFileForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const fileId = document.getElementById("editFileId").value;
+          const fileTitle = document.getElementById("editFileTitle").value;
+          const fileStatus = document.getElementById("editFileStatus").value;
+          const fileDepartment = document.getElementById("editFileDepartment").value;
+          const fileLocation = document.getElementById("editFileLocation").value;
+          const fileAssignedTo = document.getElementById("editFileAssignedTo").value;
+          const fileClassification = document.getElementById("editFileClassification").value;
+          const filePriority = document.getElementById("editFilePriority").value;
+          const fileDescription = document.getElementById("editFileDescription").value;
+          const fileType = document.getElementById("editFileType").value;
+          const fileTags = document.getElementById("editFileTags").value.split(",").map(tag => tag.trim());
+
+          // Update file data in Firestore
+          try {
+            await updateDoc(doc(db, "files", currentEditFileId), {
+              fileId, fileTitle, fileStatus, fileDepartment, fileLocation,
+              fileAssignedTo, fileClassification, filePriority, fileDescription,
+              fileType, fileTags,
+              lastUpdated: new Date().toISOString()
+            });
+            alert("File updated successfully!");
+            editFileModal.classList.add("hidden");
+            fetchFiles(); // Refresh the file list
+          } catch (e) {
+            console.error("Error updating document: ", e);
+          }
+        });
+      }
+
+      // Print QR Codes
+      if (printQRCodeButton) {
+        printQRCodeButton.addEventListener("click", function () {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          // Example QR code data
+          const qrCodeData = "Sample QR Code Data";
+
+          // Add QR code to PDF
+          doc.text("QR Code", 10, 10);
+          doc.text(qrCodeData, 10, 20);
+
+          // Save the PDF
+          doc.save("qrcodes.pdf");
+        });
+      }
+
+      // Function to update statistics
+      async function updateStatistics() {
+        const querySnapshot = await getDocs(collection(db, "files"));
+        let totalFiles = 0;
+        let filesInTransit = 0;
+        let availableFiles = 0;
+        let recentlyAccessed = 0;
+
+        querySnapshot.forEach((doc) => {
+          const file = doc.data();
+          totalFiles++;
+          if (file.fileStatus === "In Transit") filesInTransit++;
+          if (file.fileStatus === "Available") availableFiles++;
+          // Assuming recently accessed files are those updated in the last 7 days
+          const lastUpdated = new Date(file.lastUpdated);
+          const sevenDaysAgo = new Date();
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+          if (lastUpdated >= sevenDaysAgo) recentlyAccessed++;
+        });
+
+        // Update the statistics in the UI
+        document.getElementById("totalFiles").textContent = totalFiles;
+        document.getElementById("filesInTransit").textContent = filesInTransit;
+        document.getElementById("availableFiles").textContent = availableFiles;
+        document.getElementById("recentlyAccessed").textContent = recentlyAccessed;
+      }
+
+      // Fetch files from Firestore and update the table
+      async function fetchFiles() {
+        const querySnapshot = await getDocs(collection(db, "files"));
+        const fileTableBody = document.getElementById("fileTableBody");
+        const filesTableBody = document.getElementById("filesTableBody");
+        fileTableBody.innerHTML = ""; // Clear existing rows
+        filesTableBody.innerHTML = ""; // Clear existing rows
+
+        querySnapshot.forEach((doc) => {
+          const file = doc.data();
+          const row = document.createElement("tr");
+          row.className = "hover:bg-gray-50";
+          row.innerHTML = `
+            <td class="px-6 py-4">
+              <div class="flex items-center">
+                <div class="custom-checkbox row-checkbox"></div>
+              </div>
+            </td>
+            <td class="px-6 py-4 font-medium">${file.fileId}</td>
+            <td class="px-6 py-4">${file.fileTitle}</td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                ${file.fileStatus}
+              </span>
+            </td>
+            <td class="px-6 py-4">${file.fileDepartment}</td>
+            <td class="px-6 py-4">${new Date(file.lastUpdated).toLocaleDateString()}</td>
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-2">
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full view-file" data-id="${doc.id}">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full edit-file" data-id="${doc.id}">
+                  <i class="ri-pencil-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full delete-file" data-id="${doc.id}">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          fileTableBody.appendChild(row);
+
+          const filesRow = document.createElement("tr");
+          filesRow.className = "hover:bg-gray-50";
+          filesRow.innerHTML = `
+            <td class="px-6 py-4 font-medium">${file.fileId}</td>
+            <td class="px-6 py-4">${file.fileTitle}</td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                ${file.fileStatus}
+              </span>
+            </td>
+            <td class="px-6 py-4">${file.fileDepartment}</td>
+            <td class="px-6 py-4">${new Date(file.lastUpdated).toLocaleDateString()}</td>
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-2">
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full view-file" data-id="${doc.id}">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full edit-file" data-id="${doc.id}">
+                  <i class="ri-pencil-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full delete-file" data-id="${doc.id}">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          filesTableBody.appendChild(filesRow);
+        });
+
+        // Add event listeners for view, edit, and delete buttons
+        document.querySelectorAll(".view-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            viewFile(fileId);
+          });
+        });
+
+        document.querySelectorAll(".edit-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            editFile(fileId);
+          });
+        });
+
+        document.querySelectorAll(".delete-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            deleteFile(fileId);
+          });
+        });
+
+        // Add event listeners for scanning QR codes
+        document.querySelectorAll(".scan-qr").forEach((qrCodeCell) => {
+          qrCodeCell.addEventListener("click", () => {
+            const fileId = qrCodeCell.getAttribute("data-id");
+            fetchFileByQRCode(fileId);
+          });
+        });
+
+        updateStatistics(); // Update statistics after fetching files
+      }
+
+      // Fetch QR Management from Firestore and update the table
+      async function fetchQRManagement() {
+        const querySnapshot = await getDocs(collection(db, "files"));
+        const qrTableBody = document.getElementById("qrTableBody");
+        qrTableBody.innerHTML = ""; // Clear existing rows
+
+        querySnapshot.forEach((doc) => {
+          const file = doc.data();
+          const row = document.createElement("tr");
+          row.className = "hover:bg-gray-50";
+          row.innerHTML = `
+            <td class="px-6 py-4">
+              <img src="${file.qrCode}" alt="QR Code" class="w-10 h-10 rounded cursor-pointer qr-preview" data-img="${file.qrCode}" />
+            </td>
+            <td class="px-6 py-4 font-medium">${file.fileId}</td>
+            <td class="px-6 py-4">${file.fileTitle}</td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                ${file.fileStatus}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-2">
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full view-file" data-id="${doc.id}">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full edit-file" data-id="${doc.id}">
+                  <i class="ri-pencil-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full delete-file" data-id="${doc.id}">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          qrTableBody.appendChild(row);
+        });
+
+        // Add event listeners for view, edit, and delete buttons
+        document.querySelectorAll(".view-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            viewFile(fileId);
+          });
+        });
+
+        document.querySelectorAll(".edit-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            editFile(fileId);
+          });
+        });
+
+        document.querySelectorAll(".delete-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            deleteFile(fileId);
+          });
+        });
+
+        // Add event listeners for scanning QR codes
+        document.querySelectorAll(".scan-qr").forEach((qrCodeCell) => {
+          qrCodeCell.addEventListener("click", () => {
+            const fileId = qrCodeCell.getAttribute("data-id");
+            fetchFileByQRCode(fileId);
+          });
+        });
+      }
+
+      // Fetch Reports from Firestore and update the table
+      async function fetchReports() {
+        const querySnapshot = await getDocs(collection(db, "files"));
+        const reportsTableBody = document.getElementById("reportsTableBody");
+        reportsTableBody.innerHTML = ""; // Clear existing rows
+
+        querySnapshot.forEach((doc) => {
+          const file = doc.data();
+          const row = document.createElement("tr");
+          row.className = "hover:bg-gray-50";
+          row.innerHTML = `
+            <td class="px-6 py-4 font-medium">${file.fileId}</td>
+            <td class="px-6 py-4">${file.fileTitle}</td>
+            <td class="px-6 py-4">${new Date(file.lastUpdated).toLocaleDateString()}</td>
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-2">
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full view-file" data-id="${doc.id}">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full edit-file" data-id="${doc.id}">
+                  <i class="ri-pencil-line"></i>
+                </button>
+                <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full delete-file" data-id="${doc.id}">
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          reportsTableBody.appendChild(row);
+        });
+
+        // Add event listeners for view, edit, and delete buttons
+        document.querySelectorAll(".view-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            viewFile(fileId);
+          });
+        });
+
+        document.querySelectorAll(".edit-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            editFile(fileId);
+          });
+        });
+
+        document.querySelectorAll(".delete-file").forEach((button) => {
+          button.addEventListener("click", () => {
+            const fileId = button.getAttribute("data-id");
+            deleteFile(fileId);
+          });
+        });
+      }
+
+      // Function to view file details
+      async function viewFile(fileId) {
+        const docRef = doc(db, "files", fileId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const file = docSnap.data();
+          const modal = document.getElementById("fileDetailsModal");
+          modal.querySelector("h4").textContent = file.fileId;
+          modal.querySelector(".font-medium.text-gray-800").textContent = file.fileTitle;
+          modal.querySelector(".text-gray-700.mb-6").textContent = file.fileDescription;
+          modal.querySelector("#qrCodeImage").src = file.qrCode || "";
+
+          const historyList = modal.querySelector("#movementHistory");
+          historyList.innerHTML = "";
+          const movementsSnapshot = await getDocs(collection(db, "files", fileId, "movements"));
+          movementsSnapshot.forEach(doc => {
+            const move = doc.data();
+            historyList.innerHTML += `<li>${move.department} → ${move.location} by ${move.updatedBy} on ${new Date(move.timestamp).toLocaleString()}</li>`;
+          });
+
+          modal.classList.remove("hidden");
+        } else {
+          alert("No such file!");
+        }
+      }
+
+      // Function to edit file
+      async function editFile(fileId) {
+        const docRef = doc(db, "files", fileId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const file = docSnap.data();
+          document.getElementById("editFileId").value = file.fileId;
+          document.getElementById("editFileTitle").value = file.fileTitle;
+          document.getElementById("editFileStatus").value = file.fileStatus;
+          document.getElementById("editFileDepartment").value = file.fileDepartment;
+          document.getElementById("editFileLocation").value = file.fileLocation;
+          document.getElementById("editFileAssignedTo").value = file.fileAssignedTo;
+          document.getElementById("editFileClassification").value = file.fileClassification;
+          document.getElementById("editFilePriority").value = file.filePriority;
+          document.getElementById("editFileDescription").value = file.fileDescription;
+          document.getElementById("editFileType").value = file.fileType;
+          document.getElementById("editFileTags").value = file.fileTags.join(", ");
+
+          currentEditFileId = fileId;
+          document.getElementById("editFileModal").classList.remove("hidden");
+        } else {
+          alert("No such file!");
+        }
+      }
+
+      // Function to delete file
+      async function deleteFile(fileId) {
+        if (confirm("Are you sure you want to delete this file?")) {
+          try {
+            await deleteDoc(doc(db, "files", fileId));
+            alert("File deleted successfully!");
+            fetchFiles(); // Refresh the file list
+          } catch (e) {
+            console.error("Error deleting document: ", e);
+          }
+        }
+      }
+
+      // Function to fetch file by QR code
+      async function fetchFileByQRCode(fileId) {
+        const docRef = doc(db, "files", fileId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const file = docSnap.data();
+          const modal = document.getElementById("fileDetailsModal");
+          modal.querySelector("h4").textContent = file.fileId;
+          modal.querySelector(".font-medium.text-gray-800").textContent = file.fileTitle;
+          modal.querySelector(".text-gray-700.mb-6").textContent = file.fileDescription;
+          modal.querySelector("#qrCodeImage").src = file.qrCode || "";
+
+          const historyList = modal.querySelector("#movementHistory");
+          historyList.innerHTML = "";
+          const movementsSnapshot = await getDocs(collection(db, "files", fileId, "movements"));
+          movementsSnapshot.forEach(doc => {
+            const move = doc.data();
+            historyList.innerHTML += `<li>${move.department} → ${move.location} by ${move.updatedBy} on ${new Date(move.timestamp).toLocaleString()}</li>`;
+          });
+
+          modal.classList.remove("hidden");
+        } else {
+          alert("No such file!");
+        }
+      }
+
+      // Transfer File Form Submission
+      const transferFileForm = document.getElementById("transferFileForm");
+      if (transferFileForm) {
+        transferFileForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const fileId = document.getElementById("transferFileId").value;
+          const transferDepartment = document.getElementById("transferDepartment").value;
+          const transferLocation = document.getElementById("transferLocation").value;
+
+          // Query Firestore for the file
+          const querySnapshot = await getDocs(collection(db, "files"));
+          let fileDocId = null;
+          querySnapshot.forEach(doc => {
+            if (doc.data().fileId === fileId) {
+              fileDocId = doc.id;
+            }
+          });
+
+          if (fileDocId) {
+            // Get latest movement for 'from'
+            let fromHolder = "Records";
+            const movementsSnapshot = await getDocs(collection(db, "files", fileDocId, "movements"));
+            let latestMove = null;
+            movementsSnapshot.forEach(moveDoc => {
+              const move = moveDoc.data();
+              if (!latestMove || new Date(move.timestamp) > new Date(latestMove.timestamp)) {
+                latestMove = move;
+              }
+            });
+            if (latestMove && latestMove.to) fromHolder = latestMove.to;
+
+            // Update file data in Firestore
+            try {
+              await updateDoc(doc(db, "files", fileDocId), {
+                fileDepartment: transferDepartment,
+                fileLocation: transferLocation,
+                fileStatus: "In Transit",
+                lastUpdated: new Date().toISOString()
+              });
+              await addDoc(collection(db, "files", fileDocId, "movements"), {
+                from: fromHolder,
+                to: transferDepartment,
+                timestamp: new Date().toISOString(),
+                updatedBy: currentUserName,
+                notes: `Transferred to ${transferDepartment} (${transferLocation})`
+              });
+              alert("File transferred successfully!");
+              transferFileForm.reset();
+              fetchFiles();
+              fetchMovementTracker && fetchMovementTracker();
+            } catch (e) {
+              console.error("Error updating document: ", e);
+            }
+          } else {
+            alert("File not found!");
+          }
+        });
+      }
+
+      // Settings Form Submission
+      const settingsForm = document.getElementById("settingsForm");
+      if (settingsForm) {
+        settingsForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const theme = document.getElementById("theme").value;
+          const notifications = document.getElementById("notifications").checked;
+
+          // Apply theme immediately
+          if (theme === "dark") {
+            document.body.classList.add("dark");
+          } else {
+            document.body.classList.remove("dark");
+          }
+
+          // Enable/disable notifications
+          if (notifications) {
+            // Show a test notification (simulate)
+            const notificationMenu = document.getElementById("notificationMenu");
+            if (notificationMenu) {
+              notificationMenu.innerHTML = `<a href='#' class='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'><i class='ri-notification-3-line mr-2'></i> Notifications enabled!</a>` + notificationMenu.innerHTML;
+              document.getElementById("notificationBadge").textContent = "1";
+            }
+          } else {
+            // Hide notifications
+            const notificationMenu = document.getElementById("notificationMenu");
+            if (notificationMenu) notificationMenu.innerHTML = "";
+            document.getElementById("notificationBadge").textContent = "0";
+          }
+
+          // Save settings to Firestore
+          try {
+            await updateDoc(doc(db, "settings", "userSettings"), {
+              theme,
+              notifications,
+              lastUpdated: new Date().toISOString()
+            });
+            alert("Settings saved successfully!");
+          } catch (e) {
+            console.error("Error saving settings: ", e);
+          }
+        });
+      }
+      // Apply theme on load from settings
+      async function applyThemeOnLoad() {
+        const docRef = doc(db, "settings", "userSettings");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const settings = docSnap.data();
+          if (settings.theme === "dark") {
+            document.body.classList.add("dark");
+          } else {
+            document.body.classList.remove("dark");
+          }
+        }
+      }
+      applyThemeOnLoad();
+
+      // My Profile Form Submission
+      const myProfileForm = document.getElementById("myProfileForm");
+      if (myProfileForm) {
+        myProfileForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const profileName = document.getElementById("profileName").value;
+          const profileEmail = document.getElementById("profileEmail").value;
+          const profileRole = document.getElementById("profileRole").value;
+
+          // Save profile data to Firestore
+          try {
+            await updateDoc(doc(db, "profiles", "userProfile"), {
+              profileName,
+              profileEmail,
+              profileRole,
+              lastUpdated: new Date().toISOString()
+            });
+            alert("Profile saved successfully!");
+          } catch (e) {
+            console.error("Error saving profile: ", e);
+          }
+        });
+      }
+
+      // Fetch profile data from Firestore
+      async function fetchProfile() {
+        // Get current user
+        const user = auth.currentUser;
+        if (!user) return;
+        // Fetch from 'users' collection using UID
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const profile = docSnap.data();
+          document.getElementById("profileName").value = profile.username || "";
+          document.getElementById("profileEmail").value = profile.email || "";
+          document.getElementById("profileRole").value = profile.role || "";
+        } else {
+          // fallback: clear fields
+          document.getElementById("profileName").value = "";
+          document.getElementById("profileEmail").value = "";
+          document.getElementById("profileRole").value = "";
+        }
+      }
+
+      // Fetch settings data from Firestore
+      async function fetchSettings() {
+        const docRef = doc(db, "settings", "userSettings");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const settings = docSnap.data();
+          document.getElementById("theme").value = settings.theme || "light";
+          document.getElementById("notifications").checked = settings.notifications || false;
+        }
+      }
+
+      // Fetch files on page load
+      fetchFiles();
+      fetchSettings();
+
+      // Real-Time Notifications
+      onSnapshot(collection(db, "files"), (snapshot) => {
+        const notificationMenu = document.getElementById("notificationMenu");
+        const notificationBadge = document.getElementById("notificationBadge");
+        notificationMenu.innerHTML = "";
+        let notificationCount = 0;
+
+        snapshot.docChanges().forEach(change => {
+          if (change.type === "added" || change.type === "modified") {
+            const file = change.doc.data();
+            notificationMenu.innerHTML += `
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <i class="ri-file-list-3-line mr-2"></i> ${file.fileTitle} ${change.type === "added" ? "added" : "updated"}
+              </a>
+            `;
+            notificationCount++;
+          }
+        });
+
+        notificationBadge.textContent = notificationCount;
+      });
+
+      // Generate Report
+      document.getElementById("generateReport").addEventListener("click", async () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const querySnapshot = await getDocs(collection(db, "files"));
+        let y = 20;
+        doc.text("File Usage Report", 10, 10);
+        querySnapshot.forEach(fileDoc => {
+          const file = fileDoc.data();
+          doc.text(`${file.fileId}: ${file.fileTitle} (${file.fileStatus})`, 10, y);
+          y += 10;
+        });
+        doc.save("file_report.pdf");
+      });
+
+      // Archive File
+      document.querySelector(".archive-file").addEventListener("click", async () => {
+        if (currentEditFileId) {
+          await updateDoc(doc(db, "files", currentEditFileId), { fileStatus: "Archived" });
+          alert("File archived!");
+          fileDetailsModal.classList.add("hidden");
+          fetchFiles();
+        }
+      });
+
+      // Role-Based UI Restrictions
+      async function restrictUIByRole() {
+        const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+        const role = userDoc.data().role;
+
+        if (role === "user") {
+          // Disable buttons for non-admin users
+          document.querySelectorAll(".edit-file, .delete-file, #newFileButton, #printQRCode").forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add("opacity-50", "cursor-not-allowed");
+          });
+        }
+      }
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          restrictUIByRole();
+        }
+      });
+
+      // Update charts with real-time data
+      async function updateFileStatusChart() {
+        const querySnapshot = await getDocs(collection(db, "files"));
+        let available = 0, inUse = 0, inTransit = 0, archived = 0;
+        querySnapshot.forEach(doc => {
+          const status = doc.data().fileStatus;
+          if (status === "Available") available++;
+          else if (status === "In Use") inUse++;
+          else if (status === "In Transit") inTransit++;
+          else if (status === "Archived") archived++;
+        });
+        fileStatusOption.series[0].data = [available, available, available, available, available, available, available];
+        fileStatusOption.series[1].data = [inUse, inUse, inUse, inUse, inUse, inUse, inUse];
+        fileStatusOption.series[2].data = [inTransit, inTransit, inTransit, inTransit, inTransit, inTransit, inTransit];
+        fileStatusOption.series[3].data = [archived, archived, archived, archived, archived, archived, archived];
+        fileStatusChart.setOption(fileStatusOption);
+      }
+
+      async function updateDepartmentChart() {
+        const querySnapshot = await getDocs(collection(db, "files"));
+        const deptCounts = {};
+        querySnapshot.forEach(doc => {
+          const dept = doc.data().fileDepartment;
+          deptCounts[dept] = (deptCounts[dept] || 0) + 1;
+        });
+        departmentOption.series[0].data = Object.entries(deptCounts).map(([name, value]) => ({ name, value }));
+        departmentChart.setOption(departmentOption);
+      }
+
+      updateFileStatusChart();
+      updateDepartmentChart();
+
+      // Search functionality
+      const searchInput = document.getElementById("fileSearch");
+      if (searchInput) {
+        searchInput.addEventListener("input", async function () {
+          const querySnapshot = await getDocs(collection(db, "files"));
+          const searchTerm = searchInput.value.toLowerCase();
+          fileTableBody.innerHTML = "";
+          querySnapshot.forEach(doc => {
+            const file = doc.data();
+            if (file.fileId.toLowerCase().includes(searchTerm) || file.fileTitle.toLowerCase().includes(searchTerm)) {
+              const row = document.createElement("tr");
+              row.className = "hover:bg-gray-50";
+              row.innerHTML = `
+                <td class="px-6 py-4">
+                  <div class="flex items-center">
+                    <div class="custom-checkbox row-checkbox"></div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-medium">${file.fileId}</td>
+                <td class="px-6 py-4">${file.fileTitle}</td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                    ${file.fileStatus}
+                  </span>
+                </td>
+                <td class="px-6 py-4">${file.fileDepartment}</td>
+                <td class="px-6 py-4">${new Date(file.lastUpdated).toLocaleDateString()}</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center space-x-2">
+                    <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full view-file" data-id="${doc.id}">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                    <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full edit-file" data-id="${doc.id}">
+                      <i class="ri-pencil-line"></i>
+                    </button>
+                    <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full delete-file" data-id="${doc.id}">
+                      <i class="ri-delete-bin-line"></i>
+                    </button>
+                  </div>
+                </td>
+              `;
+              fileTableBody.appendChild(row);
+            }
+          });
+        });
+      }
+
+      // Fetch and display recent activity
+      async function fetchRecentActivity() {
+        // Find the Recent Activity container
+        const activityContainer = document.querySelector(
+          '#dashboardContent .grid .bg-white.rounded.shadow.p-6:last-child .space-y-4'
+        );
+        if (!activityContainer) return;
+        activityContainer.innerHTML = '';
+
+        // Get recent file additions/updates
+        const filesSnapshot = await getDocs(collection(db, 'files'));
+        let activities = [];
+        filesSnapshot.forEach(docSnap => {
+          const file = docSnap.data();
+          // Add creation
+          if (file.createdAt) {
+            activities.push({
+              type: 'created',
+              fileId: file.fileId,
+              fileTitle: file.fileTitle,
+              timestamp: file.createdAt,
+              description: `File <b>${file.fileTitle}</b> was <b>created</b>.`,
+            });
+          }
+          // Add update
+          if (file.lastUpdated && file.lastUpdated !== file.createdAt) {
+            activities.push({
+              type: 'updated',
+              fileId: file.fileId,
+              fileTitle: file.fileTitle,
+              timestamp: file.lastUpdated,
+              description: `File <b>${file.fileTitle}</b> was <b>updated</b>.`,
+            });
+          }
+        });
+
+        // Get recent transfers (movements)
+        for (const docSnap of filesSnapshot.docs) {
+          const fileId = docSnap.id;
+          const movementsSnapshot = await getDocs(collection(db, 'files', fileId, 'movements'));
+          movementsSnapshot.forEach(moveDoc => {
+            const move = moveDoc.data();
+            activities.push({
+              type: 'transferred',
+              fileId: docSnap.data().fileId,
+              fileTitle: docSnap.data().fileTitle,
+              timestamp: move.timestamp,
+              description: `File <b>${docSnap.data().fileTitle}</b> was <b>transferred</b> to <b>${move.department}</b> (${move.location}) by <b>${move.updatedBy}</b>.`,
+            });
+          });
+        }
+
+        // Sort by timestamp descending
+        activities = activities.filter(a => a.timestamp).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        // Show only the 5 most recent
+        activities.slice(0, 5).forEach(activity => {
+          const icon =
+            activity.type === 'created' ? 'ri-add-line text-green-500' :
+            activity.type === 'updated' ? 'ri-pencil-line text-blue-500' :
+            'ri-file-transfer-line text-yellow-500';
+          const time = new Date(activity.timestamp).toLocaleString();
+          const html = `<div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mt-1"><i class="ri ${icon}"></i></div>
+            <div class="flex-1">
+              <div class="text-sm text-gray-700" style="line-height:1.3;">${activity.description}</div>
+              <div class="text-xs text-gray-400 mt-1">${time}</div>
+            </div>
+          </div>`;
+          activityContainer.innerHTML += html;
+        });
+        if (activities.length === 0) {
+          activityContainer.innerHTML = '<div class="text-gray-400 text-sm">No recent activity.</div>';
+        }
+      }
+      // Call on page load
+      fetchRecentActivity();
+
+      // Utility to generate a unique File ID: MOJ-YYYY-XXXXXX
+      function generateUniqueFileId() {
+        const year = new Date().getFullYear();
+        const randomNum = Math.floor(100000 + Math.random() * 900000); // 6 digits
+        return `MOJ-${year}-${randomNum}`;
+      }
+
+      // Show new file modal when new file button is clicked
+      if (newFileButton) {
+        newFileButton.addEventListener("click", function () {
+          if (newFileModal) newFileModal.classList.remove("hidden");
+          // Set unique File ID and make it read-only
+          const fileIdInput = document.getElementById("fileId");
+          if (fileIdInput) {
+            fileIdInput.value = generateUniqueFileId();
+            fileIdInput.readOnly = true;
+          }
+        });
+      }
+
+      // Add this script after DOMContentLoaded
+      async function fetchMovementTracker() {
+        const filesSnapshot = await getDocs(collection(db, "files"));
+        const movementTrackerBody = document.getElementById("movementTrackerBody");
+        movementTrackerBody.innerHTML = "";
+        for (const fileDoc of filesSnapshot.docs) {
+          const file = fileDoc.data();
+          const fileId = fileDoc.id;
+          // Get latest movement
+          const movementsSnapshot = await getDocs(collection(db, "files", fileId, "movements"));
+          let latestMove = null;
+          movementsSnapshot.forEach(moveDoc => {
+            const move = moveDoc.data();
+            if (!latestMove || new Date(move.timestamp) > new Date(latestMove.timestamp)) {
+              latestMove = move;
+            }
+          });
+          const currentHolder = latestMove ? latestMove.to : "Records";
+          const lastMoved = latestMove ? new Date(latestMove.timestamp).toLocaleString() : "-";
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="px-6 py-4 font-medium">${file.fileId}</td>
+            <td class="px-6 py-4">${file.fileTitle}</td>
+            <td class="px-6 py-4">${currentHolder}</td>
+            <td class="px-6 py-4">${lastMoved}</td>
+            <td class="px-6 py-4">
+              <button class="bg-primary text-white px-3 py-1 rounded text-xs view-movement-history" data-id="${fileId}">View History</button>
+            </td>
+          `;
+          movementTrackerBody.appendChild(row);
+        }
+        // Add event listeners for view history buttons
+        document.querySelectorAll(".view-movement-history").forEach(btn => {
+          btn.addEventListener("click", async function() {
+            const fileId = btn.getAttribute("data-id");
+            const historyModal = document.getElementById("movementHistoryModal");
+            const historyBody = document.getElementById("movementHistoryBody");
+            historyBody.innerHTML = "";
+            const movesSnapshot = await getDocs(collection(db, "files", fileId, "movements"));
+            const moves = [];
+            movesSnapshot.forEach(moveDoc => moves.push(moveDoc.data()));
+            moves.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            moves.forEach(move => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td class="px-4 py-2">${move.from}</td>
+                <td class="px-4 py-2">${move.to}</td>
+                <td class="px-4 py-2">${new Date(move.timestamp).toLocaleString()}</td>
+                <td class="px-4 py-2">${move.notes || ""}</td>
+              `;
+              historyBody.appendChild(tr);
+            });
+            historyModal.classList.remove("hidden");
+          });
+        });
+      }
+      // Show/hide movement history modal
+      document.getElementById("closeMovementHistoryModal").addEventListener("click", function() {
+        document.getElementById("movementHistoryModal").classList.add("hidden");
+      });
+      // Fetch movement tracker when Transfers tab is shown
+      transfersLink.addEventListener("click", function () {
+        showContent(transfersContent);
+        fetchMovementTracker();
+      });
+
+      // Add 'Enter Code' button and modal in File Management
+      // Add button in File Management section (after search/filter)
+      const fileManagementHeader = document.querySelector('#fileTableBody')?.closest('div.p-6.border-b.border-gray-200 .flex.items-center.space-x-3');
+      if (fileManagementHeader) {
+        const enterCodeBtn = document.createElement('button');
+        enterCodeBtn.className = 'bg-primary text-white px-3 py-2 rounded-button text-sm ml-2';
+        enterCodeBtn.textContent = 'Enter Code';
+        enterCodeBtn.id = 'enterCodeButton';
+        fileManagementHeader.appendChild(enterCodeBtn);
+      }
+      // Add modal HTML at end of body
+      if (!document.getElementById('enterCodeModal')) {
+        const modal = document.createElement('div');
+        modal.id = 'enterCodeModal';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+        modal.innerHTML = `
+          <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+              <h3 class="font-semibold text-gray-800">Enter File Code</h3>
+              <button class="text-gray-500 hover:text-gray-700" id="closeEnterCodeModal">
+                <i class="ri-close-line ri-lg"></i>
+              </button>
+            </div>
+            <div class="p-6">
+              <input type="text" id="enteredFileCode" placeholder="Enter code from your email" class="w-full px-3 py-2 border border-gray-300 rounded-button mb-4" />
+              <button id="submitEnterCode" class="w-full bg-primary text-white px-4 py-2 rounded-button">Submit</button>
+              <div id="enterCodeResult" class="mt-4"></div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
+      // Show/hide modal logic
+      const enterCodeButton = document.getElementById('enterCodeButton');
+      const enterCodeModal = document.getElementById('enterCodeModal');
+      const closeEnterCodeModal = document.getElementById('closeEnterCodeModal');
+      if (enterCodeButton && enterCodeModal) {
+        enterCodeButton.onclick = () => enterCodeModal.classList.remove('hidden');
+      }
+      if (closeEnterCodeModal && enterCodeModal) {
+        closeEnterCodeModal.onclick = () => enterCodeModal.classList.add('hidden');
+      }
+      window.addEventListener('click', function (event) {
+        if (event.target === enterCodeModal) enterCodeModal.classList.add('hidden');
+      });
+      // Code lookup logic
+      const submitEnterCode = document.getElementById('submitEnterCode');
+      if (submitEnterCode) {
+        submitEnterCode.onclick = async function () {
+          const code = document.getElementById('enteredFileCode').value.trim();
+          const resultDiv = document.getElementById('enterCodeResult');
+          resultDiv.innerHTML = '';
+          if (!code) {
+            resultDiv.innerHTML = '<span class="text-red-500">Please enter a code.</span>';
+            return;
+          }
+          // Lookup file by fileId
+          const querySnapshot = await getDocs(collection(db, 'files'));
+          let found = null;
+          querySnapshot.forEach(doc => {
+            if (doc.data().fileId === code) found = doc.data();
+          });
+          if (found) {
+            resultDiv.innerHTML = `<div class='text-green-600 font-semibold mb-2'>File found!</div>
+              <div><b>File ID:</b> ${found.fileId}</div>
+              <div><b>Title:</b> ${found.fileTitle}</div>
+              <div><b>Status:</b> ${found.fileStatus}</div>
+              <div><b>Department:</b> ${found.fileDepartment}</div>`;
+          } else {
+            resultDiv.innerHTML = '<span class="text-red-500">No file found for that code.</span>';
+          }
+        };
+      }
+
+      // 3. Transfers: Show all files grouped by status, add Transfer button
+      async function fetchTransfersEnhanced() {
+        const querySnapshot = await getDocs(collection(db, 'files'));
+        const files = [];
+        querySnapshot.forEach(doc => files.push({ ...doc.data(), docId: doc.id }));
+        // Group by status
+        const statuses = ['Available', 'In Use', 'Archived', 'In Transit'];
+        const grouped = { Available: [], 'In Use': [], Archived: [], 'In Transit': [] };
+        files.forEach(file => {
+          let status = file.fileStatus;
+          if (!status || file.fileDepartment === 'Records') status = 'Available';
+          if (!grouped[status]) grouped[status] = [];
+          grouped[status].push(file);
+        });
+        // Render tables for each status
+        const transfersContent = document.getElementById('transfersContent');
+        let html = '';
+        statuses.forEach(status => {
+          html += `<div class='mb-8'><h3 class='text-lg font-semibold text-gray-800 mb-2'>${status} Files</h3>`;
+          html += `<div class='overflow-x-auto'><table class='w-full mb-4'><thead class='bg-gray-50 text-xs text-gray-500 uppercase tracking-wider'><tr><th class='px-6 py-3 text-left'>File ID</th><th class='px-6 py-3 text-left'>Title</th><th class='px-6 py-3 text-left'>Current Holder</th><th class='px-6 py-3 text-left'>Actions</th></tr></thead><tbody class='divide-y divide-gray-200 text-sm text-gray-700'>`;
+          grouped[status].forEach(file => {
+            html += `<tr><td class='px-6 py-4 font-medium'>${file.fileId}</td><td class='px-6 py-4'>${file.fileTitle}</td><td class='px-6 py-4'>${file.fileDepartment}</td><td class='px-6 py-4'><button class='bg-primary text-white px-3 py-1 rounded text-xs transfer-file-btn' data-id='${file.docId}' data-title='${file.fileTitle}'>Transfer</button></td></tr>`;
+          });
+          html += '</tbody></table></div></div>';
+        });
+        // Place after transfer form
+        const trackerDiv = transfersContent.querySelector('.bg-white.rounded.shadow.mb-8:last-of-type');
+        if (trackerDiv) trackerDiv.insertAdjacentHTML('afterend', html);
+        // Add event listeners for transfer buttons
+        document.querySelectorAll('.transfer-file-btn').forEach(btn => {
+          btn.onclick = function () {
+            const fileId = btn.getAttribute('data-id');
+            const fileTitle = btn.getAttribute('data-title');
+            showTransferModal(fileId, fileTitle);
+          };
+        });
+      }
+      // Transfer modal logic
+      function showTransferModal(fileId, fileTitle) {
+        let modal = document.getElementById('transferModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'transferModal';
+          modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+          modal.innerHTML = `<div class='bg-white rounded-lg shadow-xl w-full max-w-md mx-4'><div class='p-4 border-b border-gray-200 flex items-center justify-between'><h3 class='font-semibold text-gray-800'>Transfer File</h3><button class='text-gray-500 hover:text-gray-700' id='closeTransferModal'><i class='ri-close-line ri-lg'></i></button></div><div class='p-6'><div class='mb-4'><b>File:</b> ${fileTitle}</div><div class='mb-4'><label for='transferDeptSelect' class='block text-sm font-medium text-gray-700 mb-1'>Destination Department</label><input id='transferDeptSelect' class='w-full px-3 py-2 border border-gray-300 rounded-button' placeholder='Enter department' /></div><div class='mb-4'><label for='transferCodeInput' class='block text-sm font-medium text-gray-700 mb-1'>Enter Code (sent to email)</label><input id='transferCodeInput' class='w-full px-3 py-2 border border-gray-300 rounded-button' placeholder='Enter code' /></div><button id='submitTransferBtn' class='w-full bg-primary text-white px-4 py-2 rounded-button'>Transfer</button><div id='transferResult' class='mt-4'></div></div></div>`;
+          document.body.appendChild(modal);
+        } else {
+          modal.classList.remove('hidden');
+        }
+        document.getElementById('closeTransferModal').onclick = () => modal.classList.add('hidden');
+        document.getElementById('submitTransferBtn').onclick = async function () {
+          const dept = document.getElementById('transferDeptSelect').value.trim();
+          const code = document.getElementById('transferCodeInput').value.trim();
+          const resultDiv = document.getElementById('transferResult');
+          resultDiv.innerHTML = '';
+          if (!dept || !code) {
+            resultDiv.innerHTML = '<span class="text-red-500">Please enter department and code.</span>';
+            return;
+          }
+          // Simulate code check (for now, accept any code)
+          // In real system, check code validity in Firestore or backend
+          resultDiv.innerHTML = `<span class='text-green-600'>Transfer to ${dept} accepted with code ${code} (simulated).</span>`;
+          setTimeout(() => { modal.classList.add('hidden'); fetchTransfersEnhanced(); }, 1500);
+        };
+      }
+      // Fetch enhanced transfers when Transfers tab is shown
+      if (transfersLink) {
+        transfersLink.addEventListener('click', function () {
+          showContent(transfersContent);
+          fetchTransfersEnhanced();
+        });
+      }
+
+      // 1. Add department filter dropdown at the top of Transfers
+      if (transfersContent && !document.getElementById('departmentFilter')) {
+        const filterDiv = document.createElement('div');
+        filterDiv.className = 'p-6 border-b border-gray-200 flex items-center gap-4';
+        filterDiv.innerHTML = `
+          <label class='text-sm font-medium text-gray-700 mr-2'>Filter by Department:</label>
+          <select id='departmentFilter' class='px-3 py-2 border border-gray-300 rounded-button'>
+            <option value=''>All Departments</option>
+          </select>
+        `;
+        transfersContent.insertBefore(filterDiv, transfersContent.firstChild);
+      }
+      // 2. Make File ID and Destination Department dropdowns in transfer form
+      async function populateTransferDropdowns() {
+        // Populate File ID dropdown
+        const fileIdInput = document.getElementById('transferFileId');
+        if (fileIdInput && fileIdInput.tagName !== 'SELECT') {
+          const select = document.createElement('select');
+          select.id = 'transferFileId';
+          select.className = fileIdInput.className;
+          select.required = true;
+          fileIdInput.parentNode.replaceChild(select, fileIdInput);
+        }
+        const fileIdSelect = document.getElementById('transferFileId');
+        fileIdSelect.innerHTML = '';
+        const filesSnapshot = await getDocs(collection(db, 'files'));
+        filesSnapshot.forEach(doc => {
+          const file = doc.data();
+          fileIdSelect.innerHTML += `<option value='${file.fileId}'>${file.fileId} - ${file.fileTitle}</option>`;
+        });
+        // Populate Department dropdown
+        const deptInput = document.getElementById('transferDepartment');
+        if (deptInput && deptInput.tagName !== 'SELECT') {
+          const select = document.createElement('select');
+          select.id = 'transferDepartment';
+          select.className = deptInput.className;
+          select.required = true;
+          deptInput.parentNode.replaceChild(select, deptInput);
+        }
+        const deptSelect = document.getElementById('transferDepartment');
+        deptSelect.innerHTML = '';
+        const depts = new Set();
+        filesSnapshot.forEach(doc => {
+          const file = doc.data();
+          if (file.fileDepartment) depts.add(file.fileDepartment);
+        });
+        Array.from(depts).forEach(dept => {
+          deptSelect.innerHTML += `<option value='${dept}'>${dept}</option>`;
+        });
+        
+      }
+      // Call on page load and when Transfers tab is shown
+      if (transfersLink) {
+        transfersLink.addEventListener('click', function () {
+          showContent(transfersContent);
+          populateTransferDropdowns();
+        });
+      }
+
+      // Helper: update file management table in real time
+      function refreshFileTable() {
+        fetchFiles();
+        if (typeof fetchMovementTracker === 'function') fetchMovementTracker();
+      }
+      // Listen for file changes and update tables
+      onSnapshot(collection(db, 'files'), () => refreshFileTable());
+
+      // In Transfers table, add code entry and return logic
+      async function enhanceTransfersTable() {
+        const movementTrackerBody = document.getElementById('movementTrackerBody');
+        if (!movementTrackerBody) return;
+        Array.from(movementTrackerBody.querySelectorAll('tr')).forEach(row => {
+          const fileId = row.querySelector('td:nth-child(1)').textContent;
+          const statusCell = row.querySelector('td:nth-child(5)');
+          // Remove old action buttons
+          const actionsCell = row.querySelector('td:last-child');
+          actionsCell.innerHTML = '';
+          // Get file status from Firestore
+          getDocs(collection(db, 'files')).then(snapshot => {
+            let fileDoc = null;
+            snapshot.forEach(doc => { if (doc.data().fileId === fileId) fileDoc = doc; });
+            if (!fileDoc) return;
+            const file = fileDoc.data();
+            // Add Enter Code button if file is In Transit
+            if (file.fileStatus === 'In Transit') {
+              const enterCodeBtn = document.createElement('button');
+              enterCodeBtn.className = 'bg-primary text-white px-2 py-1 rounded text-xs mr-2';
+              enterCodeBtn.textContent = 'Enter Code';
+              enterCodeBtn.onclick = function () {
+                showCodeEntryModal(fileDoc.id, file.transferCode, 'inuse');
+              };
+              actionsCell.appendChild(enterCodeBtn);
+            }
+            // Add Return File button if file is In Use
+            if (file.fileStatus === 'In Use') {
+              const returnBtn = document.createElement('button');
+              returnBtn.className = 'bg-gray-700 text-white px-2 py-1 rounded text-xs';
+              returnBtn.textContent = 'Return File';
+              returnBtn.onclick = function () {
+                // Generate return code and simulate sending to registry
+                const code = Math.floor(100000 + Math.random() * 900000).toString();
+                updateDoc(doc(db, 'files', fileDoc.id), { fileStatus: 'Returning', returnCode: code });
+                addDoc(collection(db, 'files', fileDoc.id, 'movements'), {
+                  from: file.fileDepartment,
+                  to: 'Records',
+                  timestamp: new Date().toISOString(),
+                  updatedBy: 'User',
+                  notes: 'File returned, awaiting registry confirmation.'
+                });
+                alert('Return code sent to registry: ' + code);
+                refreshFileTable();
+              };
+              actionsCell.appendChild(returnBtn);
+            }
+            // Add Enter Return Code button if file is Returning
+            if (file.fileStatus === 'Returning') {
+              const enterReturnBtn = document.createElement('button');
+              enterReturnBtn.className = 'bg-primary text-white px-2 py-1 rounded text-xs';
+              enterReturnBtn.textContent = 'Enter Return Code';
+              enterReturnBtn.onclick = function () {
+                showCodeEntryModal(fileDoc.id, file.returnCode, 'available');
+              };
+              actionsCell.appendChild(enterReturnBtn);
+            }
+          });
+          // Show last moved time
+          const lastMovedCell = row.querySelector('td:nth-child(4)');
+          if (lastMovedCell) {
+            // Already shows last moved, but ensure it's up to date
+            // (fetchMovementTracker already does this)
+          }
+        });
+      }
+      // Show code entry modal
+      function showCodeEntryModal(fileDocId, code, nextStatus) {
+        let modal = document.getElementById('codeEntryModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'codeEntryModal';
+          modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+          modal.innerHTML = `<div class='bg-white rounded-lg shadow-xl w-full max-w-md mx-4'><div class='p-4 border-b border-gray-200 flex items-center justify-between'><h3 class='font-semibold text-gray-800'>Enter Code</h3><button class='text-gray-500 hover:text-gray-700' id='closeCodeEntryModal'><i class='ri-close-line ri-lg'></i></button></div><div class='p-6'><input type='text' id='codeEntryInput' class='w-full px-3 py-2 border border-gray-300 rounded-button mb-4' placeholder='Enter code'><button id='submitCodeEntry' class='w-full bg-primary text-white px-4 py-2 rounded-button'>Submit</button><div id='codeEntryResult' class='mt-4'></div></div></div>`;
+          document.body.appendChild(modal);
+        } else {
+          modal.classList.remove('hidden');
+        }
+        document.getElementById('closeCodeEntryModal').onclick = () => modal.classList.add('hidden');
+        document.getElementById('submitCodeEntry').onclick = async function () {
+          const val = document.getElementById('codeEntryInput').value.trim();
+          const resultDiv = document.getElementById('codeEntryResult');
+          resultDiv.innerHTML = '';
+          if (val === code) {
+            // Update file status
+            let update = {};
+            if (nextStatus === 'inuse') update = { fileStatus: 'In Use', transferCode: null };
+            if (nextStatus === 'available') update = { fileStatus: 'Available', returnCode: null, fileDepartment: 'Records' };
+            await updateDoc(doc(db, 'files', fileDocId), update);
+            resultDiv.innerHTML = `<span class='text-green-600'>Code accepted. Status updated!</span>`;
+            setTimeout(() => { modal.classList.add('hidden'); refreshFileTable(); }, 1200);
+          } else {
+            resultDiv.innerHTML = `<span class='text-red-500'>Incorrect code.</span>`;
+          }
+        };
+      }
+      // Enhance Transfers table after fetch
+      if (typeof fetchMovementTracker === 'function') {
+        const origFetch = fetchMovementTracker;
+        window.fetchMovementTracker = async function () {
+          await origFetch();
+          enhanceTransfersTable();
+        };
+      }
+      // Initial call
+      if (typeof fetchMovementTracker === 'function') fetchMovementTracker();
+
+      // 1. In Transfers: Change Destination Receiver to manual input, Destination Location to email
+      const transferReceiverInput = document.getElementById('transferReceiver');
+      if (transferReceiverInput && transferReceiverInput.tagName !== 'INPUT') {
+        const newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.id = 'transferReceiver';
+        newInput.placeholder = 'Enter receiver name';
+        newInput.className = transferReceiverInput.className;
+        newInput.required = true;
+        transferReceiverInput.parentNode.replaceChild(newInput, transferReceiverInput);
+      }
+      const transferLocationInput = document.getElementById('transferLocation');
+      if (transferLocationInput) {
+        transferLocationInput.type = 'email';
+        transferLocationInput.placeholder = 'Enter destination email address';
+      }
+
+      // 2. In File Management table: Add code entry for receiving file
+      async function enhanceFileTableForCodeEntry() {
+        const fileTableBody = document.getElementById('fileTableBody');
+        if (!fileTableBody) return;
+        Array.from(fileTableBody.querySelectorAll('tr')).forEach(row => {
+          const fileId = row.querySelector('td:nth-child(2)').textContent;
+          const actionsCell = row.querySelector('td:last-child');
+          if (!actionsCell) return;
+          // Remove old code entry button if any
+          if (actionsCell.querySelector('.enter-code-btn')) return;
+          // Get file status from Firestore
+          getDocs(collection(db, 'files')).then(snapshot => {
+            let fileDoc = null;
+            snapshot.forEach(doc => { if (doc.data().fileId === fileId) fileDoc = doc; });
+            if (!fileDoc) return;
+            const file = fileDoc.data();
+            if (file.fileStatus === 'In Transit') {
+              const enterCodeBtn = document.createElement('button');
+              enterCodeBtn.className = 'bg-primary text-white px-2 py-1 rounded text-xs enter-code-btn';
+              enterCodeBtn.textContent = 'Enter Code';
+              enterCodeBtn.onclick = function () {
+                showCodeEntryModal(fileDoc.id, file.transferCode, 'inuse');
+              };
+              actionsCell.appendChild(enterCodeBtn);
+            }
+          });
+        });
+      }
+      // Enhance File Management table after fetch
+      if (typeof fetchFiles === 'function') {
+        const origFetchFiles = fetchFiles;
+        window.fetchFiles = async function () {
+          await origFetchFiles();
+          enhanceFileTableForCodeEntry();
+        };
+      }
+      // Initial call
+      if (typeof fetchFiles === 'function') fetchFiles();
+
+      // In Transfers: Make Destination Receiver a dropdown of usernames, and auto-fill Destination Location with their email
+      async function setupReceiverDropdown() {
+        const receiverInput = document.getElementById('transferReceiver');
+        if (receiverInput && receiverInput.tagName !== 'SELECT') {
+          const select = document.createElement('select');
+          select.id = 'transferReceiver';
+          select.className = receiverInput.className;
+          select.required = true;
+          receiverInput.parentNode.replaceChild(select, receiverInput);
+        }
+        const receiverSelect = document.getElementById('transferReceiver');
+        receiverSelect.innerHTML = '<option value="">Select receiver</option>';
+        const usersSnapshot = await getDocs(collection(db, 'users'));
+        const userMap = {};
+        usersSnapshot.forEach(doc => {
+          const user = doc.data();
+          if (user.username && user.email) {
+            receiverSelect.innerHTML += `<option value='${user.email}'>${user.username}</option>`;
+            userMap[user.email] = user;
+          }
+        });
+        // When receiver changes, set destination location to their email
+        receiverSelect.onchange = function () {
+          const email = receiverSelect.value;
+          const locationInput = document.getElementById('transferLocation');
+          if (locationInput && userMap[email]) {
+            locationInput.value = userMap[email].email;
+          } else if (locationInput) {
+            locationInput.value = '';
+          }
+        };
+      }
+      // Call setupReceiverDropdown when Transfers tab is shown
+      if (transfersLink) {
+        transfersLink.addEventListener('click', function () {
+          showContent(transfersContent);
+          setupReceiverDropdown();
+        });
+      }
+
+      // Populate Department filter dropdown
+      async function populateDepartmentFilter() {
+        const filterDepartment = document.getElementById('filterDepartment');
+        if (!filterDepartment) return;
+        filterDepartment.innerHTML = '<option value="">All</option>';
+        const querySnapshot = await getDocs(collection(db, 'files'));
+        const depts = new Set();
+        querySnapshot.forEach(doc => {
+          const file = doc.data();
+          if (file.fileDepartment) depts.add(file.fileDepartment);
+        });
+        Array.from(depts).forEach(dept => {
+          filterDepartment.innerHTML += `<option value='${dept}'>${dept}</option>`;
+        });
+      }
+      populateDepartmentFilter();
+
+      // Apply Filters
+      const applyFileFilters = document.getElementById('applyFileFilters');
+      if (applyFileFilters) {
+        applyFileFilters.onclick = async function () {
+          const dept = document.getElementById('filterDepartment').value;
+          const fileId = document.getElementById('filterFileId').value.trim().toLowerCase();
+          const status = document.getElementById('filterStatus').value;
+          const querySnapshot = await getDocs(collection(db, 'files'));
+          const filesTableBody = document.getElementById('filesTableBody');
+          filesTableBody.innerHTML = '';
+          querySnapshot.forEach(doc => {
+            const file = doc.data();
+            if ((dept === '' || file.fileDepartment === dept) &&
+                (fileId === '' || file.fileId.toLowerCase().includes(fileId)) &&
+                (status === '' || file.fileStatus === status)) {
+              const row = document.createElement('tr');
+              row.className = 'hover:bg-gray-50';
+              row.innerHTML = `
+                <td class="px-6 py-4 font-medium">${file.fileId}</td>
+                <td class="px-6 py-4">${file.fileTitle}</td>
+                <td class="px-6 py-4">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                    ${file.fileStatus}
+                  </span>
+                </td>
+                <td class="px-6 py-4">${file.fileDepartment}</td>
+                <td class="px-6 py-4">${new Date(file.lastUpdated).toLocaleDateString()}</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center space-x-2">
+                    <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full view-file" data-id="${doc.id}">
+                      <i class="ri-eye-line"></i>
+                    </button>
+                    <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full edit-file" data-id="${doc.id}">
+                      <i class="ri-pencil-line"></i>
+                    </button>
+                    <button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full delete-file" data-id="${doc.id}">
+                      <i class="ri-delete-bin-line"></i>
+                    </button>
+                  </div>
+                </td>
+              `;
+              filesTableBody.appendChild(row);
+            }
+          });
+          // Re-attach event listeners for view/edit/delete
+          document.querySelectorAll(".view-file").forEach((button) => {
+            button.addEventListener("click", () => {
+              const fileId = button.getAttribute("data-id");
+              viewFile(fileId);
+            });
+          });
+          document.querySelectorAll(".edit-file").forEach((button) => {
+            button.addEventListener("click", () => {
+              const fileId = button.getAttribute("data-id");
+              editFile(fileId);
+            });
+          });
+          document.querySelectorAll(".delete-file").forEach((button) => {
+            button.addEventListener("click", () => {
+              const fileId = button.getAttribute("data-id");
+              deleteFile(fileId);
+            });
+          });
+        };
+      }
+
+      // Request File Modal logic
+      const requestFileButton = document.getElementById("requestFileButton");
+      const requestFileModal = document.getElementById("requestFileModal");
+      const closeRequestFileModal = document.getElementById("closeRequestFileModal");
+      const requestFileForm = document.getElementById("requestFileForm");
+      if (requestFileButton) {
+        requestFileButton.addEventListener("click", async function () {
+          // Get current user email
+          let userEmail = "";
+          if (auth.currentUser) {
+            userEmail = auth.currentUser.email;
+          } else {
+            // Try to get from Firestore
+            onAuthStateChanged(auth, (user) => {
+              if (user) {
+                document.getElementById("requestFrom").value = user.email;
+              }
+            });
+          }
+          document.getElementById("requestFrom").value = userEmail;
+          requestFileModal.classList.remove("hidden");
+        });
+      }
+      if (closeRequestFileModal) {
+        closeRequestFileModal.addEventListener("click", function () {
+          requestFileModal.classList.add("hidden");
+        });
+      }
+      window.addEventListener("click", function (event) {
+        if (event.target === requestFileModal) requestFileModal.classList.add("hidden");
+      });
+      if (requestFileForm) {
+        requestFileForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const from = document.getElementById("requestFrom").value;
+          const to = document.getElementById("requestTo").value;
+          const subject = document.getElementById("requestSubject").value;
+          const body = document.getElementById("requestBody").value;
+          try {
+            await addDoc(collection(db, "mailRequests"), { from, to, subject, body, timestamp: new Date().toISOString() });
+            document.getElementById("requestFileResult").innerHTML = '<span class="text-green-600">Request sent!</span>';
+            setTimeout(() => {
+              requestFileModal.classList.add("hidden");
+              requestFileForm.reset();
+              document.getElementById("requestFileResult").innerHTML = "";
+              document.getElementById("requestTo").value = "mtecd22-005@thuto.bac.ac.bw";
+            }, 2000);
+          } catch (err) {
+            document.getElementById("requestFileResult").innerHTML = '<span class="text-red-600">Failed to send request. Please try again.</span>';
+          }
+        });
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // File Status Chart
+      const fileStatusChart = echarts.init(
+        document.getElementById("fileStatusChart"),
+      );
+
+      const fileStatusOption = {
+        animation: false,
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          borderColor: "#e2e8f0",
+          borderWidth: 1,
+          textStyle: {
+            color: "#1f2937",
+          },
+        },
+        legend: {
+          data: ["Available", "In Use", "In Transit", "Archived"],
+          bottom: 0,
+          textStyle: {
+            color: "#1f2937",
+          },
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "15%",
+          top: "3%",
+          containLabel: true,
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+          axisLine: {
+            lineStyle: {
+              color: "#e2e8f0",
+            },
+          },
+          axisLabel: {
+            color: "#1f2937",
+          },
+        },
+        yAxis: {
+          type: "value",
+          axisLine: {
+            show: false,
+          },
+          axisLabel: {
+            color: "#1f2937",
+          },
+          splitLine: {
+            lineStyle: {
+              color: "#e2e8f0",
+            },
+          },
+        },
+        series: [
+          {
+            name: "Available",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbol: "none",
+            lineStyle: {
+              width: 3,
+              color: "rgba(87, 181, 231, 1)",
+            },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: "rgba(87, 181, 231, 0.2)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(87, 181, 231, 0.01)",
+                  },
+                ],
+              },
+            },
+            data: [0, 0, 0, 0, 0, 0, 0],
+          },
+          {
+            name: "In Use",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbol: "none",
+            lineStyle: {
+              width: 3,
+              color: "rgba(141, 211, 199, 1)",
+            },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: "rgba(141, 211, 199, 0.2)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(141, 211, 199, 0.01)",
+                  },
+                ],
+              },
+            },
+            data: [0, 0, 0, 0, 0, 0, 0],
+          },
+          {
+            name: "In Transit",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbol: "none",
+            lineStyle: {
+              width: 3,
+              color: "rgba(251, 191, 114, 1)",
+            },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: "rgba(251, 191, 114, 0.2)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(251, 191, 114, 0.01)",
+                  },
+                ],
+              },
+            },
+            data: [0, 0, 0, 0, 0, 0, 0],
+          },
+          {
+            name: "Archived",
+            type: "line",
+            stack: "Total",
+            smooth: true,
+            symbol: "none",
+            lineStyle: {
+              width: 3,
+              color: "rgba(252, 141, 98, 1)",
+            },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: "rgba(252, 141, 98, 0.2)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(252, 141, 98, 0.01)",
+                  },
+                ],
+              },
+            },
+            data: [0, 0, 0, 0, 0, 0, 0],
+          },
+        ],
+      };
+
+      fileStatusChart.setOption(fileStatusOption);
+
+      // Department Distribution Chart
+      const departmentChart = echarts.init(
+        document.getElementById("departmentChart"),
+      );
+
+      const departmentOption = {
+        animation: false,
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b}: {c} ({d}%)",
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          borderColor: "#e2e8f0",
+          borderWidth: 1,
+          textStyle: {
+            color: "#1f2937",
+          },
+        },
+        legend: {
+          orient: "vertical",
+          right: 10,
+          top: "center",
+          data: [
+            "Transport",
+            "Finance",
+            "Communications",
+            "International Relations",
+            "Other",
+          ],
+          textStyle: {
+            color: "#1f2937",
+          },
+        },
+        series: [
+          {
+            name: "File Distribution",
+            type: "pie",
+            radius: ["50%", "70%"],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 8,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: false,
+              position: "center",
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: "14",
+                fontWeight: "bold",
+              },
+            },
+            labelLine: {
+              show: false,
+            },
+            data: [
+              {
+                value: 0,
+                name: "Transport",
+                itemStyle: { color: "rgba(87, 181, 231, 1)" },
+              },
+              {
+                value: 0,
+                name: "Finance",
+                itemStyle: { color: "rgba(141, 211, 199, 1)" },
+              },
+              {
+                value: 0,
+                name: "Communications",
+                itemStyle: { color: "rgba(251, 191, 114, 1)" },
+              },
+              {
+                value: 0,
+                name: "International Relations",
+                itemStyle: { color: "rgba(252, 141, 98, 1)" },
+              },
+              { value: 0, name: "Other", itemStyle: { color: "#cbd5e1" } },
+            ],
+          },
+        ],
+      };
+
+      departmentChart.setOption(departmentOption);
+
+      // Resize charts when window size changes
+      window.addEventListener("resize", function () {
+        fileStatusChart.resize();
+        departmentChart.resize();
+      });
+    });
+
+    // QR Code Preview Modal
+    document.addEventListener("click", function(e) {
+      if (e.target.classList.contains("qr-preview")) {
+        document.getElementById("qrPreviewImg").src = e.target.dataset.img;
+        document.getElementById("qrPreviewModal").classList.remove("hidden");
+      }
+      if (e.target.id === "closeQrPreview" || e.target.id === "qrPreviewModal") {
+        document.getElementById("qrPreviewModal").classList.add("hidden");
+      }
+    });
+
+    // Notification system for destination user
+    function notifyUserOfTransfer(email, fileTitle, code) {
+      // Simulate notification (in real system, would use email or in-app notification)
+      const notificationMenu = document.getElementById('notificationMenu');
+      if (notificationMenu) {
+        notificationMenu.innerHTML = `<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+          <i class="ri-file-transfer-line mr-2"></i> File <b>${fileTitle}</b> transferred to you. Code: <b>${code}</b>
+        </a>` + notificationMenu.innerHTML;
+        document.getElementById('notificationBadge').textContent = '1';
+      }
+    }
+    // Modify transferFileWithCode to call notifyUserOfTransfer
+    async function transferFileWithCode(fileId, dept, email, code) {
+      const querySnapshot = await getDocs(collection(db, 'files'));
+      let fileDocId = null;
+      let fileTitle = '';
+      querySnapshot.forEach(doc => { if (doc.id === fileId) { fileDocId = doc.id; fileTitle = doc.data().fileTitle; } });
+      if (!fileDocId) return;
+      await updateDoc(doc(db, 'files', fileDocId), {
+        fileDepartment: dept,
+        fileStatus: 'In Transit',
+        lastUpdated: new Date().toISOString(),
+        transferCode: code,
+        transferToEmail: email
+      });
+      await addDoc(collection(db, 'files', fileDocId, 'movements'), {
+        from: 'Records',
+        to: dept,
+        timestamp: new Date().toISOString(),
+        updatedBy: 'Registry',
+        notes: `Transferred to ${dept} (${email})`
+      });
+      notifyUserOfTransfer(email, fileTitle, code);
+      fetchTransfersTable();
+    }
+    // Add 'Return File' button for files in use (user view)
+    function showReturnFileForUser() {
+      // In File Management, for files with status 'In Use', add 'Return File' button
+      const fileTableBody = document.getElementById('fileTableBody');
+      if (!fileTableBody) return;
+      Array.from(fileTableBody.querySelectorAll('tr')).forEach(row => {
+        const statusCell = row.querySelector('td:nth-child(5)');
+        if (statusCell && statusCell.textContent.includes('In Use')) {
+          if (!row.querySelector('.return-file-btn')) {
+            const actionsCell = row.querySelector('td:last-child .flex');
+            const btn = document.createElement('button');
+            btn.className = 'w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-full return-file-btn';
+            btn.innerHTML = '<i class="ri-logout-box-line"></i>';
+            btn.title = 'Return File';
+            actionsCell.appendChild(btn);
+            btn.onclick = function () {
+              // Generate code and simulate sending to registry
+              const code = Math.floor(100000 + Math.random() * 900000).toString();
+              alert(`Simulated: Return code ${code} sent to Registry`);
+              // Update file status to 'Returning' and store returnCode
+              const fileId = row.querySelector('td:nth-child(3)').textContent;
+              setReturnFileStatus(fileId, code);
+            };
+          }
+        }
+      });
+    }
+    async function setReturnFileStatus(fileId, code) {
+      // Find file doc
+      const querySnapshot = await getDocs(collection(db, 'files'));
+      let fileDocId = null;
+      querySnapshot.forEach(doc => { if (doc.data().fileId === fileId) fileDocId = doc.id; });
+      if (!fileDocId) return;
+      await updateDoc(doc(db, 'files', fileDocId), {
+        fileStatus: 'Returning',
+        returnCode: code
+      });
+      await addDoc(collection(db, 'files', fileDocId, 'movements'), {
+        from: 'User',
+        to: 'Records',
+        timestamp: new Date().toISOString(),
+        updatedBy: 'Destination User',
+        notes: 'File returned to Registry, awaiting confirmation.'
+      });
+      fetchFiles();
+    }
+    // Registry: Enter return code to confirm receipt
+    function showEnterReturnCodeForRegistry() {
+      // Add a button in Transfers for 'Enter Return Code'
+      const transfersContent = document.getElementById('transfersContent');
+      if (!transfersContent || document.getElementById('enterReturnCodeButton')) return;
+      const btn = document.createElement('button');
+      btn.className = 'bg-primary text-white px-3 py-2 rounded-button text-sm mb-4';
+      btn.textContent = 'Enter Return Code';
+      btn.id = 'enterReturnCodeButton';
+      transfersContent.insertBefore(btn, transfersContent.firstChild);
+      btn.onclick = () => {
+        let modal = document.getElementById('enterReturnCodeModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'enterReturnCodeModal';
+          modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+          modal.innerHTML = `<div class='bg-white rounded-lg shadow-xl w-full max-w-md mx-4'><div class='p-4 border-b border-gray-200 flex items-center justify-between'><h3 class='font-semibold text-gray-800'>Enter Return Code</h3><button class='text-gray-500 hover:text-gray-700' id='closeEnterReturnCodeModal'><i class='ri-close-line ri-lg'></i></button></div><div class='p-6'><input type='text' id='registryReturnCodeInput' class='w-full px-3 py-2 border border-gray-300 rounded-button mb-4' placeholder='Enter code from user'><button id='submitRegistryReturnCode' class='w-full bg-primary text-white px-4 py-2 rounded-button'>Submit</button><div id='registryReturnCodeResult' class='mt-4'></div></div></div>`;
+          document.body.appendChild(modal);
+        } else {
+          modal.classList.remove('hidden');
+        }
+        document.getElementById('closeEnterReturnCodeModal').onclick = () => modal.classList.add('hidden');
+        document.getElementById('submitRegistryReturnCode').onclick = async function () {
+          const code = document.getElementById('registryReturnCodeInput').value.trim();
+          const resultDiv = document.getElementById('registryReturnCodeResult');
+          resultDiv.innerHTML = '';
+          if (!code) {
+            resultDiv.innerHTML = '<span class="text-red-500">Please enter a code.</span>';
+            return;
+          }
+          // Find file with matching returnCode
+          const querySnapshot = await getDocs(collection(db, 'files'));
+          let foundDoc = null;
+          querySnapshot.forEach(doc => {
+            if (doc.data().returnCode === code && doc.data().fileStatus === 'Returning') foundDoc = doc;
+          });
+          if (foundDoc) {
+            await updateDoc(doc(db, 'files', foundDoc.id), { fileStatus: 'Available', returnCode: null, fileDepartment: 'Records' });
+            await addDoc(collection(db, 'files', foundDoc.id, 'movements'), {
+              from: 'User',
+              to: 'Records',
+              timestamp: new Date().toISOString(),
+              updatedBy: 'Registry',
+              notes: 'File received back in Registry.'
+            });
+            resultDiv.innerHTML = `<span class='text-green-600'>File received and now available!</span>`;
+            setTimeout(() => { modal.classList.add('hidden'); fetchTransfersTable(); }, 1500);
+          } else {
+            resultDiv.innerHTML = '<span class="text-red-500">Invalid code or file not returning.</span>';
+          }
+        };
+      };
+    }
+    // Call on page load
+    showReturnFileForUser();
+    showEnterReturnCodeForRegistry();
+  </script>
+</body>
+</html>

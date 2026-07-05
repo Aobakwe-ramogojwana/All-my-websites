@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BOCRA - Botswana Communications Regulatory Authority</title>
+  <link rel="stylesheet" href="https://www.bocra.org.bw/themes/bocra/css/bootstrap.css">
+  <link rel="stylesheet" href="https://www.bocra.org.bw/themes/bocra/css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Lato', sans-serif; margin: 0; padding: 0; font-size: 16px; }
+    a { color: #0073ae; text-decoration: none; }
+    a:hover { color: #c61e53; }
+    .container { width: 1170px; max-width: 100%; margin: 0 auto; padding: 0 15px; }
+    .container-fluid { padding: 0 15px; }
+    .row { margin: 0 -15px; }
+    .row:after { content: ""; clear: both; display: block; }
+    .col-md-12, .col-md-9, .col-md-8, .col-md-6, .col-md-5, .col-md-4, .col-md-3, .col-md-2 { float: left; padding: 0 15px; }
+    .col-md-12 { width: 100%; }
+    .col-md-9 { width: 75%; }
+    .col-md-8 { width: 66.666667%; }
+    .col-md-6 { width: 50%; }
+    .col-md-5 { width: 41.666667%; }
+    .col-md-4 { width: 33.333333%; }
+    .col-md-3 { width: 25%; }
+    .col-md-2 { width: 16.666667%; }
+    header#header { background: rgba(255,255,255,0.9); padding: 15px 0; position: relative; }
+    #block-bocra-site-branding img { max-width: 200px; }
+    #block-bocra-search-form-wide { background: rgba(198,30,83,0.4); padding: 8px 15px; }
+    #block-bocra-search-form-wide input { background: transparent; border: none; color: white; padding: 5px; width: 70%; }
+    #block-bocra-search-form-wide input::placeholder { color: rgba(255,255,255,0.8); }
+    #block-bocra-theme-block-3 { background: rgba(198,30,83,0.4); padding: 8px 15px; }
+    #block-bocra-theme-block-3 a { color: white; white-space: nowrap; margin: 0 5px; }
+    .telecoms-btn { background: rgba(198,30,83,0.6); color: white; padding: 8px 15px; display: inline-block; }
+    ul.nice-menu { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+    ul.nice-menu > li { position: relative; }
+    ul.nice-menu > li > a { display: block; padding: 30px 10px; color: #0073ae; font-weight: bold; }
+    ul.nice-menu > li:hover > a { color: #c61e53; }
+    ul.nice-menu li ul { display: none; position: absolute; top: 100%; left: 0; background: rgba(198,30,83,0.95); width: 200px; padding: 0; list-style: none; z-index: 100; }
+    ul.nice-menu li:hover ul { display: block; }
+    ul.nice-menu li ul li a { color: white; padding: 10px; display: block; }
+    ul.nice-menu li ul li a:hover { background: #027ac6; }
+    a.cstm-lnk { background: #1e6f5d; color: white !important; }
+    a.tenders { color: #c60751 !important; }
+    #carousel { background: url('https://www.bocra.org.bw/sites/default/files/media%20image/ipad-605439.jpg') center/cover no-repeat; min-height: 400px; padding: 150px 0 50px; }
+    #carousel h1 { color: white; font-size: 48px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+    #slogan { background: #f5f5f5; padding: 40px 0; }
+    #slogan h2 { color: #0073ae; }
+    #slogan h1 { color: #c61e53; }
+    #mandate { padding: 40px 0; }
+    .quicktabs-tabs { list-style: none; margin: 0 0 20px; padding: 0; border-bottom: 2px solid #0073ae; }
+    .quicktabs-tabs li { display: inline-block; padding: 10px 20px; cursor: pointer; }
+    .quicktabs-tabs li.active { background: #0073ae; color: white; }
+    #information { background: #f5f5f5; padding: 40px 0; }
+    #equipment { padding: 40px 0; }
+    #tarrifs { background: #f5f5f5; padding: 40px 0; }
+    .btn { display: inline-block; padding: 10px 20px; background: #0073ae; color: white; }
+    .btn:hover { background: #005a8c; color: white; }
+    .news-seperator { padding: 10px 0; border-bottom: 1px solid #ddd; }
+    .news-seperator li { list-style: none; }
+    select { width: 100%; padding: 10px; border: 1px solid #ddd; }
+    footer { background: #06193e; color: white; padding: 40px 0; margin-top: 40px; }
+    footer a { color: white; }
+    footer h3 { color: white; margin-bottom: 15px; }
+    footer ul { list-style: none; padding: 0; }
+    footer li { margin-bottom: 8px; }
+    h2 { color: #0073ae; }
+    @media (max-width: 768px) {
+      .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-9 { width: 100%; }
+      ul.nice-menu { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3" id="block-bocra-site-branding">
+          <a href="index.html"><img src="https://www.bocra.org.bw/sites/default/files/logo_1.png" alt="BOCRA"></a>
+        </div>
+        <div class="col-md-4" id="block-bocra-search-form-wide">
+          <form action="#" method="get">
+            <input type="search" name="keys" placeholder="Search BOCRA" value="Search BOCRA">
+            <input type="image" src="https://www.bocra.org.bw/themes/bocra/images/search.png" alt="Search">
+          </form>
+        </div>
+        <div class="col-md-1" id="block-bocra-theme-block-3">
+          <p>
+            <a href="https://op-web.bocra.org.bw">BOCRA Portal</a>
+            <a href="https://dqos.bocra.org.bw/">QOS</a>
+            <a href="licensing.html">Licensing</a>
+          </p>
+        </div>
+        <div class="col-md-3">
+          <a href="#" class="telecoms-btn">Telecoms Statistics</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="nice-menu">
+            <li><a href="index.html">About</a>
+              <ul>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="word-chief-executive.html">A Word From The Chief Executive</a></li>
+                <li><a href="history-of-communication-regulation.html">History Of Communication Regulation</a></li>
+                <li><a href="organogram.html">Organogram</a></li>
+                <li><a href="board-of-directors.html">Board of Directors</a></li>
+                <li><a href="executive-management.html">Executive Management</a></li>
+                <li><a href="careers.html">Careers</a></li>
+              </ul>
+            </li>
+            <li><a href="mandate.html">Mandate</a>
+              <ul>
+                <li><a href="legislation.html">Legislation</a></li>
+                <li><a href="telecommunications.html">Telecommunications</a>
+                  <ul>
+                    <li><a href="national-radio-frequency-plan.html">National Radio Frequency Plan</a></li>
+                    <li><a href="radio-spectrum-planning.html">Radio Spectrum Planning</a></li>
+                    <li><a href="numbering-plan.html">The Numbering Plan</a></li>
+                    <li><a href="type-approval.html">Type Approval</a></li>
+                  </ul>
+                </li>
+                <li><a href="broadcasting.html">Broadcasting</a></li>
+                <li><a href="postal.html">Postal</a></li>
+                <li><a href="internet.html">Internet</a>
+                  <ul>
+                    <li><a href="bw-cctld.html">bw ccTLD</a></li>
+                    <li><a href="bw-cirt.html">bw CIRT</a></li>
+                    <li><a href="electronic-evidence.html">Electronic Evidence</a></li>
+                    <li><a href="electronic-communications-transactions.html">Electronic Communications Transactions</a></li>
+                  </ul>
+                </li>
+                <li><a href="licensing.html">Licensing</a></li>
+              </ul>
+            </li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="documents.html">Documents</a>
+              <ul>
+                <li><a href="draft-documents-and-legislation.html">Draft Documents And Legislation</a></li>
+                <li><a href="ict-licensing-frameworks.html">ICT Licencing Framework</a></li>
+                <li><a href="itu-capacity-building-workshop.html">ITU Capacity Building Workshop</a></li>
+              </ul>
+            </li>
+            <li><a href="complaints.html">Complaints</a>
+              <ul>
+                <li><a href="consumer-education-and-advice.html">Consumer Education And Advice</a></li>
+                <li><a href="registering-complaints.html">Registering Complaints</a></li>
+                <li><a href="file-complaint-form.html">File A Complaint</a></li>
+              </ul>
+            </li>
+            <li><a href="media-center.html">Media</a>
+              <ul>
+                <li><a href="news-events.html">News & Events</a></li>
+                <li><a href="speeches.html">Speeches</a></li>
+              </ul>
+            </li>
+            <li><a href="tenders.html" class="tenders">Tenders</a></li>
+            <li><a href="https://registration.bocra.org.bw/" class="cstm-lnk" target="_blank">ASMS-WebCP</a></li>
+            <li><a href="https://customerportal.bocra.org.bw/OnlineLicenseVerification/verify" target="_blank">Licence Verification</a></li>
+            <li><a href="https://typeapproval.bocra.org.bw/" target="_blank">Type Approval</a></li>
+            <li><a href="https://nic.net.bw/" class="cstm-lnk" target="_blank">Register BW</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div id="carousel">
+    <div class="container">
+      <h1>Welcome to Botswana Communications Regulatory Authority</h1>
+    </div>
+  </div>
+
+  <div id="slogan">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Together We Can Beat</h2>
+          <h1>COVID 19</h1>
+          <p>The communications sector provides essential services required to enable the fight against Corona Virus (COVID-19) pandemic.</p>
+          <a href="#">Find More Information Here</a>
+        </div>
+        <div class="col-md-6">
+          <p>Botswana Communications Regulatory Authority (BOCRA) was established through the Communications Regulatory Authority Act, 2012 (CRA Act) on the 1st of April 2013 to regulate the communications sector in Botswana.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mandate">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Mandate</h2>
+          <ul class="quicktabs-tabs">
+            <li class="active"><a href="#">Internet</a></li>
+            <li><a href="#">Broadcasting</a></li>
+            <li><a href="#">Postal</a></li>
+            <li><a href="#">Telecommunications</a></li>
+          </ul>
+          <div class="quicktabs-tabpage">
+            <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;">
+              <h3>bw ccTLD</h3>
+              <p>Section 38(1) of the Communications and Regulatory Act No.19 of 2012(CRA) mandates Botswana Communications Regulatory Authority...</p>
+              <a href="bw-cctld.html">Learn More</a>
+            </div>
+            <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;">
+              <h3>bw CIRT</h3>
+              <p>The Ministry of Transport and Communications (MTC) developed the National Cybersecurity Strategy...</p>
+              <a href="bw-cirt.html">Learn More</a>
+            </div>
+            <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd;">
+              <h3>Electronic Evidence</h3>
+              <p>The Electronic Records (Evidence) Act No. 13 of 2014 allows for the admissibility and authentication...</p>
+              <a href="electronic-evidence.html">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="information">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <h2>News & Events</h2>
+          <div class="news-seperator"><li><a href="#">PUBLIC NOTICE - BOCRA WEBSITE DEVELOPMENT HACKATHON</a></li></div>
+          <div class="news-seperator"><li><a href="#">Press Release - BOTSWANA COLLABORATES WITH FIVE SADC MEMBER STATES</a></li></div>
+          <div class="news-seperator"><li><a href="#">MEDIA RELEASE - BOCRA Approves Reduced Data Prices for BTC</a></li></div>
+          <a href="news-events.html" class="btn">View All</a>
+        </div>
+        <div class="col-md-4">
+          <h2>Documents & Legislation</h2>
+          <div style="margin-bottom: 10px;"><a href="#">Latest Documents</a> | <a href="#">Popular Documents</a></div>
+          <div class="news-seperator"><li><a href="#">Media Release</a></li></div>
+          <div class="news-seperator"><li><a href="#">Cost Modelling Project Interim Report</a></li></div>
+          <div class="news-seperator"><li><a href="#">Enforcement Guidelines</a></li></div>
+          <a href="documents.html" class="btn">View More Documents</a>
+        </div>
+        <div class="col-md-3">
+          <h2>Apply For A License</h2>
+          <p>Choose the type of license you are applying for from the following list</p>
+          <select onchange="if(this.value) window.location.href=this.value;">
+            <option>Choose a License</option>
+            <option value="aircraft-radio-licence.html">Aircraft Radio Licence</option>
+            <option value="amateur-radio-license.html">Amateur Radio License</option>
+            <option value="broadcasting-licence.html">Broadcasting Licence</option>
+            <option value="cellular-licence.html">Cellular Licence</option>
+            <option value="vans-licence.html">VANS Licence</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="equipment">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>Equipment Approval Database</h2>
+          <p>BOCRA is mandated by Sec 84 of the CRA Act to Type Approve communications equipment.</p>
+          <a href="#" class="btn">Search Equipment</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tarrifs">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h3>Complaints Process</h3>
+          <p>BOCRA will investigate a consumer complaint against a service provider.</p>
+          <a href="file-complaint-form.html" class="btn">File a Complaint</a>
+        </div>
+        <div class="col-md-4">
+          <h3>Tools</h3>
+          <p>BOCRA develops regulatory tools to establish minimum regulatory requirements.</p>
+          <a href="#" class="btn">View Tools</a>
+        </div>
+        <div class="col-md-4">
+          <h3>Tariffs</h3>
+          <p>BOCRA regulates tariffs for dominant licensees.</p>
+          <a href="#" class="btn">View Tariffs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <h3>BOCRA</h3>
+          <p>Botswana Communications Regulatory Authority<br>
+          Plot 50671 Independence Avenue<br>
+          Gaborone, Botswana</p>
+          <p>T : +267 395 7755<br>
+          F : +267 395 7976<br>
+          E : info@bocra.org.bw</p>
+        </div>
+        <div class="col-md-3">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="profile.html">About Us</a></li>
+            <li><a href="mandate.html">Mandate</a></li>
+            <li><a href="licensing.html">Licensing</a></li>
+            <li><a href="complaints.html">Complaints</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="documents.html">Documents</a></li>
+            <li><a href="news-events.html">News & Events</a></li>
+            <li><a href="tenders.html">Tenders</a></li>
+            <li><a href="careers.html">Careers</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h3>Connect With Us</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+          <p>&copy; 2024 Botswana Communications Regulatory Authority. All Rights Reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

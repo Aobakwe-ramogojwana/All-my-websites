@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Listing - Amalet Marketplace</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: "#57B5E7", secondary: "#8DD3C7" },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        .step-indicator {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        .step-indicator.active {
+            background: #57B5E7;
+            color: white;
+        }
+        .step-indicator.completed {
+            background: #10b981;
+            color: white;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .image-preview {
+            position: relative;
+            display: inline-block;
+            margin: 5px;
+        }
+        .image-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .image-preview .remove-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-2xl font-['Pacifico'] text-primary">Amalet</a>
+                    <span class="text-gray-400">|</span>
+                    <h1 class="text-xl font-semibold text-gray-900">Create Listing</h1>
+                </div>
+                <a href="/" class="text-gray-600 hover:text-primary transition-colors">
+                    <i class="ri-close-line text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Steps -->
+    <div class="bg-white border-b">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="step-indicator active w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mr-3">1</div>
+                    <span class="text-sm font-medium text-gray-900">Category</span>
+                </div>
+                <div class="flex-1 h-1 bg-gray-200 mx-4">
+                    <div class="h-1 bg-primary transition-all duration-300" style="width: 0%" id="progressBar"></div>
+                </div>
+                <div class="flex items-center">
+                    <div class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mr-3">2</div>
+                    <span class="text-sm font-medium text-gray-500">Details</span>
+                </div>
+                <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                <div class="flex items-center">
+                    <div class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mr-3">3</div>
+                    <span class="text-sm font-medium text-gray-500">Photos</span>
+                </div>
+                <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                <div class="flex items-center">
+                    <div class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium">4</div>
+                    <span class="text-sm font-medium text-gray-500">Review</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8">
+        <form id="listingForm">
+            <!-- Step 1: Category Selection -->
+            <div id="step1" class="form-section active">
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">What are you listing today?</h2>
+                    <p class="text-gray-600 mb-8">Select the most relevant category to get started.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="category-option border-2 border-gray-200 rounded-lg p-6 cursor-pointer hover:border-primary transition-colors" data-category="Automotive Vehicles">
+                            <div class="text-center">
+                                <i class="ri-car-line text-3xl text-primary mb-3"></i>
+                                <h3 class="font-semibold text-gray-900">Automotive Vehicles</h3>
+                                <p class="text-sm text-gray-600 mt-1">Cars, motorcycles, trucks, boats</p>
+                            </div>
+                        </div>
+                        <div class="category-option border-2 border-gray-200 rounded-lg p-6 cursor-pointer hover:border-primary transition-colors" data-category="Property">
+                            <div class="text-center">
+                                <i class="ri-home-line text-3xl text-primary mb-3"></i>
+                                <h3 class="font-semibold text-gray-900">Property</h3>
+                                <p class="text-sm text-gray-600 mt-1">Houses, apartments, commercial</p>
+                            </div>
+                        </div>
+                        <div class="category-option border-2 border-gray-200 rounded-lg p-6 cursor-pointer hover:border-primary transition-colors" data-category="Goods">
+                            <div class="text-center">
+                                <i class="ri-shopping-bag-line text-3xl text-primary mb-3"></i>
+                                <h3 class="font-semibold text-gray-900">Goods</h3>
+                                <p class="text-sm text-gray-600 mt-1">Electronics, furniture, clothing</p>
+                            </div>
+                        </div>
+                        <div class="category-option border-2 border-gray-200 rounded-lg p-6 cursor-pointer hover:border-primary transition-colors" data-category="Services">
+                            <div class="text-center">
+                                <i class="ri-service-line text-3xl text-primary mb-3"></i>
+                                <h3 class="font-semibold text-gray-900">Services</h3>
+                                <p class="text-sm text-gray-600 mt-1">Business, personal, education</p>
+                            </div>
+                        </div>
+                        <div class="category-option border-2 border-gray-200 rounded-lg p-6 cursor-pointer hover:border-primary transition-colors" data-category="Everything else">
+                            <div class="text-center">
+                                <i class="ri-more-line text-3xl text-primary mb-3"></i>
+                                <h3 class="font-semibold text-gray-900">Everything else</h3>
+                                <p class="text-sm text-gray-600 mt-1">Pets, jobs, community</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subcategory Selection -->
+                    <div id="subcategorySection" class="mt-8 hidden">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Subcategory</h3>
+                        <div id="subcategoryOptions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <!-- Subcategories will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Details -->
+            <div id="step2" class="form-section">
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Item Details</h2>
+                    
+                    <!-- Car Specific Fields (shown when Automotive > Cars & Bakkies is selected) -->
+                    <div id="carFields" class="hidden space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Make <span class="text-red-500">*</span></label>
+                                <select name="make" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select make</option>
+                                    <option value="Toyota">Toyota</option>
+                                    <option value="BMW">BMW</option>
+                                    <option value="Mercedes-Benz">Mercedes-Benz</option>
+                                    <option value="Volkswagen">Volkswagen</option>
+                                    <option value="Ford">Ford</option>
+                                    <option value="Nissan">Nissan</option>
+                                    <option value="Hyundai">Hyundai</option>
+                                    <option value="Kia">Kia</option>
+                                    <option value="Mazda">Mazda</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Model <span class="text-red-500">*</span></label>
+                                <input type="text" name="model" placeholder="Enter model" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Transmission <span class="text-red-500">*</span></label>
+                                <select name="transmission" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select transmission</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Automatic">Automatic</option>
+                                    <option value="Semi-automatic">Semi-automatic</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Body Type <span class="text-red-500">*</span></label>
+                                <select name="body_type" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select body type</option>
+                                    <option value="Sedan">Sedan</option>
+                                    <option value="Hatchback">Hatchback</option>
+                                    <option value="SUV">SUV</option>
+                                    <option value="Bakkie">Bakkie</option>
+                                    <option value="Coupe">Coupe</option>
+                                    <option value="Wagon">Wagon</option>
+                                    <option value="Convertible">Convertible</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Year <span class="text-red-500">*</span></label>
+                                <input type="number" name="year" placeholder="Enter the Year" min="1980" max="2025" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Kilometers <span class="text-red-500">*</span></label>
+                                <input type="number" name="kilometers" placeholder="Enter the Kilometers" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Colour <span class="text-red-500">*</span></label>
+                                <select name="colour" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select colour</option>
+                                    <option value="White">White</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Silver">Silver</option>
+                                    <option value="Grey">Grey</option>
+                                    <option value="Red">Red</option>
+                                    <option value="Blue">Blue</option>
+                                    <option value="Green">Green</option>
+                                    <option value="Yellow">Yellow</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fuel Type <span class="text-red-500">*</span></label>
+                                <select name="fuel_type" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select fuel type</option>
+                                    <option value="Petrol">Petrol</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                    <option value="Electric">Electric</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Drive Type (Optional)</label>
+                                <select name="drive_type" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select drive type</option>
+                                    <option value="Front-wheel drive">Front-wheel drive</option>
+                                    <option value="Rear-wheel drive">Rear-wheel drive</option>
+                                    <option value="All-wheel drive">All-wheel drive</option>
+                                    <option value="4WD">4WD</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">For Sale By <span class="text-red-500">*</span></label>
+                                <select name="for_sale_by" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select option</option>
+                                    <option value="Owner">Owner</option>
+                                    <option value="Dealer">Dealer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- General Listing Information -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Listing title <span class="text-red-500">*</span></label>
+                            <input type="text" name="title" placeholder="Enter a descriptive title for your listing" maxlength="100" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                            <div class="text-sm text-gray-500 mt-1">
+                                <span id="titleCount">0</span>/100
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description <span class="text-red-500">*</span></label>
+                            <textarea name="description" rows="6" placeholder="Add any additional information here that might be useful to the buyer." maxlength="3000" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary"></textarea>
+                            <div class="text-sm text-gray-500 mt-1">
+                                <span id="descCount">0</span>/3000
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Location <span class="text-red-500">*</span></label>
+                                <select name="location" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                    <option value="">Select location</option>
+                                    <option value="Gaborone">Gaborone</option>
+                                    <option value="Francistown">Francistown</option>
+                                    <option value="Maun">Maun</option>
+                                    <option value="Kasane">Kasane</option>
+                                    <option value="Palapye">Palapye</option>
+                                    <option value="Serowe">Serowe</option>
+                                    <option value="Molepolole">Molepolole</option>
+                                    <option value="Kanye">Kanye</option>
+                                    <option value="Mochudi">Mochudi</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Mobile number <span class="text-red-500">*</span></label>
+                                <input type="tel" name="phone_number" placeholder="084 123 4567" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                <div class="flex items-center mt-2">
+                                    <input type="checkbox" name="show_number" id="showNumber" class="mr-2">
+                                    <label for="showNumber" class="text-sm text-gray-600">Show this number on my listing</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
+                            <input type="url" name="website_url" placeholder="https://example.com" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                            <p class="text-sm text-gray-500 mt-1">Promote your website by including its link on your ad.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Price (Optional)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-2 text-gray-500">P</span>
+                                    <input type="number" name="price" placeholder="0" class="w-full border border-gray-300 rounded-lg pl-8 pr-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                </div>
+                                <div class="flex items-center mt-2">
+                                    <input type="checkbox" name="accept_offers" id="acceptOffers" class="mr-2">
+                                    <label for="acceptOffers" class="text-sm text-gray-600">Accept Offers - Allow buyers interested in your item to make and send you offers.</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Video URL (Optional)</label>
+                                <input type="url" name="video_url" placeholder="Enter your YouTube video URL" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                <p class="text-sm text-gray-500 mt-1">Add a YouTube video to showcase your item</p>
+                            </div>
+                        </div>
+
+                        <!-- Seller Information -->
+                        <div class="border-t pt-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Seller Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Your Name <span class="text-red-500">*</span></label>
+                                    <input type="text" name="seller_name" placeholder="Enter your full name" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Your Email <span class="text-red-500">*</span></label>
+                                    <input type="email" name="seller_email" placeholder="Enter your email address" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:border-primary">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Photos -->
+            <div id="step3" class="form-section">
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Photos</h2>
+                    <p class="text-gray-600 mb-6">Ads with more photos get more views and sell faster.</p>
+                    
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                        <div class="mb-4">
+                            <i class="ri-image-add-line text-4xl text-gray-400"></i>
+                        </div>
+                        <div class="mb-4">
+                            <label for="imageUpload" class="bg-primary text-white px-6 py-3 rounded-lg cursor-pointer hover:bg-blue-600 transition-colors">
+                                Choose Photos
+                            </label>
+                            <input type="file" id="imageUpload" name="images" multiple accept="image/jpeg,image/jpg,image/png,image/bmp,image/webp,image/heic,image/avif" class="hidden">
+                        </div>
+                        <p class="text-sm text-gray-600">
+                            Upload JPEG, JPG, PNG, BMP, WEBP, HEIC or AVIF images<br>
+                            (minimum 320×320 pixels, maximum 10MB each)
+                        </p>
+                        <p class="text-xs text-gray-500 mt-2">
+                            <span class="text-red-500">*</span> At least one photo is required
+                        </p>
+                    </div>
+
+                    <div id="imagePreview" class="mt-6">
+                        <!-- Image previews will be shown here -->
+                    </div>
+
+                    <div class="mt-4 text-sm text-gray-600">
+                        <p><strong>Tips for great photos:</strong></p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Use natural lighting when possible</li>
+                            <li>Take photos from multiple angles</li>
+                            <li>Show any defects or wear clearly</li>
+                            <li>Clean the item before photographing</li>
+                            <li>Use a plain background</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Review -->
+            <div id="step4" class="form-section">
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Review Your Listing</h2>
+                    
+                    <div id="reviewContent">
+                        <!-- Review content will be populated here -->
+                    </div>
+
+                    <div class="border-t pt-6 mt-6">
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="agreeTerms" class="mt-1" required>
+                            <label for="agreeTerms" class="text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-primary hover:underline">Terms and Conditions</a> and confirm that the information provided is accurate. I understand that my listing will be reviewed by the admin team before being published.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between mt-8">
+                <button type="button" id="prevBtn" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors hidden">
+                    <i class="ri-arrow-left-line mr-2"></i>Previous
+                </button>
+                <div class="flex-1"></div>
+                <button type="button" id="nextBtn" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                    Next<i class="ri-arrow-right-line ml-2"></i>
+                </button>
+                <button type="submit" id="submitBtn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors hidden">
+                    <i class="ri-check-line mr-2"></i>Submit Listing
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-8 text-center">
+            <div class="mb-4">
+                <i class="ri-check-double-line text-5xl text-green-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Listing Submitted!</h3>
+            <p class="text-gray-600 mb-6">Your listing has been submitted successfully and is now under review. You'll be notified once it's approved and published.</p>
+            <div class="space-y-3">
+                <a href="/" class="block w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                    Back to Home
+                </a>
+                <button onclick="createNewListing()" class="block w-full border border-primary text-primary py-3 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                    Create Another Listing
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedCategory = '';
+        let selectedSubcategory = '';
+        let uploadedImages = [];
+
+        const subcategories = {
+            'Automotive Vehicles': ['Cars & Bakkies', 'Motorcycles', 'Trucks', 'Boats', 'Parts & Accessories'],
+            'Property': ['Houses for Sale', 'Houses to Rent', 'Flats & Apartments', 'Commercial Property', 'Land'],
+            'Goods': ['Electronics', 'Furniture', 'Clothing', 'Books', 'Sports Equipment', 'Home & Garden'],
+            'Services': ['Business Services', 'Personal Services', 'Education', 'Health & Beauty', 'Events'],
+            'Everything else': ['Pets', 'Jobs', 'Community', 'Personals']
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStepIndicators();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Category selection
+            document.querySelectorAll('.category-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectCategory(this.dataset.category);
+                });
+            });
+
+            // Navigation buttons
+            document.getElementById('nextBtn').addEventListener('click', nextStep);
+            document.getElementById('prevBtn').addEventListener('click', prevStep);
+            document.getElementById('listingForm').addEventListener('submit', submitListing);
+
+            // Image upload
+            document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+
+            // Character counters
+            document.querySelector('input[name="title"]').addEventListener('input', function() {
+                document.getElementById('titleCount').textContent = this.value.length;
+            });
+
+            document.querySelector('textarea[name="description"]').addEventListener('input', function() {
+                document.getElementById('descCount').textContent = this.value.length;
+            });
+        }
+
+        function selectCategory(category) {
+            selectedCategory = category;
+            
+            // Update UI
+            document.querySelectorAll('.category-option').forEach(option => {
+                option.classList.remove('border-primary', 'bg-blue-50');
+                option.classList.add('border-gray-200');
+            });
+            
+            event.target.closest('.category-option').classList.remove('border-gray-200');
+            event.target.closest('.category-option').classList.add('border-primary', 'bg-blue-50');
+
+            // Show subcategories
+            showSubcategories(category);
+        }
+
+        function showSubcategories(category) {
+            const subcategorySection = document.getElementById('subcategorySection');
+            const subcategoryOptions = document.getElementById('subcategoryOptions');
+            
+            subcategoryOptions.innerHTML = '';
+            
+            subcategories[category].forEach(subcategory => {
+                const option = document.createElement('div');
+                option.className = 'subcategory-option border border-gray-200 rounded-lg p-3 cursor-pointer hover:border-primary transition-colors text-center';
+                option.dataset.subcategory = subcategory;
+                option.textContent = subcategory;
+                
+                option.addEventListener('click', function() {
+                    selectSubcategory(subcategory);
+                });
+                
+                subcategoryOptions.appendChild(option);
+            });
+            
+            subcategorySection.classList.remove('hidden');
+        }
+
+        function selectSubcategory(subcategory) {
+            selectedSubcategory = subcategory;
+            
+            // Update UI
+            document.querySelectorAll('.subcategory-option').forEach(option => {
+                option.classList.remove('border-primary', 'bg-blue-50');
+                option.classList.add('border-gray-200');
+            });
+            
+            event.target.classList.remove('border-gray-200');
+            event.target.classList.add('border-primary', 'bg-blue-50');
+        }
+
+        function nextStep() {
+            if (validateCurrentStep()) {
+                if (currentStep < 4) {
+                    currentStep++;
+                    showStep(currentStep);
+                    updateStepIndicators();
+                    updateProgressBar();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+                updateStepIndicators();
+                updateProgressBar();
+            }
+        }
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show current step
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.classList.toggle('hidden', step === 1);
+            nextBtn.classList.toggle('hidden', step === 4);
+            submitBtn.classList.toggle('hidden', step !== 4);
+
+            // Special handling for step 2
+            if (step === 2) {
+                toggleCarFields();
+            }
+
+            // Special handling for step 4 (review)
+            if (step === 4) {
+                populateReview();
+            }
+        }
+
+        function toggleCarFields() {
+            const carFields = document.getElementById('carFields');
+            const showCarFields = selectedCategory === 'Automotive Vehicles' && selectedSubcategory === 'Cars & Bakkies';
+            carFields.classList.toggle('hidden', !showCarFields);
+        }
+
+        function updateStepIndicators() {
+            const indicators = document.querySelectorAll('.step-indicator');
+            
+            indicators.forEach((indicator, index) => {
+                const stepNumber = index + 1;
+                indicator.classList.remove('active', 'completed');
+                
+                if (stepNumber < currentStep) {
+                    indicator.classList.add('completed');
+                } else if (stepNumber === currentStep) {
+                    indicator.classList.add('active');
+                }
+            });
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            const progress = ((currentStep - 1) / 3) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function validateCurrentStep() {
+            switch (currentStep) {
+                case 1:
+                    if (!selectedCategory) {
+                        alert('Please select a category');
+                        return false;
+                    }
+                    if (!selectedSubcategory) {
+                        alert('Please select a subcategory');
+                        return false;
+                    }
+                    return true;
+                
+                case 2:
+                    return validateStep2();
+                
+                case 3:
+                    if (uploadedImages.length === 0) {
+                        alert('Please upload at least one photo');
+                        return false;
+                    }
+                    return true;
+                
+                default:
+                    return true;
+            }
+        }
+
+        function validateStep2() {
+            const requiredFields = ['title', 'description', 'location', 'phone_number', 'seller_name', 'seller_email'];
+            
+            // Add car-specific required fields if applicable
+            if (selectedCategory === 'Automotive Vehicles' && selectedSubcategory === 'Cars & Bakkies') {
+                requiredFields.push('make', 'model', 'transmission', 'body_type', 'year', 'kilometers', 'colour', 'fuel_type', 'for_sale_by');
+            }
+            
+            for (const field of requiredFields) {
+                const input = document.querySelector(`[name="${field}"]`);
+                if (!input || !input.value.trim()) {
+                    alert(`Please fill in the ${field.replace('_', ' ')} field`);
+                    input?.focus();
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function handleImageUpload(event) {
+            const files = Array.from(event.target.files);
+            
+            files.forEach(file => {
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push({
+                        file: file,
+                        dataUrl: e.target.result,
+                        name: file.name
+                    });
+                    updateImagePreview();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updateImagePreview() {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+            
+            uploadedImages.forEach((image, index) => {
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'image-preview';
+                imageDiv.innerHTML = `
+                    <img src="${image.dataUrl}" alt="${image.name}">
+                    <div class="remove-btn" onclick="removeImage(${index})">×</div>
+                `;
+                preview.appendChild(imageDiv);
+            });
+        }
+
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            updateImagePreview();
+        }
+
+        function populateReview() {
+            const formData = new FormData(document.getElementById('listingForm'));
+            const reviewContent = document.getElementById('reviewContent');
+            
+            let html = `
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Category</h3>
+                        <p class="text-gray-600">${selectedCategory} > ${selectedSubcategory}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Title</h3>
+                        <p class="text-gray-600">${formData.get('title') || 'Not specified'}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Description</h3>
+                        <p class="text-gray-600">${formData.get('description') || 'Not specified'}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Location</h3>
+                            <p class="text-gray-600">${formData.get('location') || 'Not specified'}</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-2">Price</h3>
+                            <p class="text-gray-600">${formData.get('price') ? 'P ' + formData.get('price') : 'Not specified'}</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Photos</h3>
+                        <p class="text-gray-600">${uploadedImages.length} photo(s) uploaded</p>
+                    </div>
+                </div>
+            `;
+            
+            reviewContent.innerHTML = html;
+        }
+
+        async function submitListing(event) {
+            event.preventDefault();
+            
+            if (!document.getElementById('agreeTerms').checked) {
+                alert('Please agree to the terms and conditions');
+                return;
+            }
+            
+            const formData = new FormData(document.getElementById('listingForm'));
+            
+            // Add additional data
+            formData.append('category', selectedCategory);
+            formData.append('subcategory', selectedSubcategory);
+            
+            // Convert images to base64 for JSON submission
+            const imageData = uploadedImages.map(img => img.dataUrl);
+            
+            // Create JSON payload
+            const listingData = {
+                category: selectedCategory,
+                subcategory: selectedSubcategory,
+                title: formData.get('title'),
+                description: formData.get('description'),
+                location: formData.get('location'),
+                phone_number: formData.get('phone_number'),
+                price: formData.get('price') ? parseFloat(formData.get('price')) : null,
+                images: imageData,
+                seller_name: formData.get('seller_name'),
+                seller_email: formData.get('seller_email'),
+                
+                // Car specific fields
+                make: formData.get('make'),
+                model: formData.get('model'),
+                year: formData.get('year') ? parseInt(formData.get('year')) : null,
+                transmission: formData.get('transmission'),
+                body_type: formData.get('body_type'),
+                kilometers: formData.get('kilometers') ? parseInt(formData.get('kilometers')) : null,
+                colour: formData.get('colour'),
+                fuel_type: formData.get('fuel_type'),
+                drive_type: formData.get('drive_type'),
+                for_sale_by: formData.get('for_sale_by')
+            };
+            
+            try {
+                const response = await fetch('/api/listings/submit-listing', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(listingData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('successModal').classList.remove('hidden');
+                } else {
+                    alert('Error submitting listing: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error submitting listing. Please try again.');
+                console.error('Error:', error);
+            }
+        }
+
+        function createNewListing() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
+

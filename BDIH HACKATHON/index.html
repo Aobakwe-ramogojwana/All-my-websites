@@ -1,0 +1,2868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ikalafe — Botswana Health Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --clay:    #c4602a;
+  --clay-l:  #f2e4d8;
+  --sand:    #f7f1e8;
+  --warm:    #ede5d8;
+  --earth:   #7a5c3a;
+  --bark:    #3d2b1f;
+  --moss:    #3d6b47;
+  --moss-l:  #dceee1;
+  --sky:     #2d6fa4;
+  --sky-l:   #daeaf7;
+  --amber:   #c4870a;
+  --amber-l: #fdf0d5;
+  --red:     #b83232;
+  --red-l:   #fbe9e9;
+  --text:    #2a1f14;
+  --muted:   #8a7060;
+  --border:  #e0d5c5;
+  --surface: #ffffff;
+  --sans: 'Plus Jakarta Sans', sans-serif;
+  --serif: 'Fraunces', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--sand);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════ */
+.topbar {
+  background: var(--bark);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 0;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 900;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-right: 36px;
+}
+.brand-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+.brand-name em { color: var(--clay); font-style: normal; }
+.brand-tag {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  height: 100%;
+  gap: 2px;
+}
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  user-select: none;
+}
+.nav-btn:hover { color: rgba(255,255,255,0.85); }
+.nav-btn.active { color: #fff; border-bottom-color: var(--clay); }
+.nav-btn .nav-icon { font-size: 15px; }
+.nav-btn .live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #ff5f5f; flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(255,95,95,0.5);
+  animation: ripple 2s infinite;
+}
+@keyframes ripple {
+  0%   { box-shadow: 0 0 0 0   rgba(255,95,95,0.5); }
+  70%  { box-shadow: 0 0 0 8px rgba(255,95,95,0); }
+  100% { box-shadow: 0 0 0 0   rgba(255,95,95,0); }
+}
+
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.alert-pill {
+  background: var(--red);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  animation: ripple 2s infinite;
+}
+.clock {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+}
+
+/* ══════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════ */
+.shell {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+.sidebar.hidden { width: 0; overflow: hidden; }
+
+.sidebar-top {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.sidebar-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.live-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--moss);
+  background: var(--moss-l);
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.live-tag::before {
+  content: '';
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--moss);
+  display: inline-block;
+  animation: ripple 2s infinite;
+}
+
+.search-wrap {
+  position: relative;
+}
+.search-wrap input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  background: var(--sand);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.search-wrap input:focus {
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(196,96,42,0.12);
+}
+.search-wrap::before {
+  content: '🔍';
+  font-size: 13px;
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.filter-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.filter-chip {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--sand);
+  transition: all 0.15s;
+  user-select: none;
+}
+.filter-chip.active { background: var(--clay); border-color: var(--clay); color: white; }
+.filter-chip:hover:not(.active) { border-color: var(--clay); color: var(--clay); }
+
+.clinic-scroll {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.clinic-card {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+}
+.clinic-card:hover { background: var(--sand); }
+.clinic-card.sel { background: var(--clay-l); }
+.clinic-card.sel::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--clay);
+  border-radius: 0 2px 2px 0;
+}
+
+.cc-row1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.cc-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+.wait-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.wb-good { background: var(--moss-l); color: var(--moss); }
+.wb-warn { background: var(--amber-l); color: var(--amber); }
+.wb-bad  { background: var(--red-l); color: var(--red); }
+.wb-closed { background: #f0f0f0; color: #999; }
+
+.cc-row2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+.cc-dist {
+  font-size: 11px;
+  color: var(--muted);
+}
+.cc-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--border); flex-shrink: 0;
+}
+.stock-mini {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.stock-mini-bar {
+  width: 32px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.stock-mini-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+/* ══════════════════════════════════════
+   VIEWS
+══════════════════════════════════════ */
+.main {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.view { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.view.on { display: flex; }
+
+/* ── MAP ── */
+#map {
+  flex: 1;
+  z-index: 1;
+}
+
+.map-topbar {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(8px);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.map-topbar strong { color: var(--text); }
+.map-stat-chip {
+  background: var(--sand);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.map-stat-chip span { color: var(--muted); font-weight: 400; }
+
+/* Floating panels on map */
+.float-panel {
+  position: absolute;
+  z-index: 500;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.alerts-panel {
+  top: 16px; right: 16px;
+  width: 252px;
+}
+.panel-head {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.panel-head .count-badge {
+  background: var(--red);
+  color: white;
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.alert-row {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.alert-row:last-child { border-bottom: none; }
+.alert-row:hover { background: var(--sand); }
+.alert-em { font-size: 18px; flex-shrink: 0; }
+.alert-body { font-size: 12px; line-height: 1.35; }
+.alert-body strong { display: block; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.alert-body span { color: var(--muted); font-size: 11px; }
+
+.legend-panel {
+  bottom: 200px; right: 16px;
+  width: 140px;
+  padding: 12px 14px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 3px 0;
+}
+.leg-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+
+/* Clinic drawer */
+.clinic-drawer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: white;
+  border-top: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  padding: 0 0 0;
+  z-index: 600;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.12);
+  max-height: 280px;
+}
+.clinic-drawer.open { transform: translateY(0); }
+
+.drawer-handle {
+  width: 36px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 10px auto 0;
+}
+.drawer-inner {
+  padding: 16px 20px 20px;
+}
+.drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+.drawer-name {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.drawer-close {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--sand);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.drawer-close:hover { background: var(--red-l); color: var(--red); border-color: var(--red); }
+
+.drawer-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.ds {
+  background: var(--sand);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.ds-val {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+.ds-lbl {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.drawer-actions {
+  display: flex;
+  gap: 8px;
+}
+.dra-btn {
+  flex: 1;
+  padding: 9px 6px;
+  border-radius: 8px;
+  border: none;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.dra-primary { background: var(--clay); color: white; }
+.dra-primary:hover { background: #a84d20; }
+.dra-danger { background: var(--red); color: white; }
+.dra-danger:hover { background: #962828; }
+.dra-ghost {
+  background: var(--sand);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.dra-ghost:hover { border-color: var(--clay); color: var(--clay); }
+
+/* ══════════════════════════════════════
+   ADMIN VIEW
+══════════════════════════════════════ */
+.admin-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: var(--sand);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.admin-intro {
+  margin-bottom: 20px;
+}
+.admin-intro h2 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+}
+.admin-intro p { font-size: 12px; color: var(--muted); }
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi.green::before { background: var(--moss); }
+.kpi.amber::before { background: var(--amber); }
+.kpi.red::before { background: var(--red); }
+.kpi.blue::before { background: var(--sky); }
+.kpi-val {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.kpi.green .kpi-val { color: var(--moss); }
+.kpi.amber .kpi-val { color: var(--amber); }
+.kpi.red .kpi-val { color: var(--red); }
+.kpi.blue .kpi-val { color: var(--sky); }
+.kpi-lbl { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.panel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.pc-head {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pc-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+.pc-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+.pc-badge.red { background: var(--red-l); color: var(--red); }
+.pc-badge.amber { background: var(--amber-l); color: var(--amber); }
+.pc-body { padding: 14px 18px; }
+
+.stock-item {
+  margin-bottom: 13px;
+}
+.stock-item:last-child { margin-bottom: 0; }
+.stock-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.stock-name { font-size: 13px; font-weight: 500; }
+.stock-pct {
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.stock-track {
+  height: 6px;
+  background: var(--sand);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.stock-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.pred-item {
+  display: flex;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+.pred-item:last-child { margin-bottom: 0; }
+.pred-item.crit { background: var(--red-l); }
+.pred-item.warn { background: var(--amber-l); }
+.pred-item.info { background: var(--moss-l); }
+.pred-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.pred-text strong { font-size: 12px; font-weight: 600; display: block; margin-bottom: 2px; }
+.pred-text span { font-size: 11px; color: var(--muted); line-height: 1.4; display: block; }
+
+.chart-wrap { padding: 14px 18px; }
+canvas { width: 100% !important; }
+
+.report-table { width: 100%; border-collapse: collapse; }
+.report-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 0 14px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.report-table td {
+  padding: 10px 14px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.report-table tr:last-child td { border-bottom: none; }
+.sev-chip {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+.sev-high { background: var(--red-l); color: var(--red); }
+.sev-med  { background: var(--amber-l); color: var(--amber); }
+.sev-low  { background: var(--moss-l); color: var(--moss); }
+.status-chip {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: var(--sand);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* ══════════════════════════════════════
+   FAST CHECKER
+══════════════════════════════════════ */
+.fast-shell {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--sand);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 20px;
+}
+.fast-wrap { max-width: 560px; width: 100%; }
+
+.fast-banner {
+  background: var(--red);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.fast-banner::after {
+  content: 'FAST';
+  position: absolute;
+  right: -10px;
+  font-family: var(--serif);
+  font-size: 110px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.07);
+  line-height: 1;
+  bottom: -10px;
+}
+.fast-banner-icon { font-size: 48px; flex-shrink: 0; }
+.fast-banner-text h2 {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+.fast-banner-text p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+
+.fast-progress-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.fp-seg {
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+.fp-seg.done { background: var(--red); }
+
+.fast-q-card {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  margin-bottom: 16px;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fq-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--red-l);
+  color: var(--red);
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.fq-q {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.fq-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+.fq-tips {
+  background: var(--sand);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  border-left: 3px solid var(--clay);
+}
+.fq-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.fq-btn {
+  padding: 14px;
+  border-radius: 10px;
+  border: 2px solid;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.fq-yes { border-color: var(--red); color: var(--red); background: transparent; }
+.fq-yes:hover { background: var(--red); color: white; }
+.fq-no  { border-color: var(--border); color: var(--muted); background: transparent; }
+.fq-no:hover { background: var(--bark); color: white; border-color: var(--bark); }
+
+.fast-result {
+  background: white;
+  border-radius: 16px;
+  border: 2px solid var(--red);
+  padding: 28px;
+  text-align: center;
+  display: none;
+  animation: slideUp 0.3s ease;
+  box-shadow: 0 4px 24px rgba(184,50,50,0.15);
+}
+.fast-result.ok { border-color: var(--moss); box-shadow: 0 4px 24px rgba(61,107,71,0.12); }
+.fast-result.show { display: block; }
+.fr-icon { font-size: 56px; margin-bottom: 14px; }
+.fr-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.fr-msg { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 400px; margin: 0 auto 20px; }
+.fr-actions { display: flex; flex-direction: column; gap: 8px; max-width: 360px; margin: 0 auto; }
+.fr-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.fr-btn.primary { background: var(--red); color: white; }
+.fr-btn.primary:hover { background: #962828; }
+.fr-btn.secondary { background: var(--sand); color: var(--text); border: 1px solid var(--border); }
+.fr-btn.secondary:hover { border-color: var(--clay); color: var(--clay); }
+
+/* ══════════════════════════════════════
+   USSD — PHONE
+══════════════════════════════════════ */
+.ussd-shell {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  gap: 48px;
+}
+
+/* Realistic phone */
+.phone {
+  width: 260px;
+  flex-shrink: 0;
+  position: relative;
+}
+.phone-body {
+  background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 36px;
+  padding: 14px;
+  box-shadow:
+    0 0 0 1px #444,
+    0 25px 60px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  position: relative;
+}
+
+/* Volume buttons */
+.phone-body::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 80px;
+  width: 3px;
+  height: 28px;
+  background: #333;
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0 36px 0 #333, 0 70px 0 #333;
+}
+/* Power button */
+.phone-body::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 100px;
+  width: 3px;
+  height: 42px;
+  background: #333;
+  border-radius: 0 2px 2px 0;
+}
+
+.phone-notch {
+  width: 80px;
+  height: 22px;
+  background: #111;
+  border-radius: 0 0 14px 14px;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+}
+.notch-cam {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #222;
+  border: 1px solid #333;
+}
+.notch-speaker {
+  width: 28px; height: 4px;
+  background: #222;
+  border-radius: 2px;
+}
+
+.phone-screen {
+  background: #000;
+  border-radius: 22px;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.phone-status-bar {
+  background: #0a0a0a;
+  padding: 6px 14px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.psb-time {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  font-variant-numeric: tabular-nums;
+}
+.psb-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.psb-icon {
+  font-size: 10px;
+  color: white;
+}
+
+/* Carrier bar */
+.phone-carrier {
+  background: #0d0d0d;
+  padding: 4px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+.carrier-name {
+  font-size: 11px;
+  color: #888;
+  font-weight: 500;
+}
+.carrier-signal {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+}
+.sig-bar {
+  width: 3px;
+  background: #00c563;
+  border-radius: 1px;
+}
+
+/* USSD dialog */
+.ussd-dialog {
+  flex: 1;
+  background: #e8e4df;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.ussd-dialog-header {
+  background: #1a73e8;
+  padding: 10px 14px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.udh-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.udh-title { font-size: 12px; font-weight: 600; color: white; line-height: 1.2; }
+.udh-sub { font-size: 10px; color: rgba(255,255,255,0.7); }
+
+.ussd-msg-area {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: none;
+}
+
+.ussd-bubble {
+  background: white;
+  border-radius: 4px 12px 12px 12px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #111;
+  font-family: 'Courier New', monospace;
+  white-space: pre-wrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  max-width: 90%;
+  align-self: flex-start;
+}
+.ussd-bubble.user {
+  background: #1a73e8;
+  color: white;
+  border-radius: 12px 12px 4px 12px;
+  align-self: flex-end;
+}
+
+.ussd-input-bar {
+  background: #f0ede8;
+  padding: 8px 10px;
+  border-top: 1px solid #d8d4ce;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.ussd-field {
+  flex: 1;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  outline: none;
+  color: #111;
+}
+.ussd-field:focus { border-color: #1a73e8; }
+.ussd-go {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #1a73e8;
+  border: none;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.ussd-go:hover { background: #1558b0; }
+
+/* Home button */
+.phone-home {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #333, #222);
+  border: 2px solid #444;
+  margin: 10px auto;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* Info panel beside phone */
+.ussd-info-panel {
+  max-width: 300px;
+}
+.uip-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--clay);
+  margin-bottom: 8px;
+}
+.uip-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.uip-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.uip-features { list-style: none; padding: 0; }
+.uip-features li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.uip-features li:last-child { border-bottom: none; }
+.uip-features li .fi {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: var(--clay-l);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.quick-codes {
+  margin-top: 16px;
+  background: var(--bark);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: white;
+}
+.qc-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); margin-bottom: 8px; font-weight: 600; }
+.qc-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 4px 0;
+  color: rgba(255,255,255,0.8);
+}
+.qc-code { font-family: 'Courier New', monospace; color: #5dcea0; }
+
+/* ══════════════════════════════════════
+   REPORT FORM
+══════════════════════════════════════ */
+.report-shell {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--sand);
+  display: flex;
+  justify-content: center;
+  padding: 32px 20px;
+}
+.report-wrap { max-width: 560px; width: 100%; }
+
+.report-hero {
+  margin-bottom: 28px;
+}
+.report-hero .tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--clay);
+  background: var(--clay-l);
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.report-hero h2 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.report-hero p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+.form-section { margin-bottom: 22px; }
+.form-lbl {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.form-lbl .req { color: var(--clay); }
+.form-ctrl {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  background: white;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+}
+.form-ctrl:focus {
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(196,96,42,0.1);
+}
+select.form-ctrl {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a7060'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+textarea.form-ctrl { resize: vertical; min-height: 90px; }
+
+.sev-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sev-opt {
+  padding: 10px 8px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  background: white;
+  user-select: none;
+}
+.sev-opt:hover { border-color: var(--clay); }
+.sev-opt.sel-low  { border-color: var(--moss);  background: var(--moss-l);  color: var(--moss); }
+.sev-opt.sel-med  { border-color: var(--amber); background: var(--amber-l); color: var(--amber); }
+.sev-opt.sel-high { border-color: var(--red);   background: var(--red-l);   color: var(--red); }
+
+.photo-zone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+  cursor: pointer;
+  background: white;
+  transition: all 0.15s;
+}
+.photo-zone:hover { border-color: var(--clay); background: var(--clay-l); }
+.photo-zone .pz-icon { font-size: 28px; margin-bottom: 6px; }
+.photo-zone p { font-size: 12px; color: var(--muted); }
+.photo-zone strong { color: var(--clay); }
+.photo-note { font-size: 11px; color: var(--muted); margin-top: 6px; text-align: center; }
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  background: var(--clay);
+  color: white;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.submit-btn:hover { background: #a84d20; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,96,42,0.3); }
+.submit-btn:active { transform: none; }
+
+.toast {
+  display: none;
+  background: var(--moss);
+  color: white;
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  align-items: center;
+  gap: 10px;
+}
+.toast.show { display: flex; animation: slideUp 0.3s ease; }
+
+/* ══════════════════════════════════════
+   LEAFLET OVERRIDES
+══════════════════════════════════════ */
+.leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  font-family: var(--sans);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 1px solid var(--border);
+}
+.leaflet-popup-tip-container { display: none; }
+.leaflet-control-zoom a {
+  border-radius: 8px !important;
+  font-family: var(--sans);
+}
+
+/* Scrollbar polish */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ══════════════════════════════════════
+   NURSE FINDER
+══════════════════════════════════════ */
+.nurse-shell {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--sand);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+.nurse-hero { max-width: 680px; width: 100%; }
+.nh-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--moss);
+  background: var(--moss-l);
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.nurse-hero h2 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.nurse-hero p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+.nh-core-sentence {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bark);
+  color: white;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  font-style: italic;
+}
+.ncs-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; font-style: normal; }
+
+.nurse-match-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  max-width: 680px;
+  width: 100%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.nmc-head {
+  background: linear-gradient(135deg, var(--clay), #a84d20);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 13px 18px;
+}
+.nmc-body { padding: 18px; }
+.nm-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.nm-field {}
+
+.nurse-results { max-width: 680px; width: 100%; }
+.nurse-results.hidden { display: none; }
+.nr-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.nr-title { font-family: var(--serif); font-size: 18px; font-weight: 600; }
+.nr-sub { font-size: 11px; color: var(--muted); }
+.nurse-list { display: flex; flex-direction: column; gap: 10px; }
+
+.nurse-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  transition: box-shadow 0.15s;
+}
+.nurse-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.nurse-card.urgent { border-left: 4px solid var(--red); }
+.nurse-avatar {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--clay-l), var(--warm));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.nurse-info { flex: 1; }
+.nurse-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.nurse-skill { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.nurse-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+.nurse-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--sand);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.nurse-badge.green { background: var(--moss-l); color: var(--moss); border-color: var(--moss-l); }
+.nurse-badge.amber { background: var(--amber-l); color: var(--amber); border-color: var(--amber-l); }
+.nurse-badge.red { background: var(--red-l); color: var(--red); border-color: var(--red-l); }
+.nurse-stars { font-size: 12px; color: var(--amber); }
+.nurse-actions { display: flex; flex-direction: column; gap: 6px; }
+.na-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.na-primary { background: var(--clay); color: white; }
+.na-primary:hover { background: #a84d20; }
+.na-ghost { background: var(--sand); border: 1px solid var(--border); color: var(--text); }
+.na-ghost:hover { border-color: var(--clay); color: var(--clay); }
+
+.nurse-register-cta {
+  max-width: 680px; width: 100%;
+  background: var(--sky-l);
+  border: 1px solid #b8d8f0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.nrc-icon { font-size: 32px; flex-shrink: 0; }
+.nrc-text { flex: 1; }
+.nrc-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--sky); margin-bottom: 2px; }
+.nrc-text span { font-size: 12px; color: var(--muted); }
+.nrc-btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--sky);
+  color: white;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.nrc-btn:hover { background: #235c87; }
+
+/* Availability toggle */
+.avail-toggle {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: white;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.avail-toggle.avail-on { border-color: var(--moss); background: var(--moss-l); color: var(--moss); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.hidden { display: none; }
+.modal-box {
+  background: white;
+  border-radius: 16px;
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 16px;
+  font-weight: 700;
+}
+.modal-body { padding: 20px; max-height: 80vh; overflow-y: auto; }
+.trust-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.tb {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--moss-l);
+  color: var(--moss);
+}
+
+/* ══════════════════════════════════════
+   MEDICINE VIEW
+══════════════════════════════════════ */
+.med-shell {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--sand);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+.med-hero { max-width: 760px; width: 100%; }
+.med-hero h2 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.med-hero p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.med-search-bar {
+  max-width: 760px; width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.med-grid {
+  max-width: 760px; width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.med-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+}
+.med-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.med-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.med-type { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.stock-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.sp-ok { background: var(--moss-l); color: var(--moss); }
+.sp-low { background: var(--amber-l); color: var(--amber); }
+.sp-out { background: var(--red-l); color: var(--red); }
+.med-pharma-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.mpl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+.mpl-name { color: var(--text); font-weight: 500; }
+.mpl-dist { color: var(--muted); }
+.mpl-stock { font-weight: 700; }
+.med-reserve-btn {
+  width: 100%;
+  padding: 9px;
+  border-radius: 8px;
+  border: 1.5px solid var(--clay);
+  background: transparent;
+  color: var(--clay);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.med-reserve-btn:hover { background: var(--clay); color: white; }
+.med-reserve-btn:disabled { border-color: var(--border); color: var(--muted); cursor: not-allowed; }
+
+/* ══════════════════════════════════════
+   GOV DASHBOARD extras
+══════════════════════════════════════ */
+.heat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.heat-label { font-size: 12px; font-weight: 600; width: 110px; flex-shrink: 0; }
+.heat-bar-wrap { flex: 1; height: 14px; background: var(--sand); border-radius: 7px; overflow: hidden; }
+.heat-bar { height: 100%; border-radius: 7px; }
+.heat-val { font-size: 12px; font-weight: 700; width: 40px; text-align: right; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-name">Ika<em>lafe</em></div>
+    <div class="brand-tag">Health Intelligence</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-btn active" onclick="go('map')"><span class="nav-icon">🗺️</span> Live Map <div class="live-dot"></div></div>
+    <div class="nav-btn" onclick="go('admin')"><span class="nav-icon">📊</span> Admin</div>
+    <div class="nav-btn" onclick="go('fast')"><span class="nav-icon">🧠</span> FAST Checker</div>
+    <div class="nav-btn" onclick="go('ussd')"><span class="nav-icon">📱</span> *123# USSD</div>
+    <div class="nav-btn" onclick="go('nurses')"><span class="nav-icon">👩‍⚕️</span> Find Nurse</div>
+    <div class="nav-btn" onclick="go('medicine')"><span class="nav-icon">💊</span> Medicine</div>
+    <div class="nav-btn" onclick="go('govdash')"><span class="nav-icon">🏛️</span> Gov Dashboard</div>
+    <div class="nav-btn" onclick="go('report')"><span class="nav-icon">📝</span> Report</div>
+  </nav>
+  <div class="topbar-right">
+    <div class="alert-pill">🔴 3 Active Alerts</div>
+    <div class="clock" id="clock">—</div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-head">
+        <div class="sidebar-label">Facilities (18)</div>
+        <div class="live-tag">Live</div>
+      </div>
+      <div class="search-wrap">
+        <input id="srch" type="text" placeholder="Search clinic or district…" oninput="filterList()">
+      </div>
+      <div class="filter-row">
+        <div class="filter-chip active" onclick="setFilter('all',this)">All</div>
+        <div class="filter-chip" onclick="setFilter('open',this)">Open</div>
+        <div class="filter-chip" onclick="setFilter('busy',this)">Busy</div>
+        <div class="filter-chip" onclick="setFilter('critical',this)">Critical</div>
+      </div>
+    </div>
+    <div class="clinic-scroll" id="clinicScroll"></div>
+  </aside>
+
+  <!-- MAP VIEW -->
+  <div class="view on" id="view-map">
+    <div class="map-topbar">
+      <strong>Botswana</strong> — National Facility Overview
+      <div class="map-stat-chip">🟢 14 Open <span>facilities</span></div>
+      <div class="map-stat-chip">⏱ 38 min <span>avg wait</span></div>
+      <div class="map-stat-chip">💊 92% <span>avg stock</span></div>
+    </div>
+    <div id="map" style="flex:1;z-index:1;position:relative;">
+
+      <!-- Alerts panel -->
+      <div class="float-panel alerts-panel">
+        <div class="panel-head">
+          ⚡ Predictive Alerts
+          <span class="count-badge">3</span>
+        </div>
+        <div class="alert-row" onclick="selectClinic(2)">
+          <div class="alert-em">💊</div>
+          <div class="alert-body">
+            <strong>Lentsweletau — Paracetamol</strong>
+            <span>Stockout in ~2 days at current rate</span>
+          </div>
+        </div>
+        <div class="alert-row" onclick="selectClinic(0)">
+          <div class="alert-em">🏥</div>
+          <div class="alert-body">
+            <strong>Princess Marina — Queue Spike</strong>
+            <span>87 patients expected 14:00–17:00</span>
+          </div>
+        </div>
+        <div class="alert-row" onclick="selectClinic(17)">
+          <div class="alert-em">💉</div>
+          <div class="alert-body">
+            <strong>Selebi-Phikwe — Insulin</strong>
+            <span>Critical stock — reorder immediately</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="float-panel legend-panel">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;">Legend</div>
+        <div class="legend-item"><div class="leg-dot" style="background:var(--moss)"></div> Open</div>
+        <div class="legend-item"><div class="leg-dot" style="background:var(--amber)"></div> Busy</div>
+        <div class="legend-item"><div class="leg-dot" style="background:var(--red)"></div> Critical</div>
+      </div>
+
+      <!-- Clinic drawer -->
+      <div class="clinic-drawer" id="drawer">
+        <div class="drawer-handle"></div>
+        <div class="drawer-inner">
+          <div class="drawer-head">
+            <div class="drawer-name" id="dName">—</div>
+            <div class="drawer-close" onclick="closeDrawer()">✕</div>
+          </div>
+          <div class="drawer-stats">
+            <div class="ds"><div class="ds-val" id="dWait">—</div><div class="ds-lbl">Wait (min)</div></div>
+            <div class="ds"><div class="ds-val" id="dStock">—</div><div class="ds-lbl">Stock %</div></div>
+            <div class="ds"><div class="ds-val" id="dDist">—</div><div class="ds-lbl">km away</div></div>
+            <div class="ds"><div class="ds-val" id="dBeds">—</div><div class="ds-lbl">Beds avail.</div></div>
+          </div>
+          <div class="drawer-actions">
+            <button class="dra-btn dra-danger" onclick="go('fast')">🧠 FAST Check</button>
+            <button class="dra-btn dra-primary" onclick="go('report')">📝 Report Issue</button>
+            <button class="dra-btn dra-ghost" id="dDir">🗺️ Directions</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN VIEW -->
+  <div class="view" id="view-admin">
+    <div class="admin-scroll">
+      <div class="admin-intro">
+        <h2>National Health Dashboard</h2>
+        <p>Live overview · Updated every 2 minutes · Powered by open government data + citizen reports</p>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi green">
+          <div class="kpi-val">14</div>
+          <div class="kpi-lbl">Facilities Online</div>
+          <div class="kpi-sub">4 reporting delays</div>
+        </div>
+        <div class="kpi amber">
+          <div class="kpi-val">487</div>
+          <div class="kpi-lbl">Patients Today</div>
+          <div class="kpi-sub">↑ 12% vs yesterday</div>
+        </div>
+        <div class="kpi red">
+          <div class="kpi-val">3</div>
+          <div class="kpi-lbl">Critical Alerts</div>
+          <div class="kpi-sub">Action required now</div>
+        </div>
+        <div class="kpi blue">
+          <div class="kpi-val">92%</div>
+          <div class="kpi-lbl">Avg Stock Level</div>
+          <div class="kpi-sub">2 meds below threshold</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel-card">
+          <div class="pc-head">
+            <div class="pc-title">Medicine Stock</div>
+            <div class="pc-badge red">2 Critical</div>
+          </div>
+          <div class="pc-body" id="stockPanel"></div>
+        </div>
+        <div class="panel-card">
+          <div class="pc-head">
+            <div class="pc-title">Predictive Alerts — 72hrs</div>
+            <div class="pc-badge amber">5 Flagged</div>
+          </div>
+          <div class="pc-body" id="predPanel"></div>
+        </div>
+        <div class="panel-card">
+          <div class="pc-head"><div class="pc-title">Patient Flow — 7 Days</div></div>
+          <div class="chart-wrap"><canvas id="flowChart" height="160"></canvas></div>
+        </div>
+        <div class="panel-card">
+          <div class="pc-head"><div class="pc-title">Avg Wait by District</div></div>
+          <div class="chart-wrap"><canvas id="waitChart" height="160"></canvas></div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="pc-head"><div class="pc-title">Recent Crowdsource Reports</div></div>
+        <table class="report-table" id="reportTable"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAST CHECKER -->
+  <div class="view" id="view-fast">
+    <div class="fast-shell">
+      <div class="fast-wrap">
+        <div class="fast-banner">
+          <div class="fast-banner-icon">🧠</div>
+          <div class="fast-banner-text">
+            <h2>FAST Stroke Checker</h2>
+            <p>Answer 4 simple questions about the person you're with. Takes under 60 seconds. Every minute counts.</p>
+          </div>
+        </div>
+        <div class="fast-progress-row">
+          <div class="fp-seg" id="fs0"></div>
+          <div class="fp-seg" id="fs1"></div>
+          <div class="fp-seg" id="fs2"></div>
+          <div class="fp-seg" id="fs3"></div>
+        </div>
+        <div id="fqWrap"></div>
+        <div class="fast-result" id="fastRes">
+          <div class="fr-icon" id="frIcon"></div>
+          <div class="fr-title" id="frTitle"></div>
+          <div class="fr-msg" id="frMsg"></div>
+          <div class="fr-actions">
+            <button class="fr-btn primary" id="frBtn1"></button>
+            <button class="fr-btn secondary" onclick="resetFast()">↩ Start Over</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USSD VIEW -->
+  <div class="view" id="view-ussd">
+    <div class="ussd-shell">
+
+      <div class="phone">
+        <div class="phone-body">
+          <div class="phone-notch">
+            <div class="notch-cam"></div>
+            <div class="notch-speaker"></div>
+          </div>
+          <div class="phone-screen">
+            <div class="phone-status-bar">
+              <div class="psb-time" id="phoneTime">9:41</div>
+              <div class="psb-icons">
+                <div class="psb-icon">📶</div>
+                <div class="psb-icon">🔋</div>
+              </div>
+            </div>
+            <div class="phone-carrier">
+              <div class="carrier-name">BTLC · *123# · Ikalafe</div>
+              <div class="carrier-signal">
+                <div class="sig-bar" style="height:4px"></div>
+                <div class="sig-bar" style="height:6px"></div>
+                <div class="sig-bar" style="height:9px"></div>
+                <div class="sig-bar" style="height:12px"></div>
+              </div>
+            </div>
+            <div class="ussd-dialog">
+              <div class="ussd-dialog-header">
+                <div class="udh-icon">💊</div>
+                <div>
+                  <div class="udh-title">Ikalafe Health</div>
+                  <div class="udh-sub">*123# USSD Service</div>
+                </div>
+              </div>
+              <div class="ussd-msg-area" id="ussdMsgs"></div>
+              <div class="ussd-input-bar">
+                <input class="ussd-field" id="ussdIn" placeholder="Type a number…" maxlength="10" onkeydown="if(event.key==='Enter')doUSSD()">
+                <button class="ussd-go" onclick="doUSSD()">➤</button>
+              </div>
+            </div>
+          </div>
+          <div class="phone-home"></div>
+        </div>
+      </div>
+
+      <div class="ussd-info-panel">
+        <div class="uip-label">Rural Inclusion Layer</div>
+        <div class="uip-title">No smartphone?<br>No data?<br>Still covered.</div>
+        <div class="uip-desc">
+          The *123# service works on <em>any</em> basic mobile phone across Botswana — no data, no smartphone, no app required. Rural clinics and families get the same health intelligence as everyone else.
+        </div>
+        <ul class="uip-features">
+          <li><div class="fi">📍</div>Find nearest open clinic</li>
+          <li><div class="fi">💊</div>Check medicine availability</li>
+          <li><div class="fi">⚠️</div>Report shortage or closed clinic</li>
+          <li><div class="fi">🚨</div>Trigger stroke emergency alert</li>
+          <li><div class="fi">⏱</div>Get current wait times</li>
+        </ul>
+        <div class="quick-codes">
+          <div class="qc-title">Quick reference</div>
+          <div class="qc-item"><span>Nearest clinic</span><span class="qc-code">*123# → 1</span></div>
+          <div class="qc-item"><span>Medicine stock</span><span class="qc-code">*123# → 2</span></div>
+          <div class="qc-item"><span>Stroke emergency</span><span class="qc-code">*123# → 4</span></div>
+          <div class="qc-item"><span>Wait times</span><span class="qc-code">*123# → 5</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REPORT VIEW -->
+  <div class="view" id="view-report">
+    <div class="report-shell">
+      <div class="report-wrap">
+        <div class="toast" id="toast">✅ Report submitted! District officers have been notified.</div>
+        <div class="report-hero">
+          <div class="tag">Citizen Reports</div>
+          <h2>Report an Issue</h2>
+          <p>Help keep health data accurate. All reports are reviewed by district health officers within 2 hours. Your input directly improves care for everyone.</p>
+        </div>
+
+        <div class="form-section">
+          <label class="form-lbl">Report Type <span class="req">*</span></label>
+          <select class="form-ctrl" id="rType">
+            <option value="">Select type…</option>
+            <option>Medicine shortage</option>
+            <option>Clinic closed / understaffed</option>
+            <option>Incorrect wait time displayed</option>
+            <option>Queue overflow</option>
+            <option>Equipment failure</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-section">
+          <label class="form-lbl">Facility <span class="req">*</span></label>
+          <select class="form-ctrl" id="rFacility">
+            <option value="">Select facility…</option>
+          </select>
+        </div>
+
+        <div class="form-section">
+          <label class="form-lbl">Severity</label>
+          <div class="sev-row">
+            <div class="sev-opt" onclick="setSev('low',this)">🟢 Low</div>
+            <div class="sev-opt" onclick="setSev('med',this)">🟡 Medium</div>
+            <div class="sev-opt" onclick="setSev('high',this)">🔴 High</div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <label class="form-lbl">What did you see?</label>
+          <textarea class="form-ctrl" id="rDesc" placeholder="Describe the issue. What happened, when, and what impact did you observe?"></textarea>
+        </div>
+
+        <div class="form-section">
+          <label class="form-lbl">Photo Evidence <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <div class="photo-zone" onclick="document.getElementById('photoIn').click()">
+            <div class="pz-icon">📷</div>
+            <p><strong>Tap to attach photo</strong><br>Helps verify and prioritise your report</p>
+          </div>
+          <input type="file" id="photoIn" accept="image/*" style="display:none" onchange="photoChosen(this)">
+          <div id="photoLabel" class="photo-note"></div>
+        </div>
+
+        <div class="form-section">
+          <label class="form-lbl">Your Name <span style="color:var(--muted);font-weight:400">(optional — anonymous if blank)</span></label>
+          <input class="form-ctrl" type="text" placeholder="e.g. Boitumelo M.">
+        </div>
+
+        <button class="submit-btn" onclick="submitReport()">Submit Report →</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .shell -->
+
+<!-- ══════════════════════════ NURSE FINDER VIEW ══════════════════════════ -->
+<div class="view" id="view-nurses" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+  <div class="nurse-shell">
+    <div class="nurse-hero">
+      <div class="nh-tag">Smart Matching</div>
+      <h2>Find a Nurse Near You</h2>
+      <p>We connect patients to available nurses instantly — matched by proximity, skill, and urgency.</p>
+      <div class="nh-core-sentence">
+        <span class="ncs-icon">🎯</span>
+        <span>"We connect patients to nearby available nurses and health services instantly — using mobile, SMS, and USSD."</span>
+      </div>
+    </div>
+
+    <!-- Smart Match Form -->
+    <div class="nurse-match-card">
+      <div class="nmc-head">⚡ Smart Match — Find the Right Nurse Now</div>
+      <div class="nmc-body">
+        <div class="nm-row">
+          <div class="nm-field">
+            <label class="form-lbl">📍 Your Location</label>
+            <select class="form-ctrl" id="nmLocation">
+              <option>Gaborone — Phase 2</option>
+              <option>Gaborone — CBD</option>
+              <option>Tlokweng</option>
+              <option>Mogoditshane</option>
+              <option>Ramotswa</option>
+              <option>Mochudi</option>
+              <option>Francistown</option>
+            </select>
+          </div>
+          <div class="nm-field">
+            <label class="form-lbl">🩺 Skill Needed</label>
+            <select class="form-ctrl" id="nmSkill">
+              <option>General Nursing</option>
+              <option>Midwife / Maternity</option>
+              <option>Wound Care</option>
+              <option>Paediatric</option>
+              <option>Mental Health</option>
+              <option>Elderly Care</option>
+              <option>IV Therapy</option>
+            </select>
+          </div>
+          <div class="nm-field">
+            <label class="form-lbl">🚨 Urgency Level</label>
+            <select class="form-ctrl" id="nmUrgency">
+              <option value="emergency">🔴 Emergency — ASAP</option>
+              <option value="urgent">🟡 Urgent — Within 1 hour</option>
+              <option value="scheduled">🟢 Scheduled — Today</option>
+              <option value="routine">⚪ Routine — Flexible</option>
+            </select>
+          </div>
+        </div>
+        <button class="submit-btn" style="margin-top:16px" onclick="runNurseMatch()">⚡ Find Best Match Now</button>
+      </div>
+    </div>
+
+    <!-- Match Results -->
+    <div id="nurseResults" class="nurse-results hidden">
+      <div class="nr-head">
+        <div class="nr-title">🎯 Smart Matches Found</div>
+        <div class="nr-sub" id="nrSub">Sorted by: distance · skill · availability</div>
+      </div>
+      <div id="nurseList" class="nurse-list"></div>
+    </div>
+
+    <!-- Nurse Registration CTA -->
+    <div class="nurse-register-cta">
+      <div class="nrc-icon">👩‍⚕️</div>
+      <div class="nrc-text">
+        <strong>Are you a nurse?</strong>
+        <span>Join the Ikalafe network — set your availability and receive patient requests.</span>
+      </div>
+      <button class="nrc-btn" onclick="showNurseReg()">Register as Nurse →</button>
+    </div>
+
+    <!-- Nurse Registration Modal -->
+    <div id="nurseRegModal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+      <div class="modal-box">
+        <div class="modal-head">
+          <span>👩‍⚕️ Nurse Registration</span>
+          <button onclick="document.getElementById('nurseRegModal').classList.add('hidden')" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="trust-badges">
+            <div class="tb">🪪 ID Verified</div>
+            <div class="tb">📋 License Checked</div>
+            <div class="tb">⭐ Rating System</div>
+          </div>
+          <div class="form-section">
+            <label class="form-lbl">Full Name <span class="req">*</span></label>
+            <input class="form-ctrl" type="text" placeholder="e.g. Kefilwe Motswagole">
+          </div>
+          <div class="form-section">
+            <label class="form-lbl">Nursing Council License # <span class="req">*</span></label>
+            <input class="form-ctrl" type="text" placeholder="e.g. BNC/2021/04521">
+          </div>
+          <div class="form-section">
+            <label class="form-lbl">Specialisation</label>
+            <select class="form-ctrl">
+              <option>General Nursing</option>
+              <option>Midwife / Maternity</option>
+              <option>Wound Care</option>
+              <option>Paediatric</option>
+              <option>Mental Health</option>
+            </select>
+          </div>
+          <div class="form-section">
+            <label class="form-lbl">Current Availability</label>
+            <div style="display:flex;gap:10px">
+              <button class="avail-toggle avail-on" id="avOn" onclick="setAvail('on')">🟢 Available Now</button>
+              <button class="avail-toggle" id="avOff" onclick="setAvail('off')">⚫ Offline</button>
+            </div>
+          </div>
+          <button class="submit-btn" onclick="submitNurseReg()">Submit for Verification →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ MEDICINE VIEW ══════════════════════════ -->
+<div class="view" id="view-medicine" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+  <div class="med-shell">
+    <div class="med-hero">
+      <div class="nh-tag">Pharmacy Intelligence</div>
+      <h2>Medicine Availability</h2>
+      <p>Check stock levels, find your nearest pharmacy, and reserve medicine — no delivery guesswork.</p>
+    </div>
+
+    <div class="med-search-bar">
+      <div class="search-wrap" style="flex:1">
+        <input type="text" id="medSearch" placeholder="Search medicine name…" oninput="filterMeds()">
+      </div>
+      <select class="form-ctrl" style="width:180px" id="medPharmFilter" onchange="filterMeds()">
+        <option value="all">All Pharmacies</option>
+        <option value="gaborone">Gaborone</option>
+        <option value="francistown">Francistown</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="med-grid" id="medGrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ GOV DASHBOARD VIEW ══════════════════════════ -->
+<div class="view" id="view-govdash" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+  <div class="admin-scroll">
+    <div class="admin-intro">
+      <h2>🏛️ Government Health Intelligence</h2>
+      <p>National overview · Demand heatmap · Nurse distribution · Medicine shortages · This makes Ikalafe a national solution, not just an app.</p>
+    </div>
+
+    <div class="kpi-row" style="grid-template-columns:repeat(5,1fr)">
+      <div class="kpi green"><div class="kpi-val">247</div><div class="kpi-lbl">Nurses Active</div><div class="kpi-sub">↑ 18 from yesterday</div></div>
+      <div class="kpi blue"><div class="kpi-val">1,842</div><div class="kpi-lbl">Requests Today</div><div class="kpi-sub">Patient connections</div></div>
+      <div class="kpi amber"><div class="kpi-val">7</div><div class="kpi-lbl">Districts Active</div><div class="kpi-sub">Out of 10 total</div></div>
+      <div class="kpi red"><div class="kpi-val">5</div><div class="kpi-lbl">Nurse Deserts</div><div class="kpi-sub">Areas with 0 nurses</div></div>
+      <div class="kpi green"><div class="kpi-val">94%</div><div class="kpi-lbl">Match Success</div><div class="kpi-sub">Requests fulfilled</div></div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="panel-card">
+        <div class="pc-head"><div class="pc-title">🔥 Demand Heatmap — by District</div><div class="pc-badge amber">LIVE</div></div>
+        <div class="pc-body">
+          <div id="heatmapBars"></div>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div class="pc-head"><div class="pc-title">👩‍⚕️ Nurse Distribution</div><div class="pc-badge red">3 DESERTS</div></div>
+        <div class="pc-body">
+          <div id="nurseDistBars"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-card" style="margin-bottom:16px">
+      <div class="pc-head"><div class="pc-title">💊 National Medicine Shortage Alerts</div><div class="pc-badge red">5 CRITICAL</div></div>
+      <div class="pc-body" style="padding:0">
+        <table class="report-table" id="shortageTable"></table>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="pc-head"><div class="pc-title">📊 Weekly Nurse Request Trends</div></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="govChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════ DATA ═══════════════════════ */
+const CLINICS = [
+  { id:0,  name:"Princess Marina Hospital",      dist:"Gaborone",   lat:-24.6550, lng:25.9090, st:"busy",     wait:68, stock:88, beds:12, km:1.2 },
+  { id:1,  name:"Gaborone Private Hospital",     dist:"Gaborone",   lat:-24.6640, lng:25.9000, st:"open",     wait:22, stock:95, beds:28, km:2.1 },
+  { id:2,  name:"Lentsweletau Clinic",           dist:"Kweneng",    lat:-24.3170, lng:25.5060, st:"critical", wait:0,  stock:14, beds:0,  km:55.4 },
+  { id:3,  name:"Nyangabgwe Referral Hospital",  dist:"Francistown",lat:-21.1700, lng:27.5110, st:"open",     wait:31, stock:79, beds:20, km:410.3 },
+  { id:4,  name:"Scottland Clinic",             dist:"Gaborone",   lat:-24.6720, lng:25.9300, st:"open",     wait:18, stock:92, beds:8,  km:3.8 },
+  { id:5,  name:"Maun General Hospital",         dist:"Ngamiland",  lat:-19.9800, lng:23.4170, st:"busy",     wait:55, stock:42, beds:6,  km:870.2 },
+  { id:6,  name:"Kanye Scottish Livingstone",    dist:"Ngwaketse",  lat:-24.9800, lng:25.3330, st:"open",     wait:28, stock:85, beds:15, km:122.4 },
+  { id:7,  name:"Lobatse Mental Health",         dist:"Lobatse",    lat:-25.2130, lng:25.6740, st:"open",     wait:14, stock:90, beds:40, km:70.1 },
+  { id:8,  name:"Ramotswa Clinic",               dist:"Ramotswa",   lat:-24.8670, lng:25.8750, st:"busy",     wait:44, stock:67, beds:3,  km:32.5 },
+  { id:9,  name:"Mochudi Primary Hospital",      dist:"Kgatleng",   lat:-24.4000, lng:26.1500, st:"open",     wait:20, stock:88, beds:18, km:40.2 },
+  { id:10, name:"Serowe Primary Hospital",       dist:"Central",    lat:-22.3890, lng:26.7170, st:"open",     wait:35, stock:82, beds:14, km:260.0 },
+  { id:11, name:"Mahalapye District Hospital",   dist:"Central",    lat:-23.1050, lng:26.8360, st:"busy",     wait:58, stock:71, beds:7,  km:195.0 },
+  { id:12, name:"Orapa Mine Hospital",           dist:"Central",    lat:-21.2750, lng:25.3670, st:"open",     wait:10, stock:97, beds:22, km:490.0 },
+  { id:13, name:"Jwaneng Mine Hospital",         dist:"Southern",   lat:-24.6020, lng:24.7290, st:"open",     wait:9,  stock:96, beds:19, km:123.0 },
+  { id:14, name:"Kasane Primary Hospital",       dist:"Chobe",      lat:-17.7990, lng:25.1540, st:"busy",     wait:49, stock:60, beds:4,  km:920.0 },
+  { id:15, name:"Ghanzi Primary Hospital",       dist:"Ghanzi",     lat:-21.6940, lng:21.6490, st:"open",     wait:16, stock:89, beds:11, km:610.0 },
+  { id:16, name:"Tsabong Primary Hospital",      dist:"Kgalagadi",  lat:-26.0330, lng:22.4600, st:"open",     wait:12, stock:93, beds:13, km:380.0 },
+  { id:17, name:"Selebi-Phikwe Hospital",        dist:"Central",    lat:-22.0000, lng:27.8300, st:"critical", wait:0,  stock:28, beds:0,  km:430.0 },
+];
+
+const STOCKS = [
+  { n:"Paracetamol",            v:18, crit:true  },
+  { n:"Amoxicillin",            v:62, crit:false },
+  { n:"Metformin",              v:45, crit:false },
+  { n:"Insulin (Regular)",      v:11, crit:true  },
+  { n:"Oral Rehydration Salts", v:78, crit:false },
+  { n:"Artemether-Lumefantrine",v:89, crit:false },
+];
+
+const PREDS = [
+  { t:"crit", icon:"💊", h:"Lentsweletau — Paracetamol",        b:"Stockout predicted in 2 days at current usage" },
+  { t:"crit", icon:"💉", h:"Selebi-Phikwe — Insulin (Regular)", b:"11 vials left. Reorder threshold is 30. Issue PO now." },
+  { t:"warn", icon:"🏥", h:"Princess Marina — Queue Spike",      b:"Model predicts 87 patients 14:00–17:00 today" },
+  { t:"warn", icon:"📦", h:"Selebi-Phikwe — Supply Delay",       b:"Delivery 3 days overdue. Logistics investigation needed." },
+  { t:"info", icon:"📈", h:"Ramotswa — Demand Rising",           b:"7-day trend: +22% patient visits. Consider staff support." },
+];
+
+const REPORTS = [
+  { time:"09:14", fac:"Lentsweletau Clinic",        type:"Medicine shortage",           sev:"high", status:"Open" },
+  { time:"08:52", fac:"Princess Marina Hospital",   type:"Queue overflow",              sev:"med",  status:"In Review" },
+  { time:"07:30", fac:"Selebi-Phikwe Hospital",     type:"Clinic closed / understaffed",sev:"high", status:"Escalated" },
+  { time:"Yest.", fac:"Maun General Hospital",      type:"Equipment failure",           sev:"med",  status:"Resolved" },
+];
+
+const FAST_QS = [
+  { L:"F", q:"Face Drooping?",     desc:"Ask the person to smile. Is one side of their face drooping or numb? Is the smile uneven or lopsided?", tip:"💡 Ask them to show their teeth." },
+  { L:"A", q:"Arm Weakness?",      desc:"Ask the person to raise both arms. Does one arm drift downward? Is there weakness, numbness or tingling?", tip:"💡 Keep both arms up for 10 seconds." },
+  { L:"S", q:"Speech Difficulty?", desc:"Ask them to repeat: 'The sky is blue in Cincinnati.' Is their speech slurred, jumbled, or impossible to understand?", tip:"💡 Even slight slurring is significant." },
+  { L:"T", q:"Time to Act?",       desc:"Do you notice ANY of the above — even mildly, even if symptoms passed? Brain cells die every second during a stroke. Time is the most critical factor.", tip:"💡 Don't wait. If in doubt, act." },
+];
+
+const USSD = {
+  "":   `Welcome to Ikalafe 💊\n────────────────────\n1. Find Nurse Near Me\n2. Nearest open clinic\n3. Medicine stock check\n4. Reserve medicine\n5. 🚨 Stroke Emergency\n6. Wait times now\n0. More options`,
+  "1":  `FIND A NURSE 👩‍⚕️\n────────────────────\nSelect skill needed:\n\n1. General Nursing\n2. Midwife / Maternity\n3. Wound Care\n4. Paediatric\n5. Mental Health\n\n0. Back to menu`,
+  "11": `GENERAL NURSING 🟢\n────────────────────\nNearest available:\n\nThato Seabe — 2.2km\n  ✅ Available · ⭐4.7\n  Est. arrival: 22 min\n\nKagiso Lesetedi — 5km\n  ✅ Available · ⭐4.7\n\nReply 1 to request\nReply 0 to go back`,
+  "12": `MIDWIFE / MATERNITY 🤱\n────────────────────\nNearest available:\n\nKefilwe Motswagole\n  📍 1.4km away\n  ✅ Available · ⭐4.9\n  Est. arrival: 15 min\n\nReply 1 to request\nReply 0 to go back`,
+  "2":  `NEAREST CLINICS 📍\n────────────────────\nScottland Clinic — 3.8km\n  ✅ Open · 18 min wait\n\nPrivate Hospital — 2.1km\n  ✅ Open · 22 min wait\n\nPrincess Marina — 1.2km\n  ⚠️ Busy · 68 min wait\n\n0. Back to menu`,
+  "3":  `MEDICINE STOCK 💊\n────────────────────\nParacetamol   ⚠️  LOW\nAmoxicillin   ✅  OK\nInsulin       🔴  CRITICAL\nMetformin     ⚠️  LOW\nORS Sachets   ✅  OK\n\nReply 4 to reserve\nReply 0 to go back`,
+  "4":  `RESERVE MEDICINE 📋\n────────────────────\nReply with:\n[MEDICINE] [QUANTITY]\n\nExample:\nParacetamol 10\n\nNearest pharmacy:\nClicks CBD — 2.4km\n✅ In stock\n\nRef sent via SMS\n⏱ Hold time: 4 hours\n\n0. Back`,
+  "5":  `🚨 STROKE ALERT\n────────────────────\nFAST Signs detected?\nF — Face drooping\nA — Arm weakness\nS — Speech slurred\nT — Time is critical\n\n✅ ALERT SENT TO:\n• Emergency: 997\n• Princess Marina ER\n• Nearest ambulance\n• Family notified\n\n🚑 ETA: ~18 minutes\n\nStay calm. Keep them\nstill. No food/water.\n\n0. Back to menu`,
+  "6":  `WAIT TIMES NOW ⏱\n────────────────────\nScottland Clinic   18 min\nPrivate Hospital   22 min\nPrincess Marina    68 min\nRamotswa Clinic    44 min\nMochudi Hospital   20 min\nMahalapye Hosp.    58 min\n\nUpdated 2 min ago\n\n0. Back`,
+  "0":  `MORE OPTIONS\n────────────────────\n7. Report shortage\n8. Mobile clinics today\n9. Register as nurse\n\n0. Back to main menu`,
+  "7":  `REPORT SHORTAGE 📋\n────────────────────\nReply with:\n[CLINIC] [MEDICINE]\n\nExample:\nScottland Paracetamol\n\nYour report goes to\ndistrict officers.\n⏱ Response: <2 hours\n\n0. Back`,
+  "8":  `MOBILE CLINICS 🚐\n────────────────────\nToday — 20 March\n\n08:00 Oodi Village\n10:30 Bokaa Ward\n13:00 Ramotswa Ext\n15:30 Tlokweng North\n\nBring your omang &\nhealth booklet.\n\n0. Back to menu`,
+  "9":  `NURSE REGISTRATION 👩‍⚕️\n────────────────────\nTo register as a nurse\non Ikalafe:\n\n1. Visit ikalafe.bw/join\n2. Or SMS: JOIN [NAME]\n   [LICENSE#]\n   to 12345\n\nVerification: 24-48hrs\nYou earn per request.\n\n0. Back`,
+};
+
+/* ═══════════════════════ MAP ═══════════════════════ */
+let map, currentFilter = 'all', selectedId = null;
+
+function initMap() {
+  map = L.map('map', { zoomControl: true }).setView([-22.5, 24.5], 6);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO', maxZoom: 19
+  }).addTo(map);
+  CLINICS.forEach(c => {
+    const col = c.st === 'open' ? '#3d6b47' : c.st === 'busy' ? '#c4870a' : '#b83232';
+    const ic = L.divIcon({
+      className: '',
+      html: `<div style="width:14px;height:14px;border-radius:50%;background:${col};border:2.5px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.25);cursor:pointer;${c.st==='critical'?'animation:ripple 1.5s infinite':''};"></div>`,
+      iconSize:[14,14], iconAnchor:[7,7]
+    });
+    L.marker([c.lat,c.lng],{icon:ic}).addTo(map).on('click', ()=>selectClinic(c.id));
+  });
+}
+
+function selectClinic(id) {
+  const c = CLINICS[id];
+  selectedId = id;
+  document.getElementById('dName').textContent = c.name;
+  const w = c.st==='critical'?'—':c.wait+'m';
+  document.getElementById('dWait').textContent = w;
+  document.getElementById('dWait').style.color = c.wait>45?'var(--red)':c.wait>25?'var(--amber)':'var(--moss)';
+  document.getElementById('dStock').textContent = c.stock+'%';
+  document.getElementById('dStock').style.color = c.stock<30?'var(--red)':c.stock<60?'var(--amber)':'var(--moss)';
+  document.getElementById('dDist').textContent = c.km;
+  document.getElementById('dBeds').textContent = c.beds||'—';
+  document.getElementById('drawer').classList.add('open');
+  document.querySelectorAll('.clinic-card').forEach(el=>el.classList.remove('sel'));
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if(el){el.classList.add('sel');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  map.panTo([c.lat,c.lng]);
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.querySelectorAll('.clinic-card').forEach(el=>el.classList.remove('sel'));
+}
+
+/* ═══════════════════════ CLINIC LIST ═══════════════════════ */
+function renderList() {
+  const q = document.getElementById('srch').value.toLowerCase();
+  const filtered = CLINICS.filter(c => {
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.dist.toLowerCase().includes(q);
+    const matchF = currentFilter==='all' || c.st===currentFilter;
+    return matchQ && matchF;
+  });
+  const el = document.getElementById('clinicScroll');
+  el.innerHTML = filtered.map(c => {
+    const wBadge = c.st==='critical'
+      ? '<div class="wait-badge wb-closed">Closed</div>'
+      : c.wait<=25 ? `<div class="wait-badge wb-good">${c.wait}m</div>`
+      : c.wait<=45 ? `<div class="wait-badge wb-warn">${c.wait}m</div>`
+      : `<div class="wait-badge wb-bad">${c.wait}m</div>`;
+    const sc = c.stock<30?'var(--red)':c.stock<60?'var(--amber)':'var(--moss)';
+    return `<div class="clinic-card" data-id="${c.id}" onclick="selectClinic(${c.id})">
+      <div class="cc-row1">
+        <div class="cc-name">${c.name}</div>
+        ${wBadge}
+      </div>
+      <div class="cc-row2">
+        <span class="cc-dist">${c.dist} · ${c.km} km</span>
+        <div class="cc-dot"></div>
+        <div class="stock-mini">
+          <div class="stock-mini-bar"><div class="stock-mini-fill" style="width:${c.stock}%;background:${sc}"></div></div>
+          ${c.stock}% stock
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterList() { renderList(); }
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+
+/* ═══════════════════════ ADMIN ═══════════════════════ */
+function renderAdmin() {
+  // Stock
+  document.getElementById('stockPanel').innerHTML = STOCKS.map(s => {
+    const col = s.v<20?'var(--red)':s.v<50?'var(--amber)':'var(--moss)';
+    return `<div class="stock-item">
+      <div class="stock-row">
+        <span class="stock-name">${s.n}${s.crit?' ⚠':''}</span>
+        <span class="stock-pct" style="color:${col}">${s.v}%</span>
+      </div>
+      <div class="stock-track"><div class="stock-fill" style="width:${s.v}%;background:${col}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Preds
+  document.getElementById('predPanel').innerHTML = PREDS.map(p =>
+    `<div class="pred-item ${p.t}">
+      <div class="pred-icon">${p.icon}</div>
+      <div class="pred-text"><strong>${p.h}</strong><span>${p.b}</span></div>
+    </div>`
+  ).join('');
+
+  // Flow chart
+  new Chart(document.getElementById('flowChart'),{
+    type:'line',
+    data:{
+      labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets:[{
+        label:'Patients',
+        data:[312,398,355,421,487,290,180],
+        borderColor:'var(--clay)',
+        backgroundColor:'rgba(196,96,42,0.08)',
+        fill:true, tension:0.4, pointRadius:3,
+        pointBackgroundColor:'var(--clay)'
+      }]
+    },
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:11}}},
+        y:{grid:{color:'#f0ede8'},ticks:{font:{family:'Plus Jakarta Sans',size:11}}}
+      },
+      responsive:true, maintainAspectRatio:false
+    }
+  });
+
+  // Wait chart
+  new Chart(document.getElementById('waitChart'),{
+    type:'bar',
+    data:{
+      labels:['Gaborone','Francistown','Ngamiland','Kweneng','Central','Chobe'],
+      datasets:[{
+        label:'Avg wait (min)',
+        data:[38,31,55,44,35,49],
+        backgroundColor:['#3d6b47','#3d6b47','#b83232','#c4870a','#3d6b47','#c4870a'],
+        borderRadius:4, borderWidth:0
+      }]
+    },
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:10}}},
+        y:{grid:{color:'#f0ede8'},ticks:{font:{family:'Plus Jakarta Sans',size:11}}}
+      },
+      responsive:true, maintainAspectRatio:false
+    }
+  });
+
+  // Reports table
+  const sev = {high:'sev-high',med:'sev-med',low:'sev-low'};
+  document.getElementById('reportTable').innerHTML = `
+    <thead><tr>
+      <th>Time</th><th>Facility</th><th>Type</th><th>Sev.</th><th>Status</th>
+    </tr></thead>
+    <tbody>${REPORTS.map(r=>`<tr>
+      <td style="color:var(--muted);font-size:11px">${r.time}</td>
+      <td style="font-weight:500">${r.fac}</td>
+      <td style="color:var(--muted)">${r.type}</td>
+      <td><span class="sev-chip ${sev[r.sev]}">${r.sev}</span></td>
+      <td><span class="status-chip">${r.status}</span></td>
+    </tr>`).join('')}</tbody>`;
+}
+
+/* ═══════════════════════ FAST ═══════════════════════ */
+let fStep = 0, fYes = 0;
+
+function renderFast() {
+  fStep = 0; fYes = 0;
+  document.getElementById('fastRes').classList.remove('show','ok');
+  updateFProg();
+  showFQ(0);
+}
+
+function showFQ(i) {
+  const q = FAST_QS[i];
+  document.getElementById('fqWrap').innerHTML = `
+    <div class="fast-q-card">
+      <div class="fq-letter">${q.L}</div>
+      <div class="fq-q">${q.L} — ${q.q}</div>
+      <div class="fq-desc">${q.desc}</div>
+      <div class="fq-tips">${q.tip}</div>
+      <div class="fq-btns">
+        <button class="fq-btn fq-yes" onclick="answerFQ(true)">⚠️ YES — I see this</button>
+        <button class="fq-btn fq-no" onclick="answerFQ(false)">✅ NO — Looks fine</button>
+      </div>
+    </div>`;
+}
+
+function answerFQ(yes) {
+  if(yes) fYes++;
+  fStep++;
+  updateFProg();
+  if(fStep>=4) showFResult();
+  else showFQ(fStep);
+}
+
+function updateFProg() {
+  for(let i=0;i<4;i++) document.getElementById('fs'+i).classList.toggle('done',i<fStep);
+}
+
+function showFResult() {
+  document.getElementById('fqWrap').innerHTML='';
+  const res = document.getElementById('fastRes');
+  if(fYes>=1){
+    document.getElementById('frIcon').textContent='🚨';
+    document.getElementById('frTitle').textContent='Possible Stroke — Act Immediately';
+    document.getElementById('frMsg').textContent=`${fYes} of 4 warning signs detected. Brain cells are dying right now — every second matters. Do not wait to see if symptoms improve. Call for help immediately.`;
+    document.getElementById('frBtn1').textContent='🚑 Send Emergency Alert Now';
+    document.getElementById('frBtn1').onclick=()=>alert('🚨 EMERGENCY ALERT SENT\n\nNotified:\n• Emergency Services (997)\n• Princess Marina ER\n• Nearest ambulance\n\nETA: ~18 minutes\n\nStay calm. Keep the person still and conscious. Do not give food or water.');
+    res.style.borderColor='var(--red)';
+  } else {
+    res.classList.add('ok');
+    document.getElementById('frIcon').textContent='✅';
+    document.getElementById('frTitle').textContent='No immediate stroke signs';
+    document.getElementById('frMsg').textContent='No FAST warning signs were identified. If you are still concerned, or symptoms come and go, please visit a clinic or call 997. Trust your instincts.';
+    document.getElementById('frBtn1').textContent='🗺️ Find Nearest Clinic';
+    document.getElementById('frBtn1').onclick=()=>go('map');
+    res.style.borderColor='var(--moss)';
+  }
+  res.classList.add('show');
+}
+
+function resetFast(){ renderFast(); }
+
+/* ═══════════════════════ USSD ═══════════════════════ */
+let ussdHistory = [];
+
+function initUSSD() {
+  ussdHistory = [];
+  const area = document.getElementById('ussdMsgs');
+  area.innerHTML = '';
+  addUSSDMsg(USSD[""], false);
+}
+
+function addUSSDMsg(text, isUser) {
+  const area = document.getElementById('ussdMsgs');
+  const div = document.createElement('div');
+  div.className = 'ussd-bubble' + (isUser?' user':'');
+  div.textContent = text;
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+}
+
+function doUSSD() {
+  const inp = document.getElementById('ussdIn');
+  const val = inp.value.trim();
+  if(!val) return;
+  addUSSDMsg(val, true);
+  inp.value='';
+  setTimeout(() => {
+    const resp = USSD[val] || `Invalid option '${val}'.\nPlease enter a valid number.\n\nReply 0 to return to menu.`;
+    addUSSDMsg(resp, false);
+    if(val==='0') setTimeout(()=>addUSSDMsg(USSD[""],false),600);
+  }, 400);
+}
+
+/* ═══════════════════════ REPORT ═══════════════════════ */
+let selSev = null;
+
+function setSev(s,el){
+  document.querySelectorAll('.sev-opt').forEach(e=>e.className='sev-opt');
+  el.classList.add('sel-'+s);
+  selSev=s;
+}
+function photoChosen(inp){
+  if(inp.files.length) document.getElementById('photoLabel').textContent='✓ Photo attached: '+inp.files[0].name;
+}
+function submitReport(){
+  if(!document.getElementById('rType').value||!document.getElementById('rFacility').value){
+    alert('Please fill in report type and facility.');return;
+  }
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  ['rType','rFacility','rDesc'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.sev-opt').forEach(e=>e.className='sev-opt');
+  document.getElementById('photoLabel').textContent='';
+  selSev=null;
+  setTimeout(()=>t.classList.remove('show'),5000);
+}
+
+/* ═══════════════════════ NURSE DATA ═══════════════════════ */
+const NURSES = [
+  { id:1, name:"Kefilwe Motswagole", skill:"Midwife / Maternity", dist:"Gaborone — Phase 2", km:1.4, avail:"available", urgency:"emergency", rating:4.9, reviews:42, verified:true, emoji:"👩‍⚕️" },
+  { id:2, name:"Thato Seabe",         skill:"General Nursing",      dist:"Gaborone — CBD",     km:2.2, avail:"available", urgency:"urgent",    rating:4.7, reviews:31, verified:true, emoji:"👨‍⚕️" },
+  { id:3, name:"Dineo Kgathi",        skill:"Wound Care",           dist:"Tlokweng",           km:3.8, avail:"available", urgency:"scheduled", rating:4.8, reviews:27, verified:true, emoji:"👩‍⚕️" },
+  { id:4, name:"Onkabetse Tau",       skill:"Paediatric",           dist:"Mogoditshane",       km:5.1, avail:"busy",      urgency:"scheduled", rating:4.5, reviews:19, verified:true, emoji:"👨‍⚕️" },
+  { id:5, name:"Mpho Ramodimoosi",    skill:"Mental Health",        dist:"Gaborone — Phase 2", km:2.9, avail:"available", urgency:"urgent",    rating:4.6, reviews:14, verified:false, emoji:"👩‍⚕️" },
+  { id:6, name:"Bame Selelo",         skill:"Elderly Care",         dist:"Gaborone — CBD",     km:1.8, avail:"available", urgency:"routine",   rating:4.9, reviews:58, verified:true, emoji:"👩‍⚕️" },
+  { id:7, name:"Kagiso Lesetedi",     skill:"IV Therapy",           dist:"Ramotswa",           km:32.5,avail:"available", urgency:"urgent",    rating:4.7, reviews:22, verified:true, emoji:"👨‍⚕️" },
+];
+
+/* ═══════════════════════ MEDICINE DATA ═══════════════════════ */
+const MEDICINES = [
+  { name:"Paracetamol 500mg", type:"Pain Relief / Fever", pharmacies:[
+    { name:"Med-Pharm Gaborone", dist:"1.2km", zone:"gaborone", stock:"low", pct:22 },
+    { name:"Clicks CBD", dist:"2.4km", zone:"gaborone", stock:"ok", pct:71 },
+    { name:"Dis-Chem Riverwalk", dist:"3.1km", zone:"gaborone", stock:"ok", pct:85 },
+  ]},
+  { name:"Amoxicillin 500mg", type:"Antibiotic", pharmacies:[
+    { name:"Scotts Pharmacy", dist:"0.9km", zone:"gaborone", stock:"ok", pct:68 },
+    { name:"Francistown Clinic Pharm", dist:"410km", zone:"francistown", stock:"ok", pct:77 },
+  ]},
+  { name:"Metformin 850mg", type:"Diabetes", pharmacies:[
+    { name:"Clicks CBD", dist:"2.4km", zone:"gaborone", stock:"low", pct:38 },
+    { name:"Jwaneng Mine Pharm", dist:"123km", zone:"other", stock:"ok", pct:90 },
+  ]},
+  { name:"Insulin (Regular)", type:"Diabetes / Emergency", pharmacies:[
+    { name:"Princess Marina Pharm", dist:"1.2km", zone:"gaborone", stock:"out", pct:0 },
+    { name:"Nyangabgwe Pharm", dist:"410km", zone:"francistown", stock:"low", pct:18 },
+  ]},
+  { name:"Oral Rehydration Salts", type:"Dehydration", pharmacies:[
+    { name:"Dis-Chem Riverwalk", dist:"3.1km", zone:"gaborone", stock:"ok", pct:92 },
+    { name:"Scotts Pharmacy", dist:"0.9km", zone:"gaborone", stock:"ok", pct:80 },
+  ]},
+  { name:"Artemether-Lumefantrine", type:"Anti-Malarial", pharmacies:[
+    { name:"Kasane Primary Pharm", dist:"920km", zone:"other", stock:"ok", pct:88 },
+    { name:"Maun General Pharm", dist:"870km", zone:"other", stock:"low", pct:45 },
+  ]},
+];
+
+/* ═══════════════════════ NURSE LOGIC ═══════════════════════ */
+function runNurseMatch() {
+  const skill = document.getElementById('nmSkill').value;
+  const urgencyVal = document.getElementById('nmUrgency').value;
+
+  let filtered = NURSES.filter(n => n.avail === 'available');
+
+  // Smart match: skill
+  const skillMatch = filtered.filter(n => n.skill === skill);
+  const results = skillMatch.length ? skillMatch : filtered;
+
+  // Sort by distance
+  results.sort((a,b) => a.km - b.km);
+
+  const el = document.getElementById('nurseList');
+  el.innerHTML = results.map(n => {
+    const urgencyColors = { emergency:'red', urgent:'amber', scheduled:'green', routine:'' };
+    const avBadge = n.avail === 'available' ? '<span class="nurse-badge green">🟢 Available</span>' : '<span class="nurse-badge amber">🟡 Busy</span>';
+    const verBadge = n.verified ? '<span class="nurse-badge green">✓ Verified</span>' : '<span class="nurse-badge">Pending</span>';
+    const urgBadge = `<span class="nurse-badge ${urgencyColors[n.urgency] || ''}">${n.urgency}</span>`;
+    const stars = '★'.repeat(Math.floor(n.rating)) + (n.rating % 1 ? '½' : '');
+    return `<div class="nurse-card ${urgencyVal==='emergency'?'urgent':''}">
+      <div class="nurse-avatar">${n.emoji}</div>
+      <div class="nurse-info">
+        <div class="nurse-name">${n.name}</div>
+        <div class="nurse-skill">${n.skill}</div>
+        <div class="nurse-meta">
+          ${avBadge}
+          ${verBadge}
+          ${urgBadge}
+          <span class="nurse-badge">📍 ${n.km}km away</span>
+          <span class="nurse-stars">${stars} <span style="color:var(--muted);font-size:11px">(${n.reviews})</span></span>
+        </div>
+      </div>
+      <div class="nurse-actions">
+        <button class="na-btn na-primary" onclick="alert('📲 Request sent to ${n.name}!\\nETA based on distance: ~${Math.round(n.km*3)} min\\n\\nYou will receive an SMS confirmation.')">Request →</button>
+        <button class="na-btn na-ghost" onclick="alert('📞 Calling ${n.name}...\\n+267 7X XXX XXXX')">Call</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('nrSub').textContent = `${results.length} nurses matched · sorted by distance · ${skill}`;
+  document.getElementById('nurseResults').classList.remove('hidden');
+}
+
+function showNurseReg() {
+  document.getElementById('nurseRegModal').classList.remove('hidden');
+}
+
+let nurseAvailState = 'on';
+function setAvail(state) {
+  nurseAvailState = state;
+  document.getElementById('avOn').className = 'avail-toggle' + (state==='on'?' avail-on':'');
+  document.getElementById('avOff').className = 'avail-toggle' + (state==='off'?' avail-on':'');
+}
+function submitNurseReg() {
+  document.getElementById('nurseRegModal').classList.add('hidden');
+  const t = document.getElementById('toast');
+  t.textContent = '✅ Registration submitted! Verification takes 24–48 hours. You will receive an SMS.';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 5000);
+}
+
+/* ═══════════════════════ MEDICINE LOGIC ═══════════════════════ */
+function renderMedicine() {
+  filterMeds();
+}
+
+function filterMeds() {
+  const q = (document.getElementById('medSearch')?.value || '').toLowerCase();
+  const zone = document.getElementById('medPharmFilter')?.value || 'all';
+  const grid = document.getElementById('medGrid');
+  if(!grid) return;
+
+  const filtered = MEDICINES.filter(m => !q || m.name.toLowerCase().includes(q) || m.type.toLowerCase().includes(q));
+
+  grid.innerHTML = filtered.map(m => {
+    const pharmas = m.pharmacies.filter(p => zone==='all' || p.zone===zone);
+    const bestStock = pharmas.reduce((best, p) => p.pct > best ? p.pct : best, 0);
+    const statusClass = bestStock===0?'sp-out':bestStock<40?'sp-low':'sp-ok';
+    const statusText = bestStock===0?'Out of Stock':bestStock<40?'Low Stock':'In Stock';
+
+    const pharmaRows = pharmas.map(p => {
+      const col = p.stock==='out'?'var(--red)':p.stock==='low'?'var(--amber)':'var(--moss)';
+      const label = p.stock==='out'?'OUT':p.pct+'%';
+      return `<div class="mpl-row">
+        <span class="mpl-name">${p.name}</span>
+        <span class="mpl-dist">${p.dist}</span>
+        <span class="mpl-stock" style="color:${col}">${label}</span>
+      </div>`;
+    }).join('');
+
+    const canReserve = bestStock > 0;
+    return `<div class="med-card">
+      <div class="med-card-top">
+        <div><div class="med-name">${m.name}</div><div class="med-type">${m.type}</div></div>
+        <div class="stock-pill ${statusClass}">${statusText}</div>
+      </div>
+      <div class="med-pharma-list">${pharmaRows || '<div style="font-size:12px;color:var(--muted);padding:4px 0">No pharmacies in selected area</div>'}</div>
+      <button class="med-reserve-btn" ${canReserve?'':"disabled"} onclick="reserveMed('${m.name}')">
+        ${canReserve ? '📋 Reserve at Nearest Pharmacy' : '❌ Unavailable — Check Alternatives'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function reserveMed(name) {
+  alert(`✅ Reservation confirmed!\n\n${name}\nReference: IKL-${Math.floor(Math.random()*90000+10000)}\n\nYou have 4 hours to collect.\nYou will receive an SMS with pharmacy address.`);
+}
+
+/* ═══════════════════════ GOV DASHBOARD ═══════════════════════ */
+let govChartInst = null;
+function renderGovDash() {
+  // Heatmap bars
+  const heatData = [
+    { label:"Gaborone", val:87, col:"#b83232" },
+    { label:"Francistown", val:62, col:"#c4870a" },
+    { label:"Ngamiland", val:55, col:"#c4870a" },
+    { label:"Central", val:71, col:"#c4870a" },
+    { label:"Kweneng", val:44, col:"#3d6b47" },
+    { label:"Chobe", val:49, col:"#3d6b47" },
+    { label:"Kgalagadi", val:23, col:"#3d6b47" },
+  ];
+  document.getElementById('heatmapBars').innerHTML = heatData.map(d=>`
+    <div class="heat-row">
+      <div class="heat-label">${d.label}</div>
+      <div class="heat-bar-wrap"><div class="heat-bar" style="width:${d.val}%;background:${d.col}"></div></div>
+      <div class="heat-val" style="color:${d.col}">${d.val}</div>
+    </div>`).join('');
+
+  // Nurse distribution
+  const nurseData = [
+    { label:"Gaborone", val:89, col:"#3d6b47" },
+    { label:"Francistown", val:52, col:"#3d6b47" },
+    { label:"Central", val:41, col:"#c4870a" },
+    { label:"Ngamiland", val:28, col:"#c4870a" },
+    { label:"Kweneng", val:19, col:"#b83232" },
+    { label:"Kgalagadi", val:9, col:"#b83232" },
+    { label:"Chobe", val:9, col:"#b83232" },
+  ];
+  document.getElementById('nurseDistBars').innerHTML = nurseData.map(d=>`
+    <div class="heat-row">
+      <div class="heat-label">${d.label}</div>
+      <div class="heat-bar-wrap"><div class="heat-bar" style="width:${d.val}%;background:${d.col}"></div></div>
+      <div class="heat-val" style="color:${d.col}">${d.val}</div>
+    </div>`).join('');
+
+  // Shortage table
+  const shortages = [
+    { med:"Insulin (Regular)", region:"Central & Chobe", level:"Critical", action:"Issue PO Now" },
+    { med:"Paracetamol 500mg", region:"Kweneng", level:"Critical", action:"Emergency Transfer" },
+    { med:"Metformin 850mg", region:"Ngamiland", level:"Warning", action:"Reorder Triggered" },
+    { med:"Amoxicillin 500mg", region:"Kgalagadi", level:"Warning", action:"Monitor" },
+    { med:"ARV Tenofovir", region:"Gaborone", level:"Critical", action:"Escalate to MoH" },
+  ];
+  const levCol = {Critical:'sev-high', Warning:'sev-med'};
+  document.getElementById('shortageTable').innerHTML = `<thead><tr>
+    <th>Medicine</th><th>Region</th><th>Level</th><th>Action</th></tr></thead>
+    <tbody>${shortages.map(s=>`<tr>
+      <td style="font-weight:600">${s.med}</td>
+      <td style="color:var(--muted)">${s.region}</td>
+      <td><span class="sev-chip ${levCol[s.level]}">${s.level}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${s.action}</td>
+    </tr>`).join('')}</tbody>`;
+
+  // Chart
+  if(govChartInst) { govChartInst.destroy(); }
+  govChartInst = new Chart(document.getElementById('govChart'), {
+    type:'bar',
+    data:{
+      labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets:[
+        { label:'Nurse Requests', data:[210,285,320,390,445,210,130], backgroundColor:'rgba(61,107,71,0.7)', borderRadius:4 },
+        { label:'Fulfilled', data:[198,271,305,374,420,202,125], backgroundColor:'rgba(61,107,71,0.25)', borderRadius:4 },
+      ]
+    },
+    options:{
+      plugins:{legend:{labels:{font:{family:'Plus Jakarta Sans',size:11}}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:11}}},
+        y:{grid:{color:'#f0ede8'},ticks:{font:{family:'Plus Jakarta Sans',size:11}}}
+      },
+      responsive:true,maintainAspectRatio:false
+    }
+  });
+}
+function go(v) {
+  document.querySelectorAll('.view').forEach(el=>{el.classList.remove('on');el.style.display='none';});
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  const vEl = document.getElementById('view-'+v);
+  if(vEl){ vEl.style.display='flex'; vEl.classList.add('on'); }
+  const idx = {map:0,admin:1,fast:2,ussd:3,nurses:4,medicine:5,govdash:6,report:7};
+  document.querySelectorAll('.nav-btn')[idx[v]]?.classList.add('active');
+
+  const sb = document.getElementById('sidebar');
+  sb.classList.toggle('hidden', v!=='map' && v!=='admin');
+
+  if(v==='map') setTimeout(()=>map.invalidateSize(),50);
+  if(v==='admin') renderAdmin();
+  if(v==='fast') renderFast();
+  if(v==='ussd') initUSSD();
+  if(v==='medicine') renderMedicine();
+  if(v==='govdash') renderGovDash();
+}
+
+/* ═══════════════════════ CLOCK ═══════════════════════ */
+function tick(){
+  const n=new Date();
+  const t=n.toLocaleTimeString('en-BW',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('clock').textContent=t+' BST';
+  document.getElementById('phoneTime').textContent=n.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+
+/* ═══════════════════════ INIT ═══════════════════════ */
+window.addEventListener('load',()=>{
+  // Populate report facility dropdown
+  const sel=document.getElementById('rFacility');
+  CLINICS.forEach(c=>{const o=document.createElement('option');o.textContent=c.name;o.value=c.name;sel.appendChild(o);});
+  renderList();
+  initMap();
+  tick();
+  setInterval(tick,1000);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      BotswanaMarket - Your Premier Shopping Destination in Botswana
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5",
+              secondary: "#EC4899",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      .search-input::-webkit-search-cancel-button { display: none; }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+      }
+    </style>
+  </head>
+  <body class="bg-white min-h-screen">
+    <header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <a href="#" class="text-2xl font-['Pacifico'] text-primary"
+              >BotswanaMarket</a
+            >
+          </div>
+          <div class="flex-1 max-w-2xl mx-8">
+            <div class="relative">
+              <input
+                type="search"
+                placeholder="Search for products, brands and more..."
+                class="w-full pl-10 pr-4 py-2 text-sm border rounded-full focus:outline-none focus:border-primary"
+              />
+              <div class="absolute left-3 top-0 h-full flex items-center">
+                <i class="ri-search-line text-gray-400"></i>
+              </div>
+              <div
+                class="absolute right-3 top-0 h-full flex items-center space-x-2"
+              >
+                <i class="ri-camera-line text-gray-400 cursor-pointer"></i>
+                <i class="ri-mic-line text-gray-400 cursor-pointer"></i>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-6">
+            <div class="relative cursor-pointer">
+              <i class="ri-shopping-cart-2-line text-xl"></i>
+              <span
+                class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                >3</span
+              >
+            </div>
+            <div class="relative cursor-pointer">
+              <i class="ri-notification-3-line text-xl"></i>
+              <span
+                class="absolute -top-2 -right-2 bg-secondary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                >5</span
+              >
+            </div>
+            <div class="cursor-pointer">
+              <img
+                src="https://public.readdy.ai/ai/img_res/4257dee90c8d2542b07ee51fe025aca5.jpg"
+                class="w-8 h-8 rounded-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+        <nav class="flex space-x-8 py-3 text-sm">
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary"
+            data-category="traditional"
+            >Traditional</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary"
+            data-category="fashion"
+            >Fashion</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary"
+            data-category="crafts"
+            >Arts & Crafts</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary"
+            data-category="jewelry"
+            >Jewelry</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary"
+            data-category="food"
+            >Local Food</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary"
+            data-category="electronics"
+            >Electronics</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary"
+            data-category="home"
+            >Home & Living</a
+          >
+          <div class="relative group">
+            <a
+              href="#"
+              class="text-gray-700 hover:text-primary flex items-center"
+            >
+              More
+              <i class="ri-arrow-down-s-line ml-1"></i>
+            </a>
+            <div
+              class="absolute hidden group-hover:block w-48 bg-white shadow-lg rounded-lg mt-2 py-2 z-50"
+            >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                data-category="beauty"
+                >Beauty & Health</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                data-category="books"
+                >Books & Stationery</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                data-category="sports"
+                >Sports & Outdoor</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                data-category="automotive"
+                >Automotive</a
+              >
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main class="pt-32 pb-16">
+      <div class="max-w-7xl mx-auto px-4">
+        <section
+          class="relative rounded-lg overflow-hidden mb-12 bg-gradient-to-r from-indigo-500/10 to-transparent"
+        >
+          <div class="grid grid-cols-2 items-center">
+            <div class="p-12">
+              <h1 class="text-4xl font-bold mb-4">
+                Discover Botswana's Finest
+              </h1>
+              <p class="text-lg text-gray-600 mb-8">
+                Experience the beauty of traditional Botswana crafts, fashion,
+                and modern goods. Shop authentic local products from trusted
+                sellers across the country.
+              </p>
+              <div class="flex space-x-4">
+                <button
+                  class="bg-primary text-white px-8 py-3 rounded-button font-medium hover:bg-primary/90"
+                >
+                  Explore Now
+                </button>
+                <button
+                  class="border-2 border-primary text-primary px-8 py-3 rounded-button font-medium hover:bg-primary/10"
+                >
+                  Local Sellers
+                </button>
+              </div>
+            </div>
+            <div class="h-[500px]">
+              <img
+                src="https://public.readdy.ai/ai/img_res/97eb9b864003393dc56d8de57ed098a0.jpg"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </section>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-6">Popular Categories</h2>
+          <div class="grid grid-cols-6 gap-6">
+            <div
+              class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/6d4d1f4738c04f08580d5f6fc4c0dfc7.jpg"
+                class="w-full h-32 object-cover rounded-lg mb-3"
+              />
+              <p class="text-center text-sm font-medium">Electronics</p>
+            </div>
+            <div
+              class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/fc7214d73c0746a87258b43ebf9f06f0.jpg"
+                class="w-full h-32 object-cover rounded-lg mb-3"
+              />
+              <p class="text-center text-sm font-medium">Fashion</p>
+            </div>
+            <div
+              class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/56efc1cdb68fb9c0e39cbc7fb14378b4.jpg"
+                class="w-full h-32 object-cover rounded-lg mb-3"
+              />
+              <p class="text-center text-sm font-medium">Home & Living</p>
+            </div>
+            <div
+              class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/64c115b3a43e9fd229ae26645d7e8060.jpg"
+                class="w-full h-32 object-cover rounded-lg mb-3"
+              />
+              <p class="text-center text-sm font-medium">Beauty</p>
+            </div>
+            <div
+              class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/9a589567164c80c98a02c9c64b270723.jpg"
+                class="w-full h-32 object-cover rounded-lg mb-3"
+              />
+              <p class="text-center text-sm font-medium">Sports</p>
+            </div>
+            <div
+              class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/244c07b00b1d39826ce978214860c2f1.jpg"
+                class="w-full h-32 object-cover rounded-lg mb-3"
+              />
+              <p class="text-center text-sm font-medium">Books</p>
+            </div>
+          </div>
+        </section>
+        <section class="mb-12">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-semibold">Featured Products</h2>
+            <div class="flex space-x-2">
+              <button
+                class="bg-white border border-gray-200 p-2 rounded-full hover:bg-gray-50"
+              >
+                <i class="ri-arrow-left-s-line text-xl"></i>
+              </button>
+              <button
+                class="bg-white border border-gray-200 p-2 rounded-full hover:bg-gray-50"
+              >
+                <i class="ri-arrow-right-s-line text-xl"></i>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-4 gap-6">
+            <div
+              class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/b020a9234f7f8c1811f09e514cc18d25.jpg"
+                class="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-500">Electronics</span>
+                  <div class="flex items-center text-yellow-400 text-sm">
+                    <i class="ri-star-fill"></i>
+                    <span class="ml-1">4.8</span>
+                  </div>
+                </div>
+                <h3 class="font-medium mb-2">Premium Wireless Headphones</h3>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-lg font-bold">$299.99</span>
+                    <span class="text-sm text-gray-500 line-through ml-2"
+                      >$399.99</span
+                    >
+                  </div>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-primary/90"
+                  >
+                    <i class="ri-shopping-cart-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/0ba279eed80545f5320ec8c01a58df77.jpg"
+                class="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-500">Fashion</span>
+                  <div class="flex items-center text-yellow-400 text-sm">
+                    <i class="ri-star-fill"></i>
+                    <span class="ml-1">4.9</span>
+                  </div>
+                </div>
+                <h3 class="font-medium mb-2">Designer Leather Handbag</h3>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-lg font-bold">$499.99</span>
+                    <span class="text-sm text-gray-500 line-through ml-2"
+                      >$699.99</span
+                    >
+                  </div>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-primary/90"
+                  >
+                    <i class="ri-shopping-cart-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/56d0859e86d9896f3f5d034c697a002b.jpg"
+                class="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-500">Home & Living</span>
+                  <div class="flex items-center text-yellow-400 text-sm">
+                    <i class="ri-star-fill"></i>
+                    <span class="ml-1">4.7</span>
+                  </div>
+                </div>
+                <h3 class="font-medium mb-2">Modern Table Lamp</h3>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-lg font-bold">$129.99</span>
+                    <span class="text-sm text-gray-500 line-through ml-2"
+                      >$179.99</span
+                    >
+                  </div>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-primary/90"
+                  >
+                    <i class="ri-shopping-cart-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            >
+              <img
+                src="https://public.readdy.ai/ai/img_res/2f577013d22b2f12499b95bb3f1d195f.jpg"
+                class="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-500">Beauty</span>
+                  <div class="flex items-center text-yellow-400 text-sm">
+                    <i class="ri-star-fill"></i>
+                    <span class="ml-1">4.6</span>
+                  </div>
+                </div>
+                <h3 class="font-medium mb-2">Luxury Skincare Set</h3>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-lg font-bold">$199.99</span>
+                    <span class="text-sm text-gray-500 line-through ml-2"
+                      >$249.99</span
+                    >
+                  </div>
+                  <button
+                    class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full hover:bg-primary/90"
+                  >
+                    <i class="ri-shopping-cart-line"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="mb-12">
+          <h2 class="text-2xl font-semibold mb-6">Why Choose Us</h2>
+          <div class="grid grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div
+                class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="ri-truck-line text-primary text-xl"></i>
+              </div>
+              <h3 class="font-medium mb-2">Fast Delivery</h3>
+              <p class="text-sm text-gray-600">
+                Free shipping on orders over $50
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div
+                class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="ri-shield-check-line text-primary text-xl"></i>
+              </div>
+              <h3 class="font-medium mb-2">Secure Payment</h3>
+              <p class="text-sm text-gray-600">100% secure payment</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div
+                class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="ri-customer-service-2-line text-primary text-xl"></i>
+              </div>
+              <h3 class="font-medium mb-2">24/7 Support</h3>
+              <p class="text-sm text-gray-600">Dedicated support</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+              <div
+                class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="ri-exchange-line text-primary text-xl"></i>
+              </div>
+              <h3 class="font-medium mb-2">Easy Returns</h3>
+              <p class="text-sm text-gray-600">30 day return policy</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="bg-gray-50 pt-12 pb-8">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-4 gap-8 mb-8">
+          <div>
+            <h3 class="text-lg font-semibold mb-4">About Us</h3>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li><a href="#" class="hover:text-primary">About ShopEase</a></li>
+              <li><a href="#" class="hover:text-primary">Careers</a></li>
+              <li><a href="#" class="hover:text-primary">News & Blog</a></li>
+              <li><a href="#" class="hover:text-primary">Help</a></li>
+              <li><a href="#" class="hover:text-primary">Press Center</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Customer Care</h3>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li><a href="#" class="hover:text-primary">Returns</a></li>
+              <li><a href="#" class="hover:text-primary">Shipping Info</a></li>
+              <li><a href="#" class="hover:text-primary">Gift Cards</a></li>
+              <li><a href="#" class="hover:text-primary">Size Guide</a></li>
+              <li><a href="#" class="hover:text-primary">Contact Us</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2 text-sm text-gray-600">
+              <li><a href="#" class="hover:text-primary">Store Locator</a></li>
+              <li><a href="#" class="hover:text-primary">Brands</a></li>
+              <li><a href="#" class="hover:text-primary">Coupons</a></li>
+              <li>
+                <a href="#" class="hover:text-primary">Affiliate Program</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-primary">Student Discount</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+            <p class="text-sm text-gray-600 mb-4">
+              Subscribe to our newsletter and get 10% off your first purchase
+            </p>
+            <div class="flex">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                class="flex-1 px-4 py-2 text-sm border rounded-l-lg focus:outline-none focus:border-primary"
+              />
+              <button
+                class="bg-primary text-white px-4 py-2 text-sm rounded-r-lg hover:bg-primary/90"
+              >
+                Subscribe
+              </button>
+            </div>
+            <div class="flex items-center space-x-4 mt-6">
+              <a href="#" class="text-gray-600 hover:text-primary">
+                <i class="ri-facebook-fill text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-600 hover:text-primary">
+                <i class="ri-twitter-fill text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-600 hover:text-primary">
+                <i class="ri-instagram-fill text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-600 hover:text-primary">
+                <i class="ri-pinterest-fill text-xl"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="border-t pt-8">
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-gray-600">
+              &copy; 2025 ShopEase. All rights reserved.
+            </p>
+            <div class="flex items-center space-x-4">
+              <img
+                src="https://public.readdy.ai/ai/img_res/a24a696f69d75099da19d58d8faad898.jpg"
+                alt="Visa"
+                class="h-6"
+              />
+              <img
+                src="https://public.readdy.ai/ai/img_res/e5e55094ba52bd4fad845965403d8061.jpg"
+                alt="Mastercard"
+                class="h-6"
+              />
+              <img
+                src="https://public.readdy.ai/ai/img_res/7a1beb05c77829a7ebcd581778068f84.jpg"
+                alt="PayPal"
+                class="h-6"
+              />
+              <img
+                src="https://public.readdy.ai/ai/img_res/e5550029a63c3283992d22557fb4475a.jpg"
+                alt="American Express"
+                class="h-6"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <div class="fixed bottom-4 right-4 flex flex-col space-y-4">
+      <button
+        class="w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center hover:bg-gray-50"
+        id="scrollToTop"
+      >
+        <i class="ri-arrow-up-line text-xl text-gray-600"></i>
+      </button>
+      <button
+        class="w-12 h-12 bg-primary shadow-lg rounded-full flex items-center justify-center hover:bg-primary/90"
+      >
+        <i class="ri-customer-service-2-line text-xl text-white"></i>
+      </button>
+    </div>
+    <script>
+      document.getElementById("scrollToTop").addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      const cartButtons = document.querySelectorAll(
+        '[class*="ri-shopping-cart-line"]',
+      );
+      cartButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const notification = document.createElement("div");
+          notification.className =
+            "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform duration-300 z-50";
+          notification.textContent = "Product added to cart!";
+          document.body.appendChild(notification);
+          setTimeout(() => {
+            notification.style.transform = "translateX(150%)";
+            setTimeout(() => notification.remove(), 300);
+          }, 2000);
+        });
+      });
+    </script>
+  </body>
+</html>

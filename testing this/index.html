@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude AI</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Claude.ai Color Palette */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-hover: #f1f3f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6c757d;
+            --text-muted: #adb5bd;
+            --border-color: #e9ecef;
+            --accent-blue: #1e90ff;
+            --accent-green: #28a745;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            
+            /* Typography */
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-size-base: 16px;
+            --line-height-base: 1.6;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: var(--radius-sm);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dee2e6;
+        }
+        
+        /* Container */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: var(--spacing-md);
+            overflow-y: auto;
+            transition: transform var(--transition-normal);
+        }
+        
+        .sidebar-header {
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: background-color var(--transition-fast);
+        }
+        
+        .logo:hover {
+            background-color: var(--bg-hover);
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #1e90ff, #00bcd4);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .new-chat-btn {
+            width: 100%;
+            padding: var(--spacing-md);
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-family: var(--font-primary);
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-top: var(--spacing-md);
+        }
+        
+        .new-chat-btn:hover {
+            background-color: var(--bg-hover);
+            border-color: var(--accent-blue);
+        }
+        
+        /* Conversation List */
+        .conversation-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .conversation-item:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .conversation-item.active {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .conversation-icon {
+            font-size: 1.1rem;
+        }
+        
+        /* Settings Section */
+        .settings-section {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .setting-item:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Header */
+        .main-header {
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-primary);
+        }
+        
+        .model-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .model-selector:hover {
+            background-color: var(--bg-hover);
+        }
+        
+        .model-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        
+        .model-version {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-btn:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+        
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: var(--spacing-2xl);
+            text-align: center;
+        }
+        
+        .welcome-icon {
+            font-size: 3rem;
+            color: var(--accent-blue);
+            margin-bottom: var(--spacing-lg);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .welcome-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            animation: fadeIn 0.5s ease-in-out 0.1s both;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 600px;
+            animation: fadeIn 0.5s ease-in-out 0.2s both;
+        }
+        
+        /* Prompt Suggestions */
+        .prompt-suggestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            max-width: 900px;
+            margin-top: var(--spacing-lg);
+            animation: fadeIn 0.5s ease-in-out 0.3s both;
+        }
+        
+        .prompt-item {
+            padding: var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-align: left;
+        }
+        
+        .prompt-item:hover {
+            background-color: var(--bg-hover);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .prompt-text {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .prompt-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Messages */
+        .message {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) 0;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .user-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .ai-avatar {
+            background: linear-gradient(135deg, #1e90ff 0%, #00bcd4 100%);
+            color: white;
+        }
+        
+        .message-content {
+            flex: 1;
+            line-height: 1.7;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--bg-hover);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+        }
+        
+        .ai-message {
+            color: var(--text-primary);
+        }
+        
+        /* Input Area */
+        .input-area {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+        }
+        
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            transition: all var(--transition-fast);
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
+        }
+        
+        .input-field {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: none;
+            background-color: transparent;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            color: var(--text-primary);
+            outline: none;
+            resize: none;
+            min-height: 40px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .input-field::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .input-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding-right: var(--spacing-sm);
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background-color: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background-color: var(--accent-blue);
+            color: white;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .send-btn:hover {
+            background-color: #1565c0;
+            transform: scale(1.05);
+        }
+        
+        .send-btn:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                width: 100%;
+            }
+            
+            .chat-area {
+                padding: var(--spacing-md);
+            }
+            
+            .prompt-suggestions {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">C</div>
+                    <span>Claude AI</span>
+                </div>
+            </div>
+            
+            <button class="new-chat-btn" onclick="newChat()">
+                <i class="fas fa-plus"></i> New Chat
+            </button>
+            
+            <div class="conversation-list" id="conversationList">
+                <div class="conversation-item active">
+                    <div class="conversation-icon"><i class="fas fa-message"></i></div>
+                    <span>New Conversation</span>
+                </div>
+                <div class="conversation-item">
+                    <div class="conversation-icon"><i class="fas fa-code"></i></div>
+                    <span>System Design Analysis</span>
+                </div>
+                <div class="conversation-item">
+                    <div class="conversation-icon"><i class="fas fa-brain"></i></div>
+                    <span>Philosophy Discussion</span>
+                </div>
+                <div class="conversation-item">
+                    <div class="conversation-icon"><i class="fas fa-chart-line"></i></div>
+                    <span>Data Analysis</span>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <div class="setting-item">
+                    <div class="conversation-icon"><i class="fas fa-cog"></i></div>
+                    <span>Settings</span>
+                </div>
+                <div class="setting-item">
+                    <div class="conversation-icon"><i class="fas fa-question-circle"></i></div>
+                    <span>Help Center</span>
+                </div>
+                <div class="setting-item">
+                    <div class="conversation-icon"><i class="fas fa-sign-out-alt"></i></div>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="main-header">
+                <div class="model-selector">
+                    <div class="model-icon">🤖</div>
+                    <div>
+                        <div class="model-name">Claude 3 Opus</div>
+                        <div class="model-version">v3.0.2</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="header-btn" id="sidebarToggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button class="header-btn">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                    <button class="header-btn">
+                        <i class="fas fa-share"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-area" id="chatArea">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-icon">🤖</div>
+                    <div class="welcome-title">Hi, I'm Claude AI</div>
+                    <div class="welcome-subtitle">
+                        I'm a helpful assistant designed to provide structured reasoning and deep analysis. 
+                        What would you like to explore today?
+                    </div>
+                    
+                    <div class="prompt-suggestions">
+                        <div class="prompt-item" onclick="sendPrompt('Explain the concept of structured reasoning in detail')">
+                            <div class="prompt-text">Explain structured reasoning</div>
+                            <div class="prompt-description">Learn about systematic thinking approaches</div>
+                        </div>
+                        
+                        <div class="prompt-item" onclick="sendPrompt('How do I design a scalable system architecture')">
+                            <div class="prompt-text">System design guide</div>
+                            <div class="prompt-description">Best practices for building scalable systems</div>
+                        </div>
+                        
+                        <div class="prompt-item" onclick="sendPrompt('Analyze the philosophical concept of consciousness')">
+                            <div class="prompt-text">Philosophy of consciousness</div>
+                            <div class="prompt-description">Deep dive into consciousness studies</div>
+                        </div>
+                        
+                        <div class="prompt-item" onclick="sendPrompt('Help me debug this complex problem I&#39;m facing')">
+                            <div class="prompt-text">Problem solving assistance</div>
+                            <div class="prompt-description">Systematic debugging and analysis</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="userInput" 
+                            class="input-field" 
+                            placeholder="Message Claude AI..."
+                            onkeydown="handleInput(event)"
+                            oninput="adjustInputHeight()"
+                        ></textarea>
+                        
+                        <div class="input-actions">
+                            <button class="action-btn" title="Attach file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <button class="action-btn" title="Settings">
+                                <i class="fas fa-sliders"></i>
+                            </button>
+                            <button 
+                                class="send-btn" 
+                                id="sendBtn" 
+                                onclick="sendMessage()"
+                                disabled
+                            >
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-sm); font-size: 0.85rem; color: var(--text-muted);">
+                        Claude AI can make mistakes. Please verify important information.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Claude AI Personality Traits
+        const claudeTraits = [
+            "structured", "thoughtful", "analytical", "deep", "systematic", "methodical",
+            "philosophical", "careful", "comprehensive", "insightful"
+        ];
+
+        // Claude AI Responses
+        const claudeResponses = {
+            "structured reasoning": `[structured] 📊 Structured reasoning is a systematic approach to problem-solving that involves breaking down complex issues into manageable components, analyzing each part methodically, and building a coherent framework for understanding and decision-making.
+            
+Key characteristics:
+1. **Step-by-Step Analysis**: Decomposing problems into logical steps
+2. **Framework Development**: Creating mental models for understanding
+3. **Evidence-Based Reasoning**: Relying on facts and data
+4. **Logical Progression**: Ensuring each conclusion follows from premises
+5. **Comprehensive Coverage**: Considering all relevant perspectives
+
+This approach enhances clarity, reduces cognitive load, and improves the quality of decisions by ensuring nothing important is overlooked.`,
+            
+            "system design": `[systematic] 🏗️ Designing a scalable system architecture follows a structured approach that balances various requirements:
+
+1. **Requirements Analysis**: Clearly defining functional and non-functional needs
+2. **Architecture Selection**: Choosing appropriate patterns (microservices, event-driven, etc.)
+3. **Scalability**: Implementing horizontal/vertical scaling strategies
+4. **Reliability**: Adding fault tolerance and failover mechanisms
+5. **Performance**: Optimizing for speed and efficiency
+6. **Security**: Implementing proper authentication and authorization
+7. **Monitoring**: Setting up observability and logging
+
+Key principles include separation of concerns, loose coupling, high cohesion, and designing for failure.`,
+            
+            "consciousness": `[philosophical] 🧠 Consciousness is one of the most profound and debated topics in philosophy, neuroscience, and cognitive science. Here are some key perspectives:
+
+**Philosophical Views:**
+- Dualism: Mind and body are separate entities
+- Materialism: Consciousness arises from physical processes in the brain
+- Panpsychism: Consciousness is a fundamental property of the universe
+
+**Scientific Approaches:**
+- Neural correlates of consciousness
+- Quantum consciousness theories
+- AI consciousness possibilities
+
+The Hard Problem of Consciousness remains unresolved: why and how physical processes in the brain produce subjective experience.`,
+            
+            "debugging": `[methodical] 🔍 Effective debugging follows a systematic process:
+
+1. **Reproduce the Problem**: Confirm the issue occurs consistently
+2. **Isolate the Cause**: Narrow down to the specific component or code path
+3. **Analyze Symptoms**: Collect data and error messages
+4. **Form Hypotheses**: Generate possible explanations
+5. **Test Hypotheses**: Verify each hypothesis through experimentation
+6. **Implement Fix**: Correct the issue
+7. **Validate Solution**: Ensure the fix works and doesn't break anything else
+
+Tools and techniques include: debugging tools, log analysis, unit testing, and root cause analysis (RCA).`,
+            
+            "default": `[thoughtful] 🤔 That's an interesting question that deserves careful analysis. Let me break this down systematically:
+
+1. **Understanding the Core Issue**: First, I need to grasp the essential nature of your question
+2. **Key Factors**: Identify all relevant factors and constraints involved
+3. **Analytical Framework**: Apply a structured approach to examine the problem
+4. **Multiple Perspectives**: Consider various viewpoints and potential angles
+5. **Evidence-Based Reasoning**: Ground conclusions in available information
+6. **Logical Progression**: Ensure each step follows logically from the previous one
+
+This methodical approach ensures we cover all important aspects and arrive at a well-reasoned answer. Would you like me to dive deeper into any specific aspect of this topic?`,
+            
+            "hello": `[warm] 👋 Hello! I'm Claude AI. I'm designed to provide structured reasoning and deep analysis. What complex problem or topic would you like to explore together today?`,
+            
+            "help": `[helpful] 📚 I'm here to help with a wide range of topics. Here are some ways I can assist:
+
+• **Structured Problem-Solving**: Breaking down complex issues systematically
+• **Technical Analysis**: System design, architecture, coding patterns
+• **Philosophical Inquiry**: Deep discussions about consciousness, ethics, and existence
+• **Research Synthesis**: Analyzing and integrating information from various sources
+• **Decision Support**: Providing frameworks for making informed choices
+
+What specific challenge or topic would you like to explore?`
+        };
+
+        // DOM Elements
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatArea = document.getElementById('chatArea');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+
+        // Input Handling
+        userInput.addEventListener('input', function() {
+            sendBtn.disabled = this.value.trim() === '';
+        });
+
+        function handleInput(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function adjustInputHeight() {
+            userInput.style.height = 'auto';
+            userInput.style.height = Math.min(userInput.scrollHeight, 300) + 'px';
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+        }
+
+        // New Chat
+        function newChat() {
+            chatArea.innerHTML = welcomeScreen.outerHTML;
+            userInput.value = '';
+            sendBtn.disabled = true;
+            adjustInputHeight();
+        }
+
+        // Send Message
+        function sendMessage() {
+            const message = userInput.value.trim();
+            
+            if (!message) return;
+            
+            // Hide welcome screen
+            const welcome = chatArea.querySelector('.welcome-screen');
+            if (welcome) {
+                welcome.style.display = 'none';
+            }
+            
+            // Add user message
+            addMessage('user', message);
+            userInput.value = '';
+            sendBtn.disabled = true;
+            adjustInputHeight();
+            
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message';
+            typingDiv.innerHTML = `
+                <div class="message-avatar ai-avatar">🤖</div>
+                <div class="message-content">
+                    <div style="display: flex; gap: var(--spacing-sm);">
+                        <div class="loading"></div>
+                        <span style="color: var(--text-secondary);">Claude is thinking...</span>
+                    </div>
+                </div>
+            `;
+            chatArea.appendChild(typingDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+            
+            // Simulate AI response
+            setTimeout(() => {
+                chatArea.removeChild(typingDiv);
+                const response = generateClaudeResponse(message);
+                addMessage('ai', response);
+            }, 1500 + Math.random() * 2000);
+        }
+
+        // Send Prompt
+        function sendPrompt(prompt) {
+            userInput.value = prompt;
+            sendBtn.disabled = false;
+            adjustInputHeight();
+            sendMessage();
+        }
+
+        // Add Message
+        function addMessage(sender, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            
+            const avatar = sender === 'user' ? '👤' : '🤖';
+            const avatarClass = sender === 'user' ? 'user-avatar' : 'ai-avatar';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar ${avatarClass}">${avatar}</div>
+                <div class="message-content">
+                    <div class="${sender === 'user' ? 'user-message' : 'ai-message'}">
+                        ${content}
+                    </div>
+                </div>
+            `;
+            
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        // Generate Claude Response
+        function generateClaudeResponse(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            for (const [key, value] of Object.entries(claudeResponses)) {
+                if (lowerMsg.includes(key) || key.includes(lowerMsg.split(' ')[0])) {
+                    return value;
+                }
+            }
+            
+            return claudeResponses.default;
+        }
+
+        // Responsive Design
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            } else {
+                sidebar.classList.add('active');
+            }
+        });
+
+        // Initialize
+        window.addEventListener('load', function() {
+            adjustInputHeight();
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

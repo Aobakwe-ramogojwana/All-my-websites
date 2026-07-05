@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Kgotla - Citizen Economy Dashboard | Botswana</title>
+    <meta name="description" content="Mobile Kgotla is a free platform democratizing economic data for Botswana communities, making it accessible and actionable.">
+    <meta name="keywords" content="Mobile Kgotla, Botswana, economic data, citizen dashboard, community empowerment">
+    <meta name="author" content="Mobile Kgotla Team">
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Mobile Kgotla - Citizen Economy Dashboard">
+    <meta property="og:description" content="Empowering Botswana communities with accessible economic data and insights.">
+    <meta property="og:image" content="<!-- PASTE YOUR OG IMAGE LINK HERE -->">
+    <meta property="og:url" content="https://yourwebsite.com">
+    <meta property="og:type" content="website">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mobile Kgotla - Citizen Economy Dashboard">
+    <meta name="twitter:description" content="Empowering Botswana communities with accessible economic data and insights.">
+    <meta name="twitter:image" content="<!-- PASTE YOUR TWITTER IMAGE LINK HERE -->">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Chart.js for Interactive Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --botswana-blue: #6BABE5;
+            --botswana-light-blue: #8DC3F0;
+            --botswana-black: #111827;
+            --botswana-white: #F9FAFB;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--botswana-black);
+            background-color: var(--botswana-white);
+        }
+
+        .bg-botswana-blue {
+            background-color: var(--botswana-blue);
+        }
+
+        .bg-botswana-light-blue {
+            background-color: var(--botswana-light-blue);
+        }
+
+        .text-botswana-blue {
+            color: var(--botswana-blue);
+        }
+
+        .border-botswana-blue {
+            border-color: var(--botswana-blue);
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .step-card {
+            position: relative;
+        }
+
+        .step-card::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            background-color: var(--botswana-blue);
+            top: 100%;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .step-card:last-child::after {
+            display: none;
+        }
+
+        .kgotla-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3zmM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3zmM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5zmM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2z' fill='%236BABE5' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .data-viz-card {
+            transition: all 0.3s ease;
+        }
+
+        .data-viz-card:hover {
+            transform: scale(1.03);
+        }
+
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .partner-logo {
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        /* Hero Gradient Animation */
+        .hero-section {
+            background: linear-gradient(-45deg, #6BABE5, #8DC3F0, #6BABE5);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Mobile Menu Animation */
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 75%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Hamburger Icon Animation */
+        #hamburger-icon {
+            transition: all 0.3s ease;
+        }
+
+        #hamburger-icon.open path {
+            display: none;
+        }
+
+        #hamburger-icon.open::before,
+        #hamburger-icon.open::after {
+            content: '';
+            position: absolute;
+            background: currentColor;
+            width: 24px;
+            height: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        #hamburger-icon.open::before {
+            transform: rotate(45deg);
+        }
+
+        #hamburger-icon.open::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Scroll Animation Trigger */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <!-- Firebase App (Note: Move to backend for production) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyD8yn5FSXNfekdUFLDUC_1g4F4TQjdtc3k",
+            authDomain: "valiant-broker-443113-s3.firebaseapp.com",
+            projectId: "valiant-broker-443113-s3",
+            storageBucket: "valiant-broker-443113-s3.firebasestorage.app",
+            messagingSenderId: "922337123917",
+            appId: "1:922337123917:web:bbccb21cd6f06caaa54604",
+            measurementId: "G-B8FDX8GN9N"
+        };
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4 px-6 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-botswana-blue rounded-full flex items-center justify-center">
+                    <img src="<!-- PASTE YOUR LOGO IMAGE LINK HERE -->" alt="Mobile Kgotla Logo" class="h-6 w-6">
+                </div>
+                <span class="text-xl font-bold text-gray-800">Mobile Kgotla</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="text-gray-700 hover:text-botswana-blue font-medium">Home</a>
+                <a href="#about" class="text-gray-700 hover:text-botswana-blue font-medium">About</a>
+                <a href="#features" class="text-gray-700 hover:text-botswana-blue font-medium">Features</a>
+                <a href="#how-it-works" class="text-gray-700 hover:text-botswana-blue font-medium">How It Works</a>
+                <a href="#stories" class="text-gray-700 hover:text-botswana-blue font-medium">Impact Stories</a>
+                <a href="#data-viz" class="text-gray-700 hover:text-botswana-blue font-medium">Data Visualization</a>
+                <a href="#partners" class="text-gray-700 hover:text-botswana-blue font-medium">Partners</a>
+                <a href="#contact" class="text-gray-700 hover:text-botswana-blue font-medium">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-toggle" class="text-gray-700 focus:outline-none" aria-label="Toggle mobile menu">
+                    <svg id="hamburger-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden">
+            <div class="container mx-auto px-6 py-4 flex flex-col space-y-4">
+                <a href="#home" class="text-gray-700 hover:text-botswana-blue font-medium">Home</a>
+                <a href="#about" class="text-gray-700 hover:text-botswana-blue font-medium">About</a>
+                <a href="#features" class="text-gray-700 hover:text-botswana-blue font-medium">Features</a>
+                <a href="#how-it-works" class="text-gray-700 hover:text-botswana-blue font-medium">How It Works</a>
+                <a href="#stories" class="text-gray-700 hover:text-botswana-blue font-medium">Impact Stories</a>
+                <a href="#data-viz" class="text-gray-700 hover:text-botswana-blue font-medium">Data Visualization</a>
+                <a href="#partners" class="text-gray-700 hover:text-botswana-blue font-medium">Partners</a>
+                <a href="#contact" class="text-gray-700 hover:text-botswana-blue font-medium">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="kgotla-pattern hero-section py-20 scroll-reveal">
+        <div class="container mx-auto px-6">
+            <div class="md:flex md:items-center md:space-x-10">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6 text-gray-900">
+                        Democratizing Economic Data Across <span class="text-botswana-blue">Botswana</span>
+                    </h1>
+                    <p class="text-lg text-gray-700 mb-8">
+                        Mobile Kgotla (CED) is a free online tool that collates economic data from diverse sources, making it accessible and understandable for communities across Botswana to bridge economic knowledge gaps.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#features" class="bg-botswana-blue hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-md shadow-md transition duration-300 text-center">Explore Features</a>
+                        <a href="#how-it-works" class="border border-botswana-blue text-botswana-blue hover:bg-gray-50 font-medium py-3 px-6 rounded-md shadow-md transition duration-300 text-center">How It Works</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <img src="<!-- PASTE YOUR HERO IMAGE LINK HERE -->" alt="Mobile Kgotla Dashboard Preview" class="rounded-xl shadow-2xl w-full" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Stats Section -->
+    <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center scroll-reveal">
+                    <div class="text-botswana-blue text-4xl font-bold mb-2">31</div>
+                    <div class="text-gray-700 font-medium">Local Authorities Across Botswana</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center scroll-reveal">
+                    <div class="text-botswana-blue text-4xl font-bold mb-2">25%</div>
+                    <div class="text-gray-700 font-medium">Adults Find Economic Discussions Difficult</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center scroll-reveal">
+                    <div class="text-botswana-blue text-4xl font-bold mb-2">50%+</div>
+                    <div class="text-gray-700 font-medium">Feel Economic Experiences Underrepresented</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">About Mobile Kgotla</h2>
+                <div class="w-24 h-1 bg-botswana-blue mx-auto"></div>
+            </div>
+
+            <div class="md:flex md:space-x-12 items-center mb-20 scroll-reveal">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <img src="<!-- PASTE YOUR MISSION IMAGE LINK HERE -->" alt="Community meeting at a kgotla" class="rounded-xl shadow-lg w-full" loading="lazy">
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Mission</h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        We are a citizen team working with communities across Botswana experiencing economic knowledge gaps to reimagine, rebalance, and transform the economy. Our mission is to democratize access to economic data and make it understandable for everyone.
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        Mobile Kgotla's mission of indigenous innovation, enterprise connectivity, and community empowerment is inspired by the kgotla principle of "mafoko a kgotla a mantle otlhe" (words from the kgotla are all valuable).
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        We are committed to enabling inclusive economic activity, with focus on vulnerable SMEs, transformational infrastructure, empowerment transactions, and farming ventures led by mostly rural people.
+                    </p>
+                </div>
+            </div>
+
+            <div class="md:flex md:space-x-12 items-center flex-row-reverse scroll-reveal">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <img src="<!-- PASTE YOUR VISION IMAGE LINK HERE -->" alt="Botswana economic empowerment" class="rounded-xl shadow-lg w-full" loading="lazy">
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Vision</h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        We envision a Botswana where economic data is accessible, understandable, and actionable for all citizens, regardless of their technical expertise or background. By bridging economic knowledge gaps, we aim to empower communities to make informed decisions about their economic future.
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        We hope to see Mobile Kgotla grow regionally and eventually globally. Each country needs a standard for citizen participation-related data for its internal interoperability and external credibility.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Our goal is to transform how communities engage with economic information, shifting from passive consumers to active participants in shaping economic narratives and policies.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50 kgotla-pattern">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Key Features</h2>
+                <p class="text-gray-700 max-w-3xl mx-auto">
+                    Mobile Kgotla (CED) offers a range of innovative features designed to make economic data accessible, understandable, and actionable for all citizens.
+                </p>
+                <div class="w-24 h-1 bg-botswana-blue mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue scroll-reveal">
+                    <div class="rounded-full bg-botswana-blue bg-opacity-10 w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-botswana-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Community Integration</h3>
+                    <p class="text-gray-700">
+                        Interfaces community development efforts with key stakeholder projects for synergic development.
+                    </p>
+                </div>
+                <div class="feature-card bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue scroll-reveal">
+                    <div class="rounded-full bg-botswana-blue bg-opacity-10 w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-botswana-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Simplified Economic Terms</h3>
+                    <p class="text-gray-700">
+                        Breaks down technical economic terms in a way non-specialists can understand.
+                    </p>
+                </div>
+                <div class="feature-card bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue scroll-reveal">
+                    <div class="rounded-full bg-botswana-blue bg-opacity-10 w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-botswana-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Local Focus</h3>
+                    <p class="text-gray-700">
+                        Designed with a local focus, breaking down data by borough and allowing easy comparisons between different local areas across Botswana's 31 local authorities.
+                    </p>
+                </div>
+                <div class="feature-card bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue scroll-reveal">
+                    <div class="rounded-full bg-botswana-blue bg-opacity-10 w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-botswana-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Contextualized Data</h3>
+                    <p class="text-gray-700">
+                        Contextualizes data by explaining what the data shows and its limitations and biases, providing a complete picture for better decision-making.
+                    </p>
+                </div>
+                <div class="feature-card bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue scroll-reveal">
+                    <div class="rounded-full bg-botswana-blue bg-opacity-10 w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-botswana-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Spatial Economy Maps</h3>
+                    <p class="text-gray-700">
+                        Creates bridges between enterprise activities to produce spatial economy maps showing key areas for improvement through heat maps and visual data representation.
+                    </p>
+                </div>
+                <div class="feature-card bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue scroll-reveal">
+                    <div class="rounded-full bg-botswana-blue bg-opacity-10 w-16 h-16 flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-botswana-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Trend Analysis</h3>
+                    <p class="text-gray-700">
+                        Produces trend analysis and expert insights on locality economy performance to feed global development narratives and inform local decision-making processes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How Mobile Kgotla Works</h2>
+                <p class="text-gray-700 max-w-3xl mx-auto">
+                    Our platform is designed to be intuitive and user-friendly, making economic data accessible to everyone in just a few simple steps.
+                </p>
+                <div class="w-24 h-1 bg-botswana-blue mx-auto mt-4"></div>
+            </div>
+
+            <div class="relative">
+                <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-botswana-blue transform -translate-x-1/2"></div>
+
+                <!-- Step 1 -->
+                <div class="md:flex items-center mb-20 relative scroll-reveal">
+                    <div class="md:w-1/2 pr-10 md:text-right mb-10 md:mb-0">
+                        <div class="bg-white rounded-lg shadow-md p-6 border-botswana-blue border-b-4 md:border-r-4 md:border-b-0 step-card">
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Select Your Location</h3>
+                            <p class="text-gray-700">
+                                Choose your local area or borough from the 31 local authorities across Botswana to view data specific to your community.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="hidden md:block absolute left-1/2 w-12 h-12 rounded-full bg-botswana-blue text-white font-bold flex items-center justify-center transform -translate-x-1/2">1</div>
+                    <div class="md:w-1/2 pl-10">
+                        <img src="<!-- PASTE YOUR STEP 1 IMAGE LINK HERE -->" alt="Map of Botswana local authorities" class="rounded-lg shadow-md w-full" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="md:flex items-center mb-20 relative scroll-reveal">
+                    <div class="md:w-1/2 pr-10 order-2">
+                        <img src="<!-- PASTE YOUR STEP 2 IMAGE LINK HERE -->" alt="Economic data categories selection" class="rounded-lg shadow-md w-full" loading="lazy">
+                    </div>
+                    <div class="hidden md:block absolute left-1/2 w-12 h-12 rounded-full bg-botswana-blue text-white font-bold flex items-center justify-center transform -translate-x-1/2">2</div>
+                    <div class="md:w-1/2 pl-10 order-1 md:text-left mb-10 md:mb-0">
+                        <div class="bg-white rounded-lg shadow-md p-6 border-botswana-blue border-b-4 md:border-l-4 md:border-b-0 step-card">
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Choose Data Categories</h3>
+                            <p class="text-gray-700">
+                                Select from various economic indicators such as employment, income, cost of living, business activity, and more to view relevant data.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="md:flex items-center mb-20 relative scroll-reveal">
+                    <div class="md:w-1/2 pr-10 md:text-right mb-10 md:mb-0">
+                        <div class="bg-white rounded-lg shadow-md p-6 border-botswana-blue border-b-4 md:border-r-4 md:border-b-0 step-card">
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Explore Visualized Data</h3>
+                            <p class="text-gray-700">
+                                View easy-to-understand graphs, charts, and maps that represent the economic data in a visual format, with explanations of what the data means.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="hidden md:block absolute left-1/2 w-12 h-12 rounded-full bg-botswana-blue text-white font-bold flex items-center justify-center transform -translate-x-1/2">3</div>
+                    <div class="md:w-1/2 pl-10">
+                        <img src="<!-- PASTE YOUR STEP 3 IMAGE LINK HERE -->" alt="Economic data visualization" class="rounded-lg shadow-md w-full" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="md:flex items-center relative scroll-reveal">
+                    <div class="md:w-1/2 pr-10 order-2">
+                        <img src="<!-- PASTE YOUR STEP 4 IMAGE LINK HERE -->" alt="Community engagement opportunities" class="rounded-lg shadow-md w-full" loading="lazy">
+                    </div>
+                    <div class="hidden md:block absolute left-1/2 w-12 h-12 rounded-full bg-botswana-blue text-white font-bold flex items-center justify-center transform -translate-x-1/2">4</div>
+                    <div class="md:w-1/2 pl-10 order-1 md:text-left mb-10 md:mb-0">
+                        <div class="bg-white rounded-lg shadow-md p-6 border-botswana-blue border-b-4 md:border-l-4 md:border-b-0 step-card">
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Connect & Take Action</h3>
+                            <p class="text-gray-700">
+                                Connect with local stakeholders, access lived experiences related to the data, and discover opportunities for economic engagement and improvement in your community.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stories Section -->
+    <section id="stories" class="py-20 bg-gray-50 kgotla-pattern">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Impact Stories</h2>
+                <p class="text-gray-700 max-w-3xl mx-auto">
+                    Real stories from communities and individuals who have benefited from using the Mobile Kgotla Citizen Economy Dashboard.
+                </p>
+                <div class="w-24 h-1 bg-botswana-blue mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white rounded-lg shadow-md overflow-hidden scroll-reveal">
+                    <img src="<!-- PASTE YOUR STORY 1 IMAGE LINK HERE -->" alt="Local farmers in Gaborone Rural District" class="h-48 w-full object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Empowering Local Farmers</h3>
+                        <p class="text-gray-600 text-sm mb-4">Gaborone Rural District</p>
+                        <p class="text-gray-700 mb-4">
+                            "The Mobile Kgotla platform helped our farming cooperative understand market trends and connect with potential buyers. We've increased our production and income by 30% in just six months."
+                        </p>
+                        <p class="text-gray-800 font-medium">- Boitumelo Moagi, Cooperative Leader</p>
+                    </div>
+                </div>
+                <div class="testimonial-card bg-white rounded-lg shadow-md overflow-hidden scroll-reveal">
+                    <img src="<!-- PASTE YOUR STORY 2 IMAGE LINK HERE -->" alt="Small business in Francistown" class="h-48 w-full object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Connecting Small Businesses</h3>
+                        <p class="text-gray-600 text-sm mb-4">Francistown</p>
+                        <p class="text-gray-700 mb-4">
+                            "As a small business owner, I struggled to find reliable economic data for my area. Mobile Kgotla provided me with insights that helped me identify new market opportunities and grow my customer base."
+                        </p>
+                        <p class="text-gray-800 font-medium">- Lesego Khumalo, Entrepreneur</p>
+                    </div>
+                </div>
+                <div class="testimonial-card bg-white rounded-lg shadow-md overflow-hidden scroll-reveal">
+                    <img src="<!-- PASTE YOUR STORY 3 IMAGE LINK HERE -->" alt="Community planning in Maun Village" class="h-48 w-full object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Informed Community Planning</h3>
+                        <p class="text-gray-600 text-sm mb-4">Maun Village</p>
+                        <p class="text-gray-700 mb-4">
+                            "Our village council used Mobile Kgotla to better understand local economic challenges. The data helped us prioritize community projects and allocate resources more effectively for our residents."
+                        </p>
+                        <p class="text-gray-800 font-medium">- Kgosi Motswasele, Village Leader</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="#" class="inline-flex items-center text-botswana-blue hover:text-blue-700 font-medium">
+                    View More Success Stories
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Visualization Section -->
+    <section id="data-viz" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Data Visualization Examples</h2>
+                <p class="text-gray-700 max-w-3xl mx-auto">
+                    Explore how Mobile Kgotla transforms complex economic data into easy-to-understand visual formats.
+                </p>
+                <div class="w-24 h-1 bg-botswana-blue mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- Data Viz 1 -->
+                <div class="data-viz-card bg-white rounded-lg shadow-md overflow-hidden scroll-reveal">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Regional Employment Rates</h3>
+                        <p class="text-gray-700 mb-4">
+                            Comparing employment statistics across different regions of Botswana, broken down by industry sectors.
+                        </p>
+                    </div>
+                    <div class="bg-gray-100 p-6 h-64">
+                        <canvas id="employmentChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Data Viz 2 -->
+                <div class="data-viz-card bg-white rounded-lg shadow-md overflow-hidden scroll-reveal">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Local Business Activity</h3>
+                        <p class="text-gray-700 mb-4">
+                            Showing business activity concentration and growth areas across different localities.
+                        </p>
+                    </div>
+                    <div class="bg-gray-100 p-6 h-64">
+                        <div id="businessMap" style="width: 100%; height: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- Data Viz 3 -->
+                <div class="data-viz-card bg-white rounded-lg shadow-md overflow-hidden scroll-reveal">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Income Distribution Trends</h3>
+                        <p class="text-gray-700 mb-4">
+                            Visual representation of income distribution patterns and changes over time across different demographics.
+                        </p>
+                    </div>
+                    <div class="bg-gray-100 p-6 h-64">
+                        <canvas id="incomeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Data Viz 4 -->
+                <div class="data-viz-card bg-white rounded-lg shadow-md overflow-hidden scroll-reveal">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Economic Connectivity Network</h3>
+                        <p class="text-gray-700 mb-4">
+                            Interactive network diagram showing connections between different economic actors and sectors in the community.
+                        </p>
+                    </div>
+                    <div class="bg-gray-100 p-6 h-64">
+                        <canvas id="connectivityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-8 scroll-reveal">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Data Interpretation Guide</h3>
+                <p class="text-gray-700 mb-6">
+                    Mobile Kgotla helps users understand what the data means by providing:
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-botswana-blue bg-opacity-10 p-4 rounded-md">
+                        <div class="font-bold text-botswana-blue mb-2">Context</div>
+                        <p class="text-gray-700 text-sm">
+                            Background information about the data source, collection methods, and historical context.
+                        </p>
+                    </div>
+                    <div class="bg-botswana-blue bg-opacity-10 p-4 rounded-md">
+                        <div class="font-bold text-botswana-blue mb-2">Limitations</div>
+                        <p class="text-gray-700 text-sm">
+                            Clear explanation of what the data doesn't show and potential biases to be aware of.
+                        </p>
+                    </div>
+                    <div class="bg-botswana-blue bg-opacity-10 p-4 rounded-md">
+                        <div class="font-bold text-botswana-blue mb-2">Lived Experience</div>
+                        <p class="text-gray-700 text-sm">
+                            Connections to case studies and stories from people who have direct experience with the topic.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners & Stakeholders Section -->
+    <section id="partners" class="py-20 bg-gray-50 kgotla-pattern">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Partners & Stakeholders</h2>
+                <p class="text-gray-700 max-w-3xl mx-auto">
+                    Mobile Kgotla collaborates with a diverse range of organizations to make economic data accessible and actionable for communities.
+                </p>
+                <div class="w-24 h-1 bg-botswana-blue mx-auto mt-4"></div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-8 scroll-reveal">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                    <div class="flex items-center justify-center">
+                        <img src="<!-- PASTE YOUR PARTNER 1 LOGO LINK HERE -->" alt="Partner 1 Logo" class="w-24 h-24 partner-logo">
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <img src="<!-- PASTE YOUR PARTNER 2 LOGO LINK HERE -->" alt="Partner 2 Logo" class="w-24 h-24 partner-logo">
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <img src="<!-- PASTE YOUR PARTNER 3 LOGO LINK HERE -->" alt="Partner 3 Logo" class="w-24 h-24 partner-logo">
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <img src="<!-- PASTE YOUR PARTNER 4 LOGO LINK HERE -->" alt="Partner 4 Logo" class="w-24 h-24 partner-logo">
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <img src="<!-- PASTE YOUR PARTNER 5 LOGO LINK HERE -->" alt="Partner 5 Logo" class="w-24 h-24 partner-logo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6 scroll-reveal">
+                    <div class="w-16 h-16 bg-botswana-blue rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Local Authorities</h3>
+                    <p class="text-gray-700">
+                        We work closely with local authorities and Dikgosi to ensure the platform addresses the specific needs of each community and integrates with existing governance structures.
+                    </p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 scroll-reveal">
+                    <div class="w-16 h-16 bg-botswana-blue rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Business Community</h3>
+                    <p class="text-gray-700">
+                        Partnerships with small, medium, and large enterprises help us create a comprehensive picture of the local economy and facilitate connections between businesses.
+                    </p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 scroll-reveal">
+                    <div class="w-16 h-16 bg-botswana-blue rounded-full flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Research Institutions</h3>
+                    <p class="text-gray-700">
+                        Collaborations with academic and research institutions ensure the quality and credibility of our data, while also promoting educational use of the platform.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Get Involved</h2>
+                <p class="text-gray-700 max-w-3xl mx-auto">
+                    Want to partner with us or learn more about Mobile Kgotla? Reach out to our team.
+                </p>
+                <div class="w-24 h-1 bg-botswana-blue mx-auto mt-4"></div>
+            </div>
+
+            <div class="md:flex shadow-lg rounded-lg overflow-hidden">
+                <div class="md:w-1/2 bg-botswana-blue p-8 text-white">
+                    <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+                    <div class="flex items-start mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <div>
+                            <p class="font-medium">Phone Number</p>
+                            <p class="mt-1">0026771768049</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <div>
+                            <p class="font-medium">Email</p>
+                            <p class="mt-1">malunga.tariq@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <div>
+                            <p class="font-medium">Location</p>
+                            <p class="mt-1">Gaborone, Botswana</p>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h4 class="font-bold mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="bg-white bg-opacity-20 h-10 w-10 rounded-full flex items-center justify-center hover:bg-opacity-30 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                                    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="bg-white bg-opacity-20 h-10 w-10 rounded-full flex items-center justify-center hover:bg-opacity-30 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                                    <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="bg-white bg-opacity-20 h-10 w-10 rounded-full flex items-center justify-center hover:bg-opacity-30 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="bg-white bg-opacity-20 h-10 w-10 rounded-full flex items-center justify-center hover:bg-opacity-30 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                                    <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.28.28.546.453.92.598 0 .694.521 1.248 1.327 1.248h.016zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 bg-white p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
+                    <form action="https://formspree.io/f/mzzrrydq" method="POST" id="contact-form">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-medium mb-2" for="name">Full Name</label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-botswana-blue focus:border-transparent" type="text" id="name" name="name" placeholder="Your name" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-medium mb-2" for="email">Email Address</label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-botswana-blue focus:border-transparent" type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-medium mb-2" for="organization">Organization</label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-botswana-blue focus:border-transparent" type="text" id="organization" name="organization" placeholder="Your organization">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 text-sm font-medium mb-2" for="message">Message</label>
+                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-botswana-blue focus:border-transparent h-32" id="message" name="message" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        <button class="bg-botswana-blue hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-300 w-full" type="submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-20">
+                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center scroll-reveal">Join the Mobile Kgotla Initiative</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue text-center scroll-reveal">
+                        <div class="w-16 h-16 bg-botswana-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">Become an Advocate</h4>
+                        <p class="text-gray-700 mb-4">
+                            Help spread awareness about Mobile Kgotla in your community and encourage others to use this valuable resource.
+                        </p>
+                        <a href="#" class="text-botswana-blue hover:text-blue-700 font-medium">Learn More</a>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue text-center scroll-reveal">
+                        <div class="w-16 h-16 bg-botswana-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">Contribute Data</h4>
+                        <p class="text-gray-700 mb-4">
+                            Organizations can partner with us to provide economic data that will enrich the platform and benefit communities.
+                        </p>
+                        <a href="#" class="text-botswana-blue hover:text-blue-700 font-medium">Partner With Us</a>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-botswana-blue text-center scroll-reveal">
+                        <div class="w-16 h-16 bg-botswana-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 2M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">Support Development</h4>
+                        <p class="text-gray-700 mb-4">
+                            Help us expand Mobile Kgotla to reach more communities and develop new features to enhance its impact.
+                        </p>
+                        <a href="#" class="text-botswana-blue hover:text-blue-700 font-medium">Support Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+   <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="md:flex md:justify-between">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-botswana-blue rounded-full flex items-center justify-center">
+                            <img src="<!-- PASTE YOUR LOGO IMAGE LINK HERE -->" alt="Mobile Kgotla Logo" class="h-6 w-6">
+                        </div>
+                        <span class="text-xl font-bold">Mobile Kgotla</span>
+                    </div>
+                    <p class="text-gray-400 max-w-xs">
+                        Democratizing economic data for Botswana communities, making it accessible and actionable for all.
+                    </p>
+                </div>
+                <div class="mb-8 md:mb-0">
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-botswana-blue transition duration-300">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-botswana-blue transition duration-300">About</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-botswana-blue transition duration-300">Features</a></li>
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-botswana-blue transition duration-300">How It Works</a></li>
+                        <li><a href="#stories" class="text-gray-400 hover:text-botswana-blue transition duration-300">Impact Stories</a></li>
+                        <li><a href="#data-viz" class="text-gray-400 hover:text-botswana-blue transition duration-300">Data Visualization</a></li>
+                        <li><a href="#partners" class="text-gray-400 hover:text-botswana-blue transition duration-300">Partners</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-botswana-blue transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-gray-400">malunga.tariq@gmail.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            <span class="text-gray-400">0026771768049</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="text-gray-400">Gaborone, Botswana</span>
+                        </li>
+                    </ul>
+                    <div class="mt-6">
+                        <h4 class="text-lg font-bold mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-botswana-blue transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                                    <path d="M16utor 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-botswana-blue transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                                    <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-botswana-blue transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-botswana-blue transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                                    <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.417.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a4.016 4.016 0 0 0 2.34-2.34c.198-.51.333-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.598-.92c-.11-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-400">&copy; 2025 Mobile Kgotla. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+            hamburgerIcon.classList.toggle('open');
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                hamburgerIcon.classList.remove('open');
+            });
+        });
+
+        // Chart.js Visualizations
+        // Employment Rates (Bar Chart)
+        const employmentChart = new Chart(document.getElementById('employmentChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Gaborone', 'Francistown', 'Maun', 'Kasane', 'Ghanzi'],
+                datasets: [{
+                    label: 'Employment Rate (%)',
+                    data: [72, 65, 58, 70, 55],
+                    backgroundColor: 'rgba(107, 171, 229, 0.6)',
+                    borderColor: 'rgba(107, 171, 229, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Employment Rate (%)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.parsed.y}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Business Activity Map (Leaflet.js)
+        const businessMap = L.map('businessMap').setView([-22.3285, 24.6849], 6); // Centered on Botswana
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(businessMap);
+
+        // Add markers for business activity
+        const markers = [
+            { lat: -24.6581, lng: 25.9124, popup: 'Gaborone: High business activity in retail' },
+            { lat: -21.1702, lng: 27.5079, popup: 'Francistown: Growing manufacturing sector' },
+            { lat: -17.7970, lng: 25.1507, popup: 'Kasane: Tourism-driven economy' }
+        ];
+
+        markers.forEach(marker => {
+            L.marker([marker.lat, marker.lng])
+                .addTo(businessMap)
+                .bindPopup(marker.popup);
+        });
+
+        // Income Distribution Trends (Line Chart)
+        const incomeChart = new Chart(document.getElementById('incomeChart'), {
+            type: 'line',
+            data: {
+                labels: ['2018', '2019', '2020', '2021', '2022'],
+                datasets: [{
+                    label: 'Median Income (BWP)',
+                    data: [4500, 4700, 4600, 4800, 5000],
+                    borderColor: 'rgba(107, 171, 229, 1)',
+                    backgroundColor: 'rgba(107, 171, 229, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Median Income (BWP)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Economic Connectivity Network (Doughnut Chart)
+        const connectivityChart = new Chart(document.getElementById('connectivityChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['SMEs', 'Large Enterprises', 'Government', 'NGOs'],
+                datasets: [{
+                    label: 'Economic Connections',
+                    data: [40, 30, 20, 10],
+                    backgroundColor: [
+                        'rgba(107, 171, 229, 0.6)',
+                        'rgba(141, 195, 240, 0.6)',
+                        'rgba(17, 24, 39, 0.6)',
+                        'rgba(249, 250, 251, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(107, 171, 229, 1)',
+                        'rgba(141, 195, 240, 1)',
+                        'rgba(17, 24, 39, 1)',
+                        'rgba(249, 250, 251, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.parsed}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // GSAP Scroll Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        document.querySelectorAll('.scroll-reveal').forEach((element, index) => {
+            gsap.fromTo(element, 
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: element,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    },
+                    delay: index * 0.1
+                }
+            );
+        });
+    </script>
+</body>
+</html>
